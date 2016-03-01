@@ -1,0 +1,39 @@
+﻿
+namespace Dna.Mvp.Data.Entities.Enums
+{
+    public enum MvpResources
+    {
+        None,
+        AccessControlListItems,
+        AllDataTypes,
+        AspNetRoles,
+        AspNetUserClaims,
+        AspNetUserLogins,
+        AspNetUserRoles,
+        AspNetUsers,
+        Attachments,
+        AuditLogs,
+        Cards,
+        Clients,
+        CustomerGroups,
+        CustomerRoles,
+        Customers,
+        CustomerSubscriptions,
+        DomainObjects,
+        ELMAH_Error,
+        GroupAspNetRoles,
+        GroupOwners,
+        GroupRoles,
+        Groups,
+        GroupUsers,
+        Permissions,
+        Spaces,
+        SubscriptionGroups,
+        SubscriptionPlans,
+        Subscriptions,
+        TableRelationships,
+        TypeOfTypes,
+        Users,
+        Validations,
+    }
+}

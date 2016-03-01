@@ -1,0 +1,38 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container">
+    </br>
+    <div class="row">
+        <h1 class="col-lg-8">ROLES list</h1>
+        <form class="form-group col-lg-4">
+            <p class="input-group">
+                <input type="text" class="form-control" placeholder="More role here..." ng-model="newRole">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary" ng-click="addRole()">Add New</button>
+                </span>
+            </p>
+        </form>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Role name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="role in roles" style="cursor: pointer">
+                <a>
+                    <td>
+                        <a>{{role.name}}</a>
+                    </td>
+                    <td><button type="button" class="btn btn-danger" ng-click="deleteRole(role)">&times;</button></td>
+                </a>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<footer class="footer">
+    <div class="container">
+        <p>MVP | MEAN
+    </div>
+</footer>

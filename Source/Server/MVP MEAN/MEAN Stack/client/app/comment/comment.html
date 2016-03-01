@@ -1,0 +1,43 @@
+<!-- client/app/comment/comment.html -->
+
+<div ng-include="'components/navbar/navbar.html'"></div>
+<link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+<script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+
+<header class="hero-unit" id="banner">
+    <div class="container">
+        COMMENTS
+    </div>
+</header>
+
+<div class="container">
+    <br />
+    <a href="/newComment"><input class="btn btn-primary" value="Add new comment"></a><br /><br />
+    <div ui-grid="{ data: comments }"></div>
+    <!--COMMENT FORM-->
+    <!--<form class="thing-form" ng-submit="addComment()" name="commentForm">
+        <label>Syncs in realtime across clients</label>
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="Comment here..." ng-model="newComment" required />
+            <span class="input-group-btn">
+                <input class="btn btn-primary" type="submit" ng-disabled="commentForm.$invalid" value="Post">
+            </span>
+        </p>
+    </form>-->
+    <!-- COMMENT LIST -->
+    <!--<div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Comments:</h1>
+            <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="comment in comments">
+                <li>
+                    <a href="#">
+                        <span ng-hide="comment.editing" ng-dblclick="editComment(comment)">{{comment.content}}</span><button type="button" class="close" ng-click="deleteComment(comment)">&times;</button>
+                    </a>
+                    <form ng-submit="doneEditing(comment)">
+                        <strong><em><input ng-show="comment.editing" ng-model="comment.content" ng-blur="doneEditing(comment)" autofocus /></em></strong>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>-->
+</div>

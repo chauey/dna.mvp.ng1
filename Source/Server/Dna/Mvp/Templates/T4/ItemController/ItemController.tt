@@ -1,0 +1,451 @@
+﻿<#@ template debug="true" hostspecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+<#@ output extension=".js" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+if (schemaNames.Count() > 0)
+{
+	foreach (string schemaName in schemaNames)
+	{
+		// Statement
+		List<string> tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+		foreach (string tableName in tableNames)
+		{
+			if (!string.IsNullOrEmpty(tableName) && !tableName.StartsWith("webpages_") && !tableName.StartsWith("__")) 
+			{
+				// ----- Declare variables -----
+				//var entityName = "typeOfType";		var entityNamePlural = entityName + "s";
+				//var EntityName = "TypeOfType";		var EntityNamePlural = EntityName + "s";
+				//var DisplayName = "Type Of Type";		var DisplayNamePlural = DisplayName + "s";
+
+				var entityNamePlural = GetStringIncamelCase(tableName);
+				var entityName = GetStringInSingle(entityNamePlural);
+					
+				var EntityNamePlural = tableName;
+				var EntityName = GetStringInSingle(EntityNamePlural);
+					
+				var DisplayNamePlural = EntityNamePlural;
+				var DisplayName = EntityName;
+
+				// Column Names
+				var PrimaryKeyName = GetPrimaryKeyName(schemaName, tableName, metaDataTable);
+				if(string.IsNullOrEmpty(PrimaryKeyName)) PrimaryKeyName = EntityName + "Id";
+				var primaryKeyName = GetStringIncamelCase(PrimaryKeyName);
+				var columnNames = GetColumnNames(schemaName, tableName, metaDataTable);
+				var mainColumnNames = GetMainColumnNames(schemaName, tableName, metaDataTable);
+				var mainColumnNamesWithTypes = GetMainColumnNamesWithTypes(schemaName, tableName, metaDataTable);
+
+				// Dropdown / Foreign Keys
+				List<string> foreignKeys = GetFKColumnNames(schemaName, tableName, metaDataTable);
+				var foreignKeysIncamelCase = ConvertTocamelCase(foreignKeys);
+
+                      // Listbox / ManyToMany Relationships
+                    List<string> manyToManyTableNameList = GetManyToManyTableNames(tableName);
+                    var manyToManyTableNameListIncamelCase = ConvertTocamelCase(manyToManyTableNameList);
+#>
+// 0. IIFE (Immediately-invoked function expression)
+(function () {
+    'use strict';
+
+    var controllerId = '<#= EntityName #>ItemController';
+
+	// 1. Add controller to module
+    angular
+		.module('app.features')
+		.controller(controllerId, <#= EntityName #>ItemController);
+
+	// 2. Inject dependencies
+<# if (manyToManyTableNameList.Count > 0)
+{
+    string injectListService = GetManyToManyListService(entityName, manyToManyTableNameList);
+    string implementListService = injectListService.Replace("'",string.Empty);
+#>
+
+   
+<#= EntityName #>ItemController.$inject = ['$location', '$stateParams','$rootScope', '$scope', '$window', '$modal',
+            'bootstrap.dialog', 'common', 'config', 'commonConfig', 'datePickerConfig', 'model', 'datacontext', 'urlHelper',<#=injectListService#>];
+	// 3. Define controller
+    function <#= EntityName #>ItemController($location, $stateParams, $rootScope, $scope, $window, $modal,
+        bsDialog, common, config, commonConfig, datePickerConfig, model, datacontext, urlHelper,<#=implementListService#>) {
+   var vm = this;
+ <#for (int y = 0; y < manyToManyTableNameList.Count; y++)
+    {
+        string tableMMName = manyToManyTableNameList[y].Replace("ID", string.Empty).Replace("Id", string.Empty);
+        string tableMMNameIncamelCase = manyToManyTableNameListIncamelCase[y].Replace("ID", string.Empty)
+            .Replace("Id", string.Empty);
+        #>
+vm.<#=  entityName + tableMMName #>ListService = <#=  entityName + tableMMName #>ListService;
+<# }
+}
+else
+{ #>
+	<#= EntityName #>ItemController.$inject = ['$location', '$stateParams','$rootScope', '$scope', '$window', '$modal',
+            'bootstrap.dialog', 'common', 'config', 'commonConfig', 'datePickerConfig', 'model', 'datacontext', 'urlHelper'];
+	// 3. Define controller
+    function <#= EntityName #>ItemController($location, $stateParams, $rootScope, $scope, $window, $modal,
+        bsDialog, common, config, commonConfig, datePickerConfig, model, datacontext, urlHelper) {
+   var vm = this;
+<# } #>
+
+		// #region 3.1. Setup variables and functions
+     
+        var logError = common.logger.getLogFn(controllerId, 'error');
+        var entityName = model.entityNames.<#= entityName #>;
+        var wipEntityKey = undefined;
+		// #endregion
+
+        // #region 3.2. Expose public bindable interface
+		vm.activate = activate;
+        vm.<#= entityName #> = undefined;
+
+        vm.isCreating = false;
+        // For audit log
+        vm.actionType = ''; // I: Insert || U: Update || D: Delete
+        vm.original<#= EntityName #> = null;
+
+		<# if(foreignKeys.Count > 0) {#>
+<#
+					for (int i = 0; i < foreignKeys.Count; i++)
+                        {
+                            string navProperty = foreignKeys[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                            string navPropertyIncamelCase = foreignKeysIncamelCase[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                            string foreignKeyNameIncamelCase = foreignKeysIncamelCase[i];
+#>
+			vm.<#= navPropertyIncamelCase + "s" #> = [];
+            vm.selected<#= navProperty #>Id =  null;
+			$scope.$watch('vm.selected<#= navProperty #>', function (newValue, oldValue) {
+            if (newValue === oldValue) return;
+            vm.hasChanges = true;
+        });
+      <# }
+}#>
+
+        vm.goBack = goBack;
+        vm.cancel = cancel;
+        vm.save = save;
+        vm.delete<#= EntityName #> = delete<#= EntityName #>;
+        vm.hasChanges = false;
+        vm.isSaving = false;
+        Object.defineProperty(vm, 'canSave', {
+            get: canSave
+        });
+
+		// For DateTime fields
+		<# if(mainColumnNames.Count > 0) {
+				for (int i = 0; i < mainColumnNames.Count; i++) {
+					if (mainColumnNamesWithTypes[mainColumnNames[i]] == "date" || mainColumnNamesWithTypes[mainColumnNames[i]] == "datetime") { #>	
+		vm.datePickerConfig = datePickerConfig;<#break; }}}#>	
+		
+        // For modal dialog
+        vm.isModal = false;
+        if ($scope.isModal) {
+            vm.isModal = $scope.isModal;
+        }    
+		// #endregion
+
+		// 3.3. Run activate method
+        activate();
+
+		// #region 3.4. Implement private functions
+        function activate() {
+            onDestroy();
+            onHasChanges();
+			<# if (foreignKeys.Count > 0) { #>
+			initLookupsForRefEntity(); 
+			<# } #>
+            common.activateController([getRequested<#= EntityName #>()], controllerId)
+                .then(onEveryChange());
+        }
+
+        function getRequested<#= EntityName #>() {
+            if (vm.isModal) {
+                vm.actionType = 'I'; // For audit log
+                return vm.<#= entityName #> = datacontext.<#= entityName #>.create();
+            }
+
+            var val = $stateParams.id;
+
+            if (val === 'new') {
+                vm.isCreating = true;
+                vm.actionType = 'I'; // For audit log
+                return vm.<#= entityName #> = datacontext.<#= entityName #>.create();
+            }
+
+            return datacontext.<#= entityName #>.getById(val)
+			    .then(function (data) {
+                    vm.actionType = 'U'; // For audit log
+                    vm.<#= entityName #> = data.entity || data;
+                    initLookupsForRefEntity();
+
+					// TODO: Parse date as HTML5 input format
+					// Sample: vm.validation.date = new moment(vm.validation.date).format('YYYY-MM-DD');
+	<# if(foreignKeys.Count > 0) {#>
+<#
+					for (int i = 0; i < foreignKeys.Count; i++)
+                        {
+                            string navProperty = foreignKeys[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                            string navPropertyIncamelCase = foreignKeysIncamelCase[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                            string foreignKeyNameIncamelCase = foreignKeysIncamelCase[i];
+#>
+			                    vm.selected<#=navProperty#> =  vm.<#=entityName#>.<#=foreignKeyNameIncamelCase#> ;
+
+<# if (manyToManyTableNameList.Count > 0)
+{
+for (int y = 0; y < manyToManyTableNameList.Count; y++)
+    {
+        string tableMMName = manyToManyTableNameList[y].Replace("ID", string.Empty).Replace("Id", string.Empty);
+        string tableMMNameIncamelCase = manyToManyTableNameListIncamelCase[y].Replace("ID", string.Empty)
+            .Replace("Id", string.Empty);
+        #>
+vm.<#=  entityName + tableMMName #>ListService.populateList(vm.<#=  entityName #>.<#=tableMMNameIncamelCase#>);
+<# }
+}
+#>
+                }, function (error) {
+                    logError('Unable to get <#= DisplayName #> ' + val);
+                    goTo<#= EntityNamePlural #>();
+                });
+        }
+
+        function initLookupsForRefEntity() {
+		<# if(foreignKeys.Count > 0) {#>
+<#
+					for (int i = 0; i < foreignKeys.Count; i++)
+                        {
+                            string navProperty = foreignKeys[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                            string navPropertyIncamelCase = foreignKeysIncamelCase[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                            string foreignKeyNameIncamelCase = foreignKeysIncamelCase[i];
+#>
+			vm.<#= navPropertyIncamelCase + "s" #> = [];
+            vm.selected<#= navProperty #>Id =  null;
+
+                datacontext.navPropertyIncamelCase.getAll()
+               .then(function (data) {
+                   vm.<#= navPropertyIncamelCase + "s" #> = data;
+                   if (vm.<#= entityName #> !== undefined) {
+                        vm.selected<#= navProperty #>Id = vm.<#= entityName #>.<#= navPropertyIncamelCase#>Id;
+                   }
+               });
+
+      <# }
+}#>
+           
+
+        }
+        // #region Back - Save - Cancel - Delete
+        function goBack() {
+            goTo<#= EntityNamePlural #>();
+        }
+
+        function cancel() {
+            goTo<#= EntityNamePlural #>();
+        }
+
+        function goTo<#= EntityNamePlural #>() {
+            $location.path('/<#= entityNamePlural #>');
+        }
+
+        function onDestroy() {
+            // $on listens events of a given type
+            $scope.$on('$destroy', function () {
+                autoStoreWip(true);
+                datacontext.cancel();
+            });
+        }
+		
+        function canSave() {
+            //return (vm.hasChanges && !vm.isSaving);
+
+            // HACK
+            return true;
+        }
+
+        function save() {
+
+		// TODO: May need to parse numeric fields (parseInt or parseFloat)
+		// Sample: vm.validation.integer = parseInt(vm.validation.integer);
+		if (vm.validateForm(form)) {
+				vm.isSaving = true;
+		<# if(foreignKeys.Count > 0) {#>
+	<#
+						for (int j= 0; j < foreignKeys.Count; j++)
+						{
+							string navProperty = foreignKeys[j].Replace("ID", string.Empty).Replace("Id", string.Empty);
+							string navPropertyIncamelCase = foreignKeysIncamelCase[j].Replace("ID", string.Empty).Replace("Id", string.Empty);#>
+	  vm.<#=entityName#>.<#=foreignKeysIncamelCase[j]#> = vm.selected<#=navProperty #>;
+
+	   <#}
+						}#>
+
+				// Save Changes
+				return datacontext.save("Save<#=tableName#>")
+					.then(function (saveResult) {
+						vm.isSaving = false;
+
+						// Save Audit Log
+						common.$broadcast(commonConfig.config.userActionAddedEvent, vm.actionType, model.controllerNames.<#= entityName #>,
+											vm.actionType != 'D' ? vm.original<#= EntityName #> : clone<#= EntityName #>(vm.<#= entityName #>),
+											vm.actionType != 'D' ? clone<#= EntityName #>(vm.<#= entityName #>) : null);
+
+						removeWipEntity();
+						if (!vm.isModal) {
+						urlHelper.replaceLocationUrlGuidWithId(vm.<#= entityName #>.<#= primaryKeyName #>);
+						}
+						else {
+							$scope.modalInstance.close(vm.hospital);
+						}
+					}, function (error) {
+						vm.isSaving = false;                    
+					});
+			}
+		}
+
+		vm.validateForm = function (form) {
+            $scope.submitted = true;
+            if (form.$valid) {
+                console.log('Form is valid');
+                log("Form is valid.");
+                return true;
+            }
+            logError("Form is not valid.");
+            return false;
+        }
+
+        vm.interacted = function (field) {
+            return $scope.submitted || field.$dirty;
+        }
+
+        function onHasChanges() {
+            $scope.$on(config.events.hasChangesChanged,
+                function (event, data) {
+                    vm.hasChanges = data.hasChanges;
+                });
+        }
+
+        function delete<#= EntityName #>() {
+            return bsDialog.deleteDialog('<#= DisplayName#>')
+                .then(confirmDelete);
+
+            function confirmDelete() {
+                vm.actionType = 'D'; // For Audit Log
+                datacontext.markDeleted(vm.<#= entityName #>);
+                vm.save().then(success).catch(failed);
+
+                function success() {
+                    removeWipEntity();
+                if (!vm.isModal) {
+                    goTo<#= EntityNamePlural #>();
+                }
+                    else {
+                        $scope.modalInstance.dismiss('cancel');
+                    }
+                }
+
+                function failed(error) { cancel(); }
+            }
+        }
+        // #endregion
+
+				function initLookups() {
+				var lookups = datacontext.lookup.lookupCachedData;
+	<# if(foreignKeys.Count > 0) {#>
+<#
+					for (int j= 0; j < foreignKeys.Count; j++)
+                    {
+						string navProperty = foreignKeys[j].Replace("ID", string.Empty).Replace("Id", string.Empty);
+						string navPropertyIncamelCase = foreignKeysIncamelCase[j].Replace("ID", string.Empty).Replace("Id", string.Empty);#>
+                      vm.<#= navPropertyIncamelCase + "s" #> = lookups.<#= navPropertyIncamelCase + "s" #>;
+                  if (vm.<#=entityName#> !== undefined) {
+                vm.selected<#=navProperty#> =  vm.<#=entityName#>.<#=foreignKeysIncamelCase[j]#> ;
+}
+
+   <#}
+					}#>
+        }
+
+        // #region Work in progress
+        function storeWipEntity() {
+            if (!vm.<#= entityName #>) { return; }
+            var description = vm.<#= entityName #>.name || '[New <#= EntityName #>] id: ' + vm.<#= entityName #>.<#= primaryKeyName #>; // Need to change "name" to a main property that we want to show to user
+
+            wipEntityKey = datacontext.zStorageWip.storeWipEntity(
+                vm.<#= entityName #>, wipEntityKey, entityName, description);
+        }
+
+        function autoStoreWip(immediate) {
+            common.debouncedThrottle(controllerId, storeWipEntity, 1000, immediate);
+        }
+
+        function onEveryChange() {
+            $scope.$on(config.events.entitiesChanged,
+                function (event, data) { autoStoreWip(); }
+            );
+        }
+
+        function removeWipEntity() {
+            datacontext.zStorageWip.removeWipEntity(wipEntityKey);
+        }
+        // #endregion
+
+        function clone<#= EntityName #>(<#= entityName #>) {
+            return {
+		<#foreach (string columnName in columnNames)
+		{#>
+            <#= columnName #>: <#= entityName #>.<#= GetStringIncamelCase(columnName) #>,
+		<#}#>
+        };
+        }
+		// #endregion
+<# if (foreignKeys.Count > 0) { #>
+			// #region Modal Dialog
+	<#foreach (string foreignKey in foreignKeys) {
+			string navPropertyName = foreignKey.Replace("ID", string.Empty).Replace("Id", string.Empty); 
+                            string navIncamelPropertyName = GetStringIncamelCase(navPropertyName);
+                            string foreignKeyIncamel = GetStringIncamelCase(foreignKey);
+#>
+		function add<#= navPropertyName #>(){
+            var modalScope = $rootScope.$new();
+            // passing parameter into modal view
+            modalScope.isModal = true;
+            modalScope.modalInstance = $modal.open({
+                templateUrl: '/app/features/<#=navIncamelPropertyName #>/<#=navIncamelPropertyName #>Item.html',
+                controller: '<#=navIncamelPropertyName #>ItemController as vm',
+                size: 'lg',
+                scope: modalScope, // <- This is it!
+                //resolve: {
+                //    isModal: true
+                //}
+            });
+
+            modalScope.modalInstance.result.then(function (new<#=navPropertyName #>) {
+                
+                if (new<#=navPropertyName #>) {
+                    vm.<#=navIncamelPropertyName #>s.push(new<#=navPropertyName #>);
+                    vm.selected<#=navPropertyName #> =  vm.<#=navIncamelPropertyName #>s[vm.<#=navIncamelPropertyName #>s.length - 1].<#=foreignKeyIncamel #>;
+                    vm.<#=entityName#>.<#=foreignKeyIncamel#> = vm.selected<#=navPropertyName #>;
+                    vm.isSaving = false;
+                    vm.hasChanges = true;
+                }
+
+            }, function () {
+                //$log.info('Modal dismissed at: ' + new Date());
+            });
+
+} ;
+      <#}#>
+            // #endregion
+			<# } #>
+    }
+	// #endregion
+})();
+
+<# 
+				SaveOutput(entityName, entityName + "ItemController.js");
+			}
+		}
+	}
+}
+#>

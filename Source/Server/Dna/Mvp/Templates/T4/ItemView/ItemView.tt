@@ -1,0 +1,404 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+<#@ assembly name="Newtonsoft.Json.dll" #>
+<#@ import namespace="Newtonsoft.Json.Serialization" #>
+<#@ import namespace="Newtonsoft.Json.Linq" #>
+<#@ import namespace="Newtonsoft.Json" #>
+<#@ output extension=".html" #>
+
+<# 
+    DataTable metaDataTable = GetMetaDataTable();
+    List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+	// #region Validations
+	// Required columns
+	List<KeyValuePair<string, string>> requiredColumns = new List<KeyValuePair<string, string>>();
+
+	// Tables with column extended properties
+	Dictionary<string, Dictionary<string, JToken>> tableWithColumnExtProperties = new Dictionary<string, Dictionary<string, JToken>>();
+
+	// Tables with column lengths
+	Dictionary<string, Dictionary<string, int>> tableWithColumnLengths = new Dictionary<string, Dictionary<string, int>>();
+
+	// Dictionary with <tableName, propertyName> with each datatype list
+	List<KeyValuePair<string, string>> numericProperties = new List<KeyValuePair<string, string>>();
+	List<KeyValuePair<string, string>> intProperties = new List<KeyValuePair<string, string>>();
+	List<KeyValuePair<string, string>> smallIntProperties = new List<KeyValuePair<string, string>>();
+	List<KeyValuePair<string, string>> bigIntProperties = new List<KeyValuePair<string, string>>();
+
+	List<KeyValuePair<string, string>> datetimeProperties = new List<KeyValuePair<string, string>>();
+	List<KeyValuePair<string, string>> timeProperty = new List<KeyValuePair<string, string>>();
+	List<KeyValuePair<string, string>> bitProperties = new List<KeyValuePair<string, string>>();
+	List<KeyValuePair<string, string>> guidProperties = new List<KeyValuePair<string, string>>();
+	List<KeyValuePair<string, string>> emailProperties = new List<KeyValuePair<string, string>>();
+	List<KeyValuePair<string, string>> websiteProperties = new List<KeyValuePair<string, string>>();
+	List<KeyValuePair<string, string>> phoneProperties = new List<KeyValuePair<string, string>>();
+
+	List<string> createValidationMethods = new List<string>();
+	List<string> applyValidationMethods = new List<string>();
+	// #endregion
+
+    if (schemaNames.Count() > 0)
+    {
+        foreach (string schemaName in schemaNames)
+        {
+            // Statement
+            List<string> tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+            foreach (string tableName in tableNames)
+            {
+                if (!string.IsNullOrEmpty(tableName) && !tableName.StartsWith("webpages_") && !tableName.StartsWith("__")) 
+                {
+                    // ----- Declare variables -----
+                    //var entityName = "typeOfType";		var entityNamePlural = entityName + "s";
+                    //var EntityName = "TypeOfType";		var EntityNamePlural = EntityName + "s";
+                    //var DisplayName = "Type Of Type";		var DisplayNamePlural = DisplayName + "s";
+
+                    var entityNamePlural = GetStringIncamelCase(tableName);
+                    var entityName = GetStringInSingle(entityNamePlural);
+					
+                    var EntityNamePlural = tableName;
+                    var EntityName = GetStringInSingle(EntityNamePlural);
+					
+                    var DisplayNamePlural = EntityNamePlural;
+                    var DisplayName = EntityName;
+
+                    // Column Names
+					//var PrimaryKeyName = GetPrimaryKeyName(schemaName, tableName, metaDataTable);
+					//if(string.IsNullOrEmpty(PrimaryKeyName)) PrimaryKeyName = EntityName + "Id";
+					//var primaryKeyName = GetStringIncamelCase(PrimaryKeyName);
+                    var columnNames = GetColumnNames(schemaName, tableName, metaDataTable);
+                    var mainColumnNames = GetMainColumnNames(schemaName, tableName, metaDataTable);
+                    var mainColumnNamesIncamelCase = ConvertTocamelCase(mainColumnNames);
+                    var mainColumnNamesWithTypes = GetMainColumnNamesWithTypes(schemaName, tableName, metaDataTable);
+                    var mainColumnNamesWithExtProperties = GetMainColumnNamesWithExtProperties(schemaName, tableName, metaDataTable);
+
+                    string pkType = GetPKType(schemaName, tableName, metaDataTable);
+
+                    // Dropdown / Foreign Keys
+                    List<string> foreignKeys = GetFKColumnNames(schemaName, tableName, metaDataTable);
+                    var foreignKeysIncamelCase = ConvertTocamelCase(foreignKeys);
+
+                    // Listbox / ManyToMany Relationships
+                    List<string> manayToManyTableNameList = GetManyToManyTableNames(tableName);
+                    var manayToManyTableNameListIncamelCase = ConvertTocamelCase(manayToManyTableNameList);
+
+					// #region Validations
+					// Add Required columns to list
+					foreach (var requiredColumn in GetRequiredColumns(schemaName, tableName, metaDataTable))
+					{
+						requiredColumns.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(requiredColumn)));
+					}
+
+					// Add Extended Properties to list
+					Dictionary<string, JToken> extPropertiesDictionary = new Dictionary<string, JToken>();
+					tableWithColumnExtProperties.Add(tableName, extPropertiesDictionary);
+					Dictionary<string, string> extProperties = GetMainColumnNamesWithExtProperties(schemaName, tableName, metaDataTable);
+					foreach (KeyValuePair<string, string> extProperty in extProperties)
+					{
+						JToken extPropertyJson = ((JObject)JsonConvert.DeserializeObject(extProperty.Value))["validations"][0];
+						extPropertiesDictionary.Add(extProperty.Key, extPropertyJson);
+					}
+                 
+					// Add columns with Types to list
+					var columnTypes = GetMainColumnNamesWithTypes(schemaName, tableName, metaDataTable);
+					foreach (var columnType in columnTypes)
+					{
+						// If current property = [datatype], add to [datatype]Properies dictionary
+						switch (columnType.Value)
+						{
+							case "int":
+								intProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+								break;
+							case "bigint":
+								bigIntProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+								break;
+							case "smallint":
+								smallIntProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+								break;
+							case "datetime":
+								datetimeProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));	
+								break;
+							case "bit":
+								bitProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+								break;
+							case "uniqueIdentifier":
+								guidProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+								break;
+							case "nchar":
+							case "nvarchar":
+							case "char":
+							case"varchar":
+							case "text":
+							case"ntext":							
+								if (columnType.Key.IndexOf("email", StringComparison.OrdinalIgnoreCase) >= 0)
+								{
+									emailProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+								}
+								if (columnType.Key.IndexOf("website", StringComparison.OrdinalIgnoreCase) >= 0)
+								{
+									websiteProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+								}
+								if (columnType.Key.IndexOf("phone", StringComparison.OrdinalIgnoreCase) >= 0)
+								{
+									phoneProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+								}
+								break;
+						}
+					}
+
+					// Add column lengths to list
+					tableWithColumnLengths.Add(tableName, GetMainColumnNamesWithLengths(schemaName, tableName, metaDataTable));
+					// #endregion
+
+#><form name="form" novalidate>
+<!-- 1. Buttons -->
+            <div>
+
+                <!-- 1.1. Back button -->
+                <button id="<#= entityName #>BackButton" class="infoButton"
+                        data-ng-click="vm.goBack()">
+                    <i class="fa fa-arrow-left"></i>Back
+                </button>
+
+                <!-- 1.2. Cancel button -->
+                <button id="<#= entityName #>CancelButton" class="infoButton"
+                        data-ng-click="vm.cancel()"
+                        data-ng-disabled="!vm.canSave">
+                    <i class="fa fa-undo"></i>Cancel
+                </button>
+
+                <!-- 1.3. Save button -->
+                <button id="<#= entityName #>SaveButton" class="infoButton"
+                        data-ng-click="vm.save(form)"
+                        data-ng-disabled="!vm.canSave">
+                    <i class="fa fa-save"></i>Save
+                </button>
+
+                <!-- 1.4. Delete button -->
+                <button id="<#= entityName #>DeleteButton" class="dangerButton" 
+                        data-ng-click="vm.delete<#= EntityName #>()">
+                    <i class="fa fa-trash-o"></i>Delete
+                </button>
+
+                <!-- 1.5. Has changes * -->
+                <span data-ng-show="vm.hasChanges"
+                      class="dissolve-animation ng-hide">
+                    <i class="fa fa-asterisk fa-asterisk-large"></i>
+                </span>
+            </div>
+
+			<!-- 2. Content/main area -->
+            <div class="widget wlightblue">
+                
+				<!-- 2.1. Panel header -->
+				<div data-dna-widget-header title="Edit {{vm.<#= entityName #>.name || 'New <#= DisplayName #>'}}"></div>
+                
+				<!-- 2.2. Panel form -->
+				<div class="widget-content user">
+
+					<!-- 2.2.1. Main form contains many form groups -->
+                        <#if(mainColumnNames.Count > 0) {
+                        for (int i = 0; i < mainColumnNames.Count; i++)
+                        {#>
+
+						<!-- 2.2.2. One form group foreach property -->
+                    <div class="form-horizontal">
+						<div class="form-group">
+
+                        <#if (mainColumnNamesWithTypes[mainColumnNames[i]] == "bit")
+                            { // Check-box #> 
+                                <!-- 2.2.2.1. Form label -->
+							<label class="col-sm-2 control-label"><#= mainColumnNames[i] #></label>
+
+                            <div class="col-sm-2">
+                                <input id="<#= mainColumnNamesIncamelCase[i] #>CheckBox" type="checkbox"
+                                       class="form-control"
+                                       data-ng-model="vm.<#= entityName #>.<#= mainColumnNamesIncamelCase[i] #>" />
+                            </div>
+                        <#}
+                            else if (mainColumnNamesWithTypes[mainColumnNames[i]] == "date" || mainColumnNamesWithTypes[mainColumnNames[i]] == "datetime")
+                            { // DateTime
+						#>		
+						    <div class="col-sm-2 control-label">Date</div>
+							<div class="col-sm-4">
+								<input id="<#= mainColumnNames[i] #>" name="<#= mainColumnNames[i] #>" class="form-control" type="date" 
+									data-ng-model="vm.<#= entityName #>.<#= mainColumnNamesIncamelCase[i] #>"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-4">
+								<div class="error-messages" data-ng-if="submitted && vm.interacted(form.<#= mainColumnNames[i] #>)"
+										data-ng-messages="form.date.$error" ng-messages-include="app/ngMessages.html">
+								</div>
+							</div>
+						</div>
+					</div>
+							<!--<div class="dpt-datepicker">
+                                <p class="dpt-input-group">
+                                    <input id="<#= mainColumnNames[i] #>DatePicker"
+                                           type="text"
+                                           class="form-control"
+                                           datepicker-popup="{{vm.datePickerConfig.format}}"
+                                           data-ng-model="vm.<#= entityName #>.<#= mainColumnNamesIncamelCase[i] #>"
+                                           is-open="vm.datePickerConfig.opened"
+                                           max-date="'2015-06-22'"
+                                           datepicker-options="vm.datePickerConfig.dateOptions"
+                                           date-disabled="vm.datePickerConfig.disabled(date, mode)"
+                                           ng-required="true"
+                                           close-text="Close" />
+                                    <span class="dpt-input-group-btn">
+                                        <button id="<#= entityName #><#= GetStringInPascalCase(mainColumnNamesIncamelCase[i]) #>DatePickerButton" type="button"
+                                                class="dpt-btn dna_btn-default"
+                                                data-ng-click="vm.datePickerConfig.open($event)">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </p>
+                            </div>-->
+                        <#}
+                            else
+                            { // Text
+						#><!-- 2.2.2.1. Form label -->
+							<label for="<#= mainColumnNames[i] #>"
+                                   class="col-sm-2 control-label"><#= mainColumnNames[i] #></label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-4">
+                                <input id="<#= mainColumnNames[i] #>TextBox"
+									   name="<#= mainColumnNames[i] #>TextBox"
+                                       placeholder="<#= mainColumnNames[i] #>"
+                                       class="form-control"
+                                       data-ng-model="vm.<#= entityName #>.<#= mainColumnNamesIncamelCase[i] #>" />
+                            </div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-4">
+								<div class="error-messages" data-ng-show="submitted && vm.interacted(form.<#= mainColumnNames[i] #>TextBox)" 
+									data-ng-messages="form.<#= mainColumnNames[i] #>TextBox.$error" data-ng-messages-include="app/ngMessages.html">
+								</div>
+							</div>
+						</div>
+					</div>
+                        <#}#>
+                    <#}
+                    }#>
+
+					<#if(foreignKeys.Count > 0) {
+                        for (int i = 0; i < foreignKeys.Count; i++)
+                        {
+                            string navProperty = foreignKeys[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                            string navPropertyIncamelCase = foreignKeysIncamelCase[i].Replace("ID", string.Empty).Replace("Id", string.Empty);#>
+
+						<!-- 2.2.2. One form group foreach property -->
+					<div class="form-horizontal">
+						<div class="form-group">
+
+							<!-- 2.2.2.1. Form label -->
+							<label for="<#= navProperty #>" class="col-sm-2 control-label"><#= navProperty #></label>
+							<div class="col-sm-4">
+                               
+								<!-- 2.2.2.1. Form input -->
+								<select id="<#= navProperty #>" data-ng-options="t.<#= foreignKeysIncamelCase[i] #> as t.name for t in vm.<#= navPropertyIncamelCase + "s" #>"
+									data-ng-model="vm.selected<#= navProperty #>" class="form-control" data-z-validate>
+                                </select>
+							</div>
+						</div>
+					</div>
+                    <#}
+                    }#>
+<#if(manayToManyTableNameList.Count > 0) {
+                        for (int i = 0; i < manayToManyTableNameList.Count; i++)
+                        {
+                            string tableMMName = manayToManyTableNameList[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                            string tableMMNameIncamelCase = manayToManyTableNameListIncamelCase[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                    var tableMMNameUpperCaseInSingle = GetStringInSingle(tableMMName);
+                    var tableMMNameInSingle = GetStringInSingle(tableMMNameIncamelCase);
+     var mainMMColumnNames = GetMainColumnNames(schemaName, tableName, metaDataTable);
+                    var mainMMColumnNamesIncamelCase = ConvertTocamelCase(mainColumnNames);
+                    var mainMMColumnNamesWithTypes = GetMainColumnNamesWithTypes(schemaName, tableName, metaDataTable);
+                            string serviceName = entityName + tableMMNameUpperCaseInSingle+"ListService."+tableMMNameInSingle;
+
+#>
+
+
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+							<!-- 2.2.2.1. Form label -->
+							<div class="col-md-12">
+							<label for="<#= tableMMName #>" class="col-sm-2 control-label"><#= tableMMName #></label>       
+					<!-- 2. Content/main area -->
+                    <div class="widget wlightblue col-md-12">
+
+						<!-- 2.1. Panel header -->
+                        <div data-dna-widget-header title={{vm.<#= serviceName #>.title}} 
+                             subtitle="{{vm.<#= serviceName  #>FilteredCountServer}} / {{vm.<#= serviceName#>CountServer}}"
+                             right-text="Page {{vm.<#= serviceName #>.paging.currentPage}} of {{vm.<#= serviceName #>.paging.pageCountServer}}"
+                             allow-collapse="true"></div>
+						<!-- 2.2.Panel list/grid -->
+                        <div class="widget-content">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-condensed table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th data-ng-repeat="thead in vm.<#= serviceName  #>.theads">
+                                                <a data-ng-click="vm.<#= serviceName #>.setSortServer(thead)" href="">{{thead}}</a>
+                                                <span>
+                                                    <!-- Change DisplayNames to FieldNames: lowercase first letter then remove spaces -->
+                                                    <span data-ng-if="vm.<#= serviceName #>.sortingServer.orderBy ==
+                                                      (thead.charAt(0).toLowerCase() + thead.slice(1)).replace(' ','')">
+                                                        <i class="fa fa-caret-down" style="color: #00C0F7;"
+                                                           data-ng-show="vm.<#= serviceName #>.sortingServer.orderDesc == ''" ></i>
+                                                        <i class="fa fa-caret-up" style="color: #00C0F7;"
+                                                           data-ng-show="vm.<#= serviceName #>.sortingServer.orderDesc == 'desc'" ></i>
+                                                    </span>
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-ng-repeat="<#= tableMMNameInSingle #> in vm.<#= tableMMNameIncamelCase #>ServerFilter">
+                                            <!-- // ADD TABLE DATA HERE with approriate data type and control -->
+<# foreach (string columnName in mainMMColumnNamesIncamelCase)
+{#>
+                                            <td>{{<#= tableMMNameInSingle #>.<#= columnName #>}}</td>
+<#}#>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+						<!-- 2.3. Panel pagination -->
+                        <div class="widget-foot">
+                            <div class="clearfix"></div>
+                                <pagination class="pagination-sm"
+                                        total-items="vm.<#= serviceName #>FilteredCountServer"
+										items-per-page="vm.<#= serviceName #>.paging.pageSize"
+                                        max-size="vm.<#= serviceName #>.paging.maxPagesToShow"
+                                        data-ng-model="vm.<#= serviceName #>.paging.currentPageServer"
+										data-ng-change="vm.<#= serviceName #>.pageChangedServer()"
+										boundary-links="true"
+										previous-text="Prev"
+										next-text="Next"
+										first-text="First"
+										last-text="Last"></pagination>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+						</div>       
+ <#}
+					}#>          
+        </div>
+    </div>
+</form>
+
+<# 
+                    SaveOutput(entityName, entityName + "Item.html");
+                }
+            }
+        }
+    }
+#>

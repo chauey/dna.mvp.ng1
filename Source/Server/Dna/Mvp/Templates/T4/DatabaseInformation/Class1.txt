@@ -1,0 +1,420 @@
+﻿
+ 
+
+
+Class Dna.Mvp.Data.Entities.Core.BaseEntity
+
+Class Dna.Mvp.Data.Entities.Utilities.PasswordManagment
+
+Class Dna.Mvp.Data.Entities.Seeding.Seed
+
+Class Dna.Mvp.Data.Entities.Migrations.RemoveCreatedByRelationshipToUsersTable
+
+Class Dna.Mvp.Data.Entities.Migrations.AddClientTable
+
+Class Dna.Mvp.Data.Entities.Migrations.ChangeAuditLogTableName
+
+Class Dna.Mvp.Data.Entities.Migrations.ChangeStringLengthOfAllowedOrigin
+
+Class Dna.Mvp.Data.Entities.Migrations.update_some_table
+
+Class Dna.Mvp.Data.Entities.Migrations.Update_Schema_CustomerUserGroupRole
+
+Class Dna.Mvp.Data.Entities.Migrations.AddManyToManyForUsers_Customers
+
+Class Dna.Mvp.Data.Entities.Migrations.Added_TableRelationships
+
+Class Dna.Mvp.Data.Entities.Migrations._20150303A_Initialization
+
+Class Dna.Mvp.Data.Entities.Migrations.Configuration
+
+Class Dna.Mvp.Data.Entities.Migrations.StripeTables
+
+Class Dna.Mvp.Data.Entities.StripeEntity
+	Property StripeID(string, Required, MaxLength, 50)
+	Property CreatedDate(System.DateTime?)
+	Property UpdatedDate(System.DateTime?)
+	Property Metadata(System.Collections.Generic.IDictionary<string,object>, NotMapped)
+
+Class Dna.Mvp.Data.Entities.GroupRole
+	Property Id(System.Guid)
+	Property GroupId(System.Guid)
+	Property AspNetRoleId(string, Required, StringLength, 128)
+	Property AspNetRole(Dna.Mvp.Data.Entities.AspNetRole)
+	Property Group(Dna.Mvp.Data.Entities.Group)
+
+Class Dna.Mvp.Data.Entities.User
+	Property StatusID(byte)
+	Property CreatedDate(System.DateTime)
+	Property UpdatedDate(System.DateTime?)
+	Property CreateBy(System.Guid)
+	Property UpdateBy(System.Guid?)
+	Property FirstName(string)
+	Property MiddleName(string)
+	Property LastName(string)
+	Property Company(string)
+	Property Department(string)
+	Property JobTitle(string)
+	Property WorkNumber(string)
+	Property WorkFaxNumber(string)
+	Property WorkAddress(string)
+	Property IM(string)
+	Property Email(string)
+	Property MobileNumber(string)
+	Property WebPage(string)
+	Property OfficeLocation(string)
+	Property HomeNumber(string)
+	Property HomeAddress(string)
+	Property OtherAddress(string)
+	Property PagerNumber(string)
+	Property CarNumber(string)
+	Property HomeFax(string)
+	Property CompanyNumber(string)
+	Property Work2Number(string)
+	Property Home2Number(string)
+	Property RadioNumber(string)
+	Property IM2(string)
+	Property IM3(string)
+	Property Email2(string)
+	Property Email3(string)
+	Property Assistant(string)
+	Property AssistantNumber(string)
+	Property Manager(string)
+	Property GovtID(string)
+	Property Account(string)
+	Property Birthday(System.DateTime)
+	Property Anniversary(string)
+	Property Spouse(string)
+	Property Children(string)
+	Property IUserID(int, DatabaseGenerated, DatabaseGeneratedOption.Identity)
+	Property PhotoUrl(string)
+	Property PledgeAmount(int?)
+	Property NewsLetterEmail(string)
+	Property OtherInfo(string)
+	Property CustomerId(string, StringLength, 128)
+	Property Customers(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.Customer>)
+	Property Id(string, Key)
+	Property AspNetUser(Dna.Mvp.Data.Entities.AspNetUser)
+	Property Customer(Dna.Mvp.Data.Entities.Customer)
+	Property GroupOwners(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.GroupOwner>)
+	Property GroupUsers(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.GroupUser>)
+
+Class Dna.Mvp.Data.Entities.TableRelationship
+	Property Id(System.Guid, Key)
+	Property Table1Name(string, Required)
+	Property Table2Name(string, Required)
+
+Class Dna.Mvp.Data.Entities.Subscription
+	Property Id(System.Guid)
+	Property PlanId(System.Guid?)
+	Property Expiration(System.DateTime?)
+	Property Name(string, StringLength, 255)
+	Property CustomerSubscriptions(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.CustomerSubscription>)
+	Property SubscriptionGroups(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.SubscriptionGroup>)
+	Property SubscriptionPlan(Dna.Mvp.Data.Entities.SubscriptionPlan)
+
+Class Dna.Mvp.Data.Entities.AspNetUser
+	Property Id(string)
+	Property Email(string, StringLength, 256)
+	Property EmailConfirmed(bool)
+	Property PasswordHash(string)
+	Property SecurityStamp(string)
+	Property PhoneNumber(string)
+	Property PhoneNumberConfirmed(bool)
+	Property TwoFactorEnabled(bool)
+	Property LockoutEndDateUtc(System.DateTime?)
+	Property LockoutEnabled(bool)
+	Property AccessFailedCount(int)
+	Property UserName(string, Required, StringLength, 256)
+	Property AspNetUserClaims(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.AspNetUserClaim>)
+	Property AspNetUserLogins(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.AspNetUserLogin>)
+	Property User(Dna.Mvp.Data.Entities.User)
+	Property AspNetRoles(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.AspNetRole>)
+
+Class Dna.Mvp.Data.Entities.SubscriptionPlan
+	Property Id(System.Guid)
+	Property Name(string, Required, StringLength, 255)
+	Property MaxGroups(int?)
+	Property MaxUsers(int?)
+	Property MaxExample(int?)
+	Property Price(decimal?)
+	Property TrialPeriod(int?)
+	Property Subscriptions(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.Subscription>)
+
+Class Dna.Mvp.Data.Entities.TypeOfType
+	Property TypeOfTypeID(System.Guid)
+	Property Abbreviation(string)
+	Property Name(string, Required)
+	Property Key(string)
+	Property Order(int?)
+	Property ParentID(System.Guid?)
+	Property TypeID(System.Guid?)
+	Property Value(string)
+	Property CreatedDate(System.DateTime)
+	Property UpdatedDate(System.DateTime?)
+	Property CreateBy(System.Guid?)
+	Property UpdateBy(System.Guid?)
+	Property TypeOfTypes1(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.TypeOfType>)
+	Property TypeOfType1(Dna.Mvp.Data.Entities.TypeOfType)
+	Property TypeOfTypes11(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.TypeOfType>)
+	Property TypeOfType2(Dna.Mvp.Data.Entities.TypeOfType)
+
+Class Dna.Mvp.Data.Entities.Client
+	Property Id(string)
+	Property Secret(string, Required)
+	Property Name(string, Required, StringLength, 100)
+	Property ApplicationType(int)
+	Property Active(bool)
+	Property RefreshTokenLifeTime(int)
+	Property AllowedOrigin(string, StringLength, 200)
+
+Class Dna.Mvp.Data.Entities.SubscriptionGroup
+	Property Id(System.Guid)
+	Property SubscriptionId(System.Guid)
+	Property GroupId(System.Guid)
+	Property Group(Dna.Mvp.Data.Entities.Group)
+	Property Subscription(Dna.Mvp.Data.Entities.Subscription)
+
+Class Dna.Mvp.Data.Entities.CustomerRole
+	Property CustomerRoleId(System.Guid)
+	Property AspNetRoleId(string, Required, StringLength, 128)
+	Property CustomerId(string, Required, StringLength, 128)
+	Property AspNetRole(Dna.Mvp.Data.Entities.AspNetRole)
+	Property Customer(Dna.Mvp.Data.Entities.Customer)
+
+Class Dna.Mvp.Data.Entities.Attachment
+	Property AttachmentID(System.Guid)
+	Property FileName(string, Required, StringLength, 100)
+	Property FilePath(string, Required)
+	Property FileContent(byte[], Required)
+	Property IsActive(bool)
+	Property DisplayOrder(int?)
+	Property CreatedDate(System.DateTime)
+	Property CreateBy(System.Guid)
+	Property UpdatedDate(System.DateTime?)
+	Property UpdateBy(System.Guid?)
+
+Class Dna.Mvp.Data.Entities.AccessControlListItem
+	Property Id(int, DatabaseGenerated, DatabaseGeneratedOption.Identity)
+	Property DomainObjectId(int?)
+	Property RoleId(string, Required, StringLength, 128)
+	Property PermissionValue(int)
+	Property IsActive(bool)
+	Property CreatedDate(System.DateTime)
+	Property CreatedBy(string, Required, StringLength, 255)
+	Property UpdatedDate(System.DateTime?)
+	Property UpdatedBy(string, StringLength, 255)
+	Property Role(Dna.Mvp.Data.Entities.AspNetRole)
+	Property DomainObject(Dna.Mvp.Data.Entities.DomainObject)
+
+Class Dna.Mvp.Data.Entities.ELMAH_Error
+	Property ErrorId(System.Guid, Key)
+	Property Application(string, Required, StringLength, 60)
+	Property Host(string, Required, StringLength, 50)
+	Property Type(string, Required, StringLength, 100)
+	Property Source(string, Required, StringLength, 60)
+	Property Message(string, Required, StringLength, 500)
+	Property User(string, Required, StringLength, 50)
+	Property StatusCode(int)
+	Property TimeUtc(System.DateTime)
+	Property Sequence(int, DatabaseGenerated, DatabaseGeneratedOption.Identity)
+	Property AllXml(string, Required)
+
+Class Dna.Mvp.Data.Entities.MvpContext
+	Property AllDataTypes(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.AllDataType>)
+	Property AspNetRoles(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.AspNetRole>)
+	Property AspNetUserClaims(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.AspNetUserClaim>)
+	Property AspNetUserLogins(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.AspNetUserLogin>)
+	Property AspNetUsers(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.AspNetUser>)
+	Property Attachments(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.Attachment>)
+	Property AuditLogs(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.AuditLog>)
+	Property Clients(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.Client>)
+	Property ELMAH_Error(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.ELMAH_Error>)
+	Property TypeOfTypes(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.TypeOfType>)
+	Property Users(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.User>)
+	Property Validations(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.Validation>)
+	Property AccessControlListItems(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.AccessControlListItem>)
+	Property DomainObjects(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.DomainObject>)
+	Property Permissions(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.Permission>)
+	Property TableRelationships(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.TableRelationship>)
+	Property Cards(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.Card>)
+	Property Customers(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.Customer>)
+	Property Groups(System.Data.Entity.DbSet<Dna.Mvp.Data.Entities.Group>)
+
+Class Dna.Mvp.Data.Entities.Card
+	Property ID(System.Guid)
+	Property StripeID(string, Required, StringLength, 50)
+	Property StripeToken(string, Required, StringLength, 50)
+	Property Fingerprint(string, StringLength, 50)
+	Property Last4(string, StringLength, 4)
+	Property Brand(string, StringLength, 50)
+	Property Funding(string, StringLength, 10)
+	Property IsValid(bool)
+	Property CustomerID(string, StringLength, 128)
+	Property Customer(Dna.Mvp.Data.Entities.Customer)
+
+Class Dna.Mvp.Data.Entities.AspNetRole
+	Property Id(string)
+	Property Name(string, Required, StringLength, 256)
+	Property AccessControlListItems(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.AccessControlListItem>)
+	Property CustomerRoles(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.CustomerRole>)
+	Property GroupRoles(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.GroupRole>)
+	Property AspNetUsers(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.AspNetUser>)
+	Property Customers(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.Customer>)
+	Property Groups(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.Group>)
+
+Class Dna.Mvp.Data.Entities.AuditLog
+	Property Id(int, DatabaseGenerated, DatabaseGeneratedOption.Identity)
+	Property Who(System.Guid)
+	Property What(string, Required, StringLength, 50)
+	Property When(System.DateTime)
+	Property TableName(string, Required, StringLength, 50)
+	Property TableIdValue(string, StringLength, 50)
+	Property OldData(string, TypeName = "text")
+	Property NewData(string, TypeName = "text")
+
+Class Dna.Mvp.Data.Entities.AspNetUserLogin
+	Property LoginProvider(string, Key, Order = 0)
+	Property ProviderKey(string, Key, Order = 1)
+	Property UserId(string, Key, Order = 2)
+	Property AspNetUser(Dna.Mvp.Data.Entities.AspNetUser)
+
+Class Dna.Mvp.Data.Entities.Validation
+	Property ValidationID(System.Guid)
+	Property Integer(int)
+	Property String(string)
+	Property Date(System.DateTime?, TypeName = "date")
+	Property BeforeDate(System.DateTime?)
+	Property AfterDate(System.DateTime?)
+	Property Age(int?, Range, 0, 150, ErrorMessage = "Please enter valid age.")
+	Property CreditCard(decimal?, TypeName = "numeric")
+	Property Email(string, StringLength, 100)
+	Property Phone(string, StringLength, 15)
+	Property URL(string)
+	Property Zip(string, StringLength, 5)
+	Property StartsWithDPT(string, StringLength, 100)
+	Property ContainsDPT(string, StringLength, 100)
+
+Class Dna.Mvp.Data.Entities.Permission
+	Property Id(int, DatabaseGenerated, DatabaseGeneratedOption.Identity)
+	Property Value(int)
+	Property Name(string, Required, StringLength, 50)
+	Property Description(string, StringLength, 255)
+	Property IsActive(bool)
+	Property CreatedDate(System.DateTime?)
+	Property CreatedBy(string, StringLength, 255)
+	Property UpdatedDate(System.DateTime?)
+	Property UpdatedBy(string, StringLength, 255)
+
+Class Dna.Mvp.Data.Entities.GroupOwner
+	Property Id(System.Guid)
+	Property GroupId(System.Guid)
+	Property OwnerId(string, Required, StringLength, 128)
+	Property Group(Dna.Mvp.Data.Entities.Group)
+	Property User(Dna.Mvp.Data.Entities.User)
+
+Class Dna.Mvp.Data.Entities.Customer
+	Property Id(string, Key)
+	Property StripeId(string, Required, StringLength, 50)
+	Property Deliquent(bool)
+	Property DefaultCardId(System.Guid?)
+	Property FirstName(string, StringLength, 35)
+	Property LastName(string, StringLength, 35)
+	Property Cards(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.Card>)
+	Property Users(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.User>)
+	Property HasPaymentDetails(bool, NotMapped)
+	Property FullName(string, NotMapped)
+
+Class Dna.Mvp.Data.Entities.DomainObject
+	Property Id(int, DatabaseGenerated, DatabaseGeneratedOption.Identity)
+	Property Name(string, StringLength, 50)
+	Property Description(string)
+	Property IsActive(bool?)
+	Property CreatedDate(System.DateTime?)
+	Property CreatedBy(string, StringLength, 255)
+	Property UpdatedDate(System.DateTime?)
+	Property UpdatedBy(string, StringLength, 255)
+	Property AccessControlListItems(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.AccessControlListItem>)
+
+Class Dna.Mvp.Data.Entities.Group
+	Property Id(System.Guid)
+	Property PayerId(System.Guid?)
+	Property Name(string, Required, StringLength, 255)
+	Property CustomerGroups(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.CustomerGroup>)
+	Property GroupOwners(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.GroupOwner>)
+	Property GroupRoles(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.GroupRole>)
+	Property GroupUsers(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.GroupUser>)
+	Property SubscriptionGroups(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.SubscriptionGroup>)
+	Property AspNetRoles(System.Collections.Generic.ICollection<Dna.Mvp.Data.Entities.AspNetRole>)
+
+Class Dna.Mvp.Data.Entities.AllDataType
+	Property AllDataTypeID(System.Guid, DatabaseGenerated, DatabaseGeneratedOption.None)
+	Property BigInt(long?)
+	Property Binary(byte[], MaxLength, 50)
+	Property Bit(bool?)
+	Property Char(string, StringLength, 10)
+	Property Date(System.DateTime?, TypeName = "date")
+	Property DateTime(System.DateTime?)
+	Property DateTime2(System.DateTime?, TypeName = "datetime2")
+	Property DateTimeOffset(System.DateTimeOffset?)
+	Property Decimal(decimal?)
+	Property Float(double?)
+	Property Geography(System.Data.Entity.Spatial.DbGeography)
+	Property Geometry(System.Data.Entity.Spatial.DbGeometry)
+	Property Image(byte[], TypeName = "image")
+	Property Int(int?)
+	Property Money(decimal?, TypeName = "money")
+	Property NChar(string, StringLength, 10)
+	Property NText(string, TypeName = "ntext")
+	Property Numeric(decimal?, TypeName = "numeric")
+	Property NVarChar(string, StringLength, 50)
+	Property NVarCharMax(string)
+	Property Real(float?)
+	Property SmallDateTime(System.DateTime?, TypeName = "smalldatetime")
+	Property SmallInt(short?)
+	Property SmallMoney(decimal?, TypeName = "smallmoney")
+	Property Text(string, TypeName = "text")
+	Property Time(System.TimeSpan?)
+	Property TimeStamp(byte[], TypeName = "timestamp", DatabaseGenerated, DatabaseGeneratedOption.Computed, MaxLength, 8)
+	Property TinyInt(byte?)
+	Property UniqueIdentifier(System.Guid?)
+	Property VarBinary(byte[], MaxLength, 50)
+	Property VarBinaryMax(byte[])
+	Property VarChar(string, StringLength, 50)
+	Property VarCharMax(string)
+	Property Xml(string, TypeName = "xml")
+	Property ZHierarchyID(string, StringLength, 50)
+	Property ZSql_Variant(string, StringLength, 50)
+
+Class Dna.Mvp.Data.Entities.AspNetUserClaim
+	Property Id(int)
+	Property UserId(string, Required, StringLength, 128)
+	Property ClaimType(string)
+	Property ClaimValue(string)
+	Property AspNetUser(Dna.Mvp.Data.Entities.AspNetUser)
+
+Class Dna.Mvp.Data.Entities.CustomerGroup
+	Property Id(System.Guid)
+	Property CustomerId(string, StringLength, 128)
+	Property GroupId(System.Guid)
+	Property Customer(Dna.Mvp.Data.Entities.Customer)
+	Property Group(Dna.Mvp.Data.Entities.Group)
+
+Class Dna.Mvp.Data.Entities.CustomerSubscription
+	Property Id(System.Guid)
+	Property CustomerId(string, StringLength, 128)
+	Property SubscriptionId(System.Guid)
+	Property Discount(string, StringLength, 50)
+	Property TaxPercent(int?)
+	Property StartDate(System.DateTime?)
+	Property EndDate(System.DateTime?)
+	Property Customer(Dna.Mvp.Data.Entities.Customer)
+	Property Subscription(Dna.Mvp.Data.Entities.Subscription)
+
+Class Dna.Mvp.Data.Entities.GroupUser
+	Property Id(System.Guid)
+	Property GroupId(System.Guid)
+	Property UserId(string, Required, StringLength, 128)
+	Property Group(Dna.Mvp.Data.Entities.Group)
+	Property User(Dna.Mvp.Data.Entities.User)
+

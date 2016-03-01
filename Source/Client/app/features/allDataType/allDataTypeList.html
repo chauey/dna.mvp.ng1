@@ -1,0 +1,127 @@
+<div class="row">
+    <div class="form-search">
+        <!--<input class="input-sm search-query"
+           data-ng-model="vm.allDataTypeSearch"
+           data-ng-keyup="vm.search($event)"
+           placeholder="live search...">-->
+        <div class="btn-group pull-right">
+            <a class="infoButton"
+               data-ng-click="vm.refresh()">
+                <i class="fa fa-refresh"></i><span> Refresh</span>
+            </a>
+            <a class="infoButton" href="#/allDataType/new">
+                <i class="fa fa-plus"></i> Add AllDataType
+            </a>
+        </div>
+    </div>
+
+    <br /> <br /> <br />
+
+    <div class="col-md-12">
+        <div class="portlet box blue-madison">
+
+            <!-- Portlet Title -->
+            <div class="portlet-title">
+                <div class="caption">
+                    <div>{{vm.title}} ({{vm.allDataTypeFilteredCountServer}} / {{vm.allDataTypeCountServer}})</div>
+                </div>
+                <div class="tools">
+                    <a href="" class="collapse"></a>
+                    <!--<div>Page {{vm.paging.currentPage}} of {{vm.paging.pageCount}}</div>-->
+                </div>
+            </div>
+
+            <!-- Portlet Body -->
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                <th data-ng-repeat="thead in vm.theads">
+                                    <a data-ng-click="vm.setSortServer(thead)" href="" style="color: #52b9e9">{{thead}}</a>
+                                    <span>
+                                        <span data-ng-if="vm.sortingServer.orderBy ==
+                                                    (thead.charAt(0).toLowerCase() + thead.slice(1)).replace(' ','')">
+                                            <i class="fa fa-caret-down" data-ng-show="vm.sortingServer.orderDesc == ''" style="color: #52b9e9"></i>
+                                            <i class="fa fa-caret-up" data-ng-show="vm.sortingServer.orderDesc == 'desc'" style="color: #52b9e9"></i>
+                                        </span>
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="a in vm.allDataTypesServerFilter | orderBy:vm.sortingServer.orderBy:vm.sortingServer.orderDesc"
+                                data-ng-click="vm.goToAllDataType(a)"
+                                title="Go to AllDataType details"
+                                style="cursor: pointer">
+                                <!-- // TODO: DONE - ADD TABLE DATA HERE -->
+                                <td>{{a.bigInt}}</td>
+                                <td>{{a.binary}}</td>
+                                <td>{{a.bit}}</td>
+                                <td>{{a.char}}</td>
+                                <td>{{a.date}}</td>
+                                <td>{{a.dateTime}}</td>
+                                <td>{{a.dateTime2}}</td>
+                                <td>{{a.dateTimeOffset}}</td>
+                                <td>{{a.decimal}}</td>
+                                <td>{{a.float}}</td>
+                                <td>{{a.geography}}</td>
+                                <td>{{a.geometry}}</td>
+                                <td>{{a.image}}</td>
+                                <td>{{a.int}}</td>
+                                <td>{{a.money}}</td>
+                                <td>{{a.nChar}}</td>
+                                <td>{{a.nText}}</td>
+                                <td>{{a.numeric}}</td>
+                                <td>{{a.nVarChar}}</td>
+                                <td>{{a.nVarCharMax}}</td>
+                                <td>{{a.real}}</td>
+                                <td>{{a.smallDateTime}}</td>
+                                <td>{{a.smallInt}}</td>
+                                <td>{{a.smallMoney}}</td>
+                                <td>{{a.text}}</td>
+                                <td>{{a.time}}</td>
+                                <td>{{a.timeStamp}}</td>
+                                <td>{{a.tinyInt}}</td>
+                                <td>{{a.uniqueIdentifier}}</td>
+                                <td>{{a.varBinary}}</td>
+                                <td>{{a.varBinaryMax}}</td>
+                                <td>{{a.varChar}}</td>
+                                <td>{{a.varCharMax}}</td>
+                                <td>{{a.xml}}</td>
+                                <td>
+                                    td
+                                    {{a.zSql_Variant}}
+                                    <!--<td>{</td>
+
+            td
+            <!--<td>{
+            {t.createdDate | date: 'MM/dd/yyyy hh:mm:ss.sss a'}}</td>-->
+                            </tr>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="widget-foot">
+            <div class="clearfix"></div>
+            <pagination boundary-links="true"
+                        ng-change="vm.pageChanged(page)"
+                        total-items="vm.allDataTypeFilteredCount"
+                        items-per-page="vm.paging.pageSize"
+                        ng-model="vm.paging.currentPage"
+                        max-size="vm.paging.maxPagesToShow"
+                        class="pagination-sm"
+                        previous-text="Prev"
+                        next-text="Next"
+                        first-text="First"
+                        last-text="Last"></pagination>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+</div>
+
+

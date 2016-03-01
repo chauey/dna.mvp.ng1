@@ -1,0 +1,296 @@
+﻿<#@ template debug="true" hostspecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+<#@ output extension=".js" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+if (schemaNames.Count() > 0)
+{
+	foreach (string schemaName in schemaNames)
+	{
+		// Statement
+		List<string> tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+		foreach (string mainTableName in tableNames)
+		{
+             string mainTableNameInSingle =     GetStringInSingle(mainTableName);
+		    string mainTableNameIncamelCase = GetStringIncamelCase(mainTableNameInSingle);
+			if (!string.IsNullOrEmpty(mainTableName) && !mainTableName.StartsWith("webpages_") && !mainTableName.StartsWith("__")) 
+			{
+                // Listbox / ManyToMany Relationships
+                    List<string> manayToManyTableNameList = GetManyToManyTableNames(mainTableName);
+                    var manayToManyTableNameListIncamelCase = ConvertTocamelCase(manayToManyTableNameList);
+
+                    if(manayToManyTableNameList.Count > 0) {
+                        for (int y = 0; y < manayToManyTableNameList.Count; y++)
+                        {
+                             string tableMMName = manayToManyTableNameList[y].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                            string tableMMNameIncamelCase = manayToManyTableNameListIncamelCase[y].Replace("ID", string.Empty).Replace("Id", string.Empty);
+
+      string entityNamePlural = GetStringIncamelCase(tableMMName);
+				string entityName = GetStringInSingle(entityNamePlural);
+					
+				string EntityNamePlural = tableMMName;
+				string EntityName = GetStringInSingle(EntityNamePlural);
+					
+				string DisplayNamePlural = EntityNamePlural;
+				string DisplayName = EntityName;
+			
+				// Column Names
+				var PrimaryKeyName = GetPrimaryKeyName(schemaName, tableMMName, metaDataTable);
+				if(string.IsNullOrEmpty(PrimaryKeyName)) PrimaryKeyName = EntityName + "Id";
+				var primaryKeyName = GetStringIncamelCase(PrimaryKeyName);
+				List<string> columnNames = GetColumnNames(schemaName, tableMMName, metaDataTable);
+				List<string> mainColumnNames = GetMainColumnNames(schemaName, tableMMName, metaDataTable);
+				
+				//
+				string theadsString = string.Empty;
+				string defaultOrderColumnName = string.Empty;
+				int index = 0;
+                foreach (string columnName in mainColumnNames)
+                {
+					if (index == 0) defaultOrderColumnName = GetStringIncamelCase(columnName);
+					if (columnName.ToLower().Contains("name")) defaultOrderColumnName = GetStringIncamelCase(columnName);
+					theadsString += "'" + columnName + "',";
+					index++;
+                }
+				
+				// Remove the last comma
+				if(!string.IsNullOrEmpty(theadsString) && theadsString.EndsWith(","))  theadsString = theadsString.Substring(0, theadsString.LastIndexOf(","));
+          
+#>// 0. IIFE (Immediately-invoked function expression)
+(function () {
+	'use strict';
+
+	var controllerId = '<#=  mainTableNameIncamelCase + EntityNamePlural #>ListService';
+
+	// 1. Add controller to module
+	angular
+		.module('app.features')
+		.service(controllerId, <#=  mainTableNameIncamelCase + EntityNamePlural #>ListService);
+
+	// 2. Inject dependencies
+	<#=  mainTableNameIncamelCase + EntityNamePlural #>ListService.$inject = ['$location', 'common', 'config', 'datacontext'];
+
+	// 3. Define controller
+	function <#=  mainTableNameIncamelCase + EntityNamePlural #>ListService($location, common, config, datacontext) {
+		var that = this;
+		// #region 3.1. Setup variables and functions
+		var getLogFn = common.logger.getLogFn;
+		var log = getLogFn(controllerId);
+		var keyCodes = config.keyCodes;
+
+		// #endregion
+
+		// #region 3.2. Expose public bindable interface
+		// #region Breeze client-side cached
+		this.<#= entityNamePlural #> = [];
+		this.<#= entityName #>Count = 0;
+		this.<#= entityName #>FilteredCount = 0;
+		this.<#= entityName #>Search = '';
+
+		this.title = '<#= DisplayNamePlural #>';
+		this.refresh = refresh;
+		this.search = search;
+
+		this.paging = {
+			currentPage: 1,
+            currentPageServer: 1,
+			maxPagesToShow: 5,
+			pageSize: 15
+		};
+		this.pageChanged = pageChanged;
+		Object.defineProperty(this.paging, 'pageCount', {
+			get: function () {
+				return Math.floor(that.<#= entityName #>FilteredCount / this.paging.pageSize) + 1;
+			}
+		});
+
+		this.setSort = setSort;
+		this.theads = [<#= theadsString #>]; // Table headers
+		this.sorting = {
+			orderBy: '<#= defaultOrderColumnName #>',
+			orderDesc: ''
+		};
+		// #endregion
+
+        // #region server-side remote acess
+        
+        this.<#= entityNamePlural #>Server = [];
+        this.<#= entityNamePlural #>ServerFilter = [];
+        this.<#= entityName #>CountServer = 0;
+        this.<#= entityName #>FilteredCountServer = 0;
+        this.<#= entityName #>ServerSearch = '';
+        this.set<#= EntityNamePlural #>ServerFilter = set<#= EntityNamePlural #>ServerFilter;
+
+        this.refreshServer = refreshServer;
+        this.searchServer = searchServer;
+
+        this.pageChangedServer = pageChangedServer;
+        Object.defineProperty(this.paging, 'pageCountServer', {
+            get: function () {
+                return Math.floor(that.<#= entityName #>FilteredCountServer / that.paging.pageSize) + 1;
+            }
+        });
+
+        this.setSortServer = setSortServer;
+        this.sortingServer = {
+			orderBy: '<#= defaultOrderColumnName #>',
+			orderDesc: ''
+		};
+      
+        // #endregion
+		// #endregion
+        
+        // Populate list
+this.populateList = populateList;
+function populateList(list) {			
+					that.<#= entityNamePlural #> = list;			
+               
+		}
+		// 3.3. Run activate method
+		//activate();
+
+		// #region 3.4. Implement private functions
+		function activate() {
+			common.activateController([get<#= EntityNamePlural #>() 
+                                       ,get<#= EntityNamePlural#>Server()], controllerId)
+				.then(function () { log('Activated <#= DisplayNamePlural #> View.'); });
+		}
+
+		function get<#= EntityNamePlural #>(forceRefresh) {
+			return datacontext.<#= entityName #>.getAll(
+                    forceRefresh,
+                    that.sorting.orderBy,
+                    that.sorting.orderDesc,
+				    that.paging.currentPage,
+                    that.paging.pageSize,
+                    that.<#= entityName #>Search)
+				.then(function (data) {
+					that.<#= entityNamePlural #> = data;
+					
+                    if (!that.<#= entityName #>Count || forceRefresh) {
+						// Only grab the full count once or on refresh
+						get<#= EntityName #>Count();
+					}
+					get<#= EntityName #>FilteredCount();
+					return data;
+				}
+			);
+		}
+
+		function get<#= EntityNamePlural #>Server(forceRefresh) {
+            return datacontext.<#= entityName #>.getAllServer(
+                    forceRefresh,
+                    that.sortingServer.orderBy,
+                    that.sortingServer.orderDesc,
+                    that.paging.currentPageServer,
+                    that.paging.pageSize,
+                    that.<#= entityName #>ServerSearch)
+                .then(function(data) {
+                    that.<#= entityNamePlural #>ServerFilter = data;
+
+                    if (!that.<#= entityName #>FilteredCountServer || forceRefresh) {
+                        get<#= EntityName #>CountServer();
+                    }
+
+                    get<#= EntityName #>FilteredCountServer();
+
+                    return data;
+                });
+        }
+
+		// #region Get Counts
+		function get<#= EntityName #>Count() {
+			return datacontext.<#= entityName #>.getCount().then(function (data) {
+				return that.<#= entityName #>Count = data;
+			});
+		}
+
+		function get<#= EntityName #>FilteredCount() {
+            that.<#= entityName #>FilteredCount = datacontext.<#= entityName #>.getFilteredCount(that.<#= entityName #>Search);
+		}
+
+		function get<#= EntityName #>CountServer() {
+            return datacontext.<#= entityName #>.getCount().then(function (data) {
+                return that.<#= entityName #>CountServer = data;
+            });
+        }
+
+        function get<#= EntityName #>FilteredCountServer() {
+            datacontext.<#= entityName #>.getFilteredCountServer(that.<#= entityName #>ServerSearch)
+                .then(function(count) {
+                    that.<#= entityName #>FilteredCountServer = count;
+                });
+        }
+		// #endregion
+
+		// #region Paging/Sorting/Filtering
+		function pageChanged() {
+			get<#= EntityNamePlural #>();
+		}
+
+		function pageChangedServer() {
+            get<#= EntityNamePlural #>Server();
+        }
+
+		function refresh() { get<#= EntityNamePlural #>(true); }
+		function refreshServer() { get<#= EntityNamePlural #>Server(true); }
+
+		function search($event) {
+			if ($event.keyCode === keyCodes.esc) { that.<#= entityName #>Search = ''; }
+			get<#= EntityNamePlural #>();
+		}
+
+		function searchServer() {
+            return get<#= EntityNamePlural #>Server();
+        }
+
+        function set<#= EntityNamePlural #>ServerFilter(<#= entityName #>) {
+            var textContains = common.textContains;
+            var searchText = that.<#= entityNamePlural #>ServerSearch;
+
+            var isMatch = searchText
+                ? textContains(<#= entityName #>.name, searchText)
+                || textContains(<#= entityName #>.abbreviation, searchText)
+                : true;
+            return isMatch;
+        }
+
+        function setSort(field) {
+            field = common.lowerCaseFirstLetter(field);
+            field = common.replaceSpecialCharacters(field, ' ');
+
+            that.sorting.orderBy = field;
+            if (that.sorting.orderDesc == '') { that.sorting.orderDesc = 'desc'; }
+            else { that.sorting.orderDesc = ''; }
+
+            get<#= EntityNamePlural #>();
+        }
+
+        function setSortServer(field) {
+            field = common.lowerCaseFirstLetter(field);
+            field = common.replaceSpecialCharacters(field, ' ');
+
+            that.sortingServer.orderBy = field;
+            if (that.sortingServer.orderDesc == '') { that.sortingServer.orderDesc = 'desc'; }
+            else { that.sortingServer.orderDesc = ''; }
+
+            return get<#= EntityNamePlural #>Server();
+        }
+		// #endregion
+		// #endregion
+	}
+	// #endregion
+})();
+
+<# 
+				SaveOutput(mainTableNameIncamelCase, mainTableNameIncamelCase + EntityNamePlural + "ListController.js");
+			}
+		}
+	}
+}
+            }
+}
+#>

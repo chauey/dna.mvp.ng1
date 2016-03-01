@@ -1,0 +1,47 @@
+﻿
+<div class="portlet box blue-madison">
+    <div class="portlet-title">
+        <div class="caption">
+            Update Subscription
+        </div>
+    </div>
+    <div class="portlet-body">
+        <!--<div data-ng-show="!vm.authentication.isAuth">
+                You must sign-in first!
+            </div>-->
+        <div class="row">
+            <div class="col-md-12">
+
+                <div data-ng-show="vm.authentication.isAuth" style="padding: 10px;">
+                    <!--<div data-ng-hide="plans.length">No plans</div>-->
+                    <div data-ng-repeat="plan in vm.plans">
+                        <div class="row">
+                            <h3>{{plan.name}} - {{(plan.amount /100).toFixed(2) | currency}}/{{plan.interval}}</h3>
+                            <button class="btn btn-info btn-lg"
+                                    data-ng-disabled="vm.checkCurrentSubscription(plan.id)"
+                                    data-ng-click="vm.subscribe(plan.id)">
+                                Subscribe
+                            </button>
+                        </div>
+
+                        <!--@if (item.IsTrialing() && item.End == null)
+                            {
+                            <p ng-if="plan.isTrialing" ><strong>Free Trial Until @item.TrialEnd.Value.ToString("MMMM dd, yyyy")</strong></p>
+                            }
+                            @if (item.End == null)
+                            {
+                            <p>
+                                <a href="@Url.Action(" cancelsubscription", "Billing" , new {id=item.Id})">Cancel Subscription</a> - @Html.ActionLink("Change Plan", "ChangeSubscription", "Billing")
+                            </p>
+                            }
+                            else
+                            {
+                            <p>Your Subscription will not be renewed after @item.End.Value.ToString("MMMM dd, yyyy")</p>
+                            <p><a href="@Url.Action(" reactivatesubscription")" class="btn btn-primary">Re-Activate Subscription</a></p>
+                            }-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+        <!-- 1. Buttons -->
+<div>
+
+    <!-- 1.1. Back button -->
+    <button id="permissionBackButton" class="infoButton"
+            data-ng-click="vm.goBack()">
+        <i class="fa fa-arrow-left"></i>Back
+    </button>
+
+    <!-- 1.2. Cancel button -->
+    <button id="permissionCancelButton" class="infoButton"
+            data-ng-click="vm.cancel()"
+            data-ng-disabled="!vm.canSave">
+        <i class="fa fa-undo"></i>Cancel
+    </button>
+
+    <!-- 1.3. Save button -->
+    <button id="permissionSaveButton" class="infoButton"
+            acl-permissions
+            domainobjects="Permissions"
+            permissions="Write"
+            data-ng-click="vm.save()"
+            data-ng-disabled="!vm.canSave">
+        <i class="fa fa-save"></i>Save
+    </button>
+
+    <!-- 1.4. Delete button -->
+    <button id="permissionDeleteButton" class="dangerButton"
+            aclpermissions
+            domainobjects="Permissions"
+            permissions="Delete"
+            data-ng-click="vm.deletePermission()">
+        <i class="fa fa-trash-o"></i>Delete
+    </button>
+
+    <!-- 1.5. Has changes * -->
+    <span data-ng-show="vm.hasChanges"
+          class="dissolve-animation data-ng-hide">
+        <i class="fa fa-asterisk fa-asterisk-large"></i>
+    </span>
+</div>
+
+<!-- 2. Content/main area -->
+<div class="widget wlightblue">
+
+    <!-- 2.1. Panel header -->
+    <div data-dna-widget-header title="Edit {{vm.permission.name || 'New Permission'}}"></div>
+
+    <!-- 2.2. Panel form -->
+    <div class="widget-content user">
+
+        <!-- 2.2.1. Main form contains many form groups -->
+        <form class="form-horizontal" role="form" data-ng-submit="vm.submit(form)" novalidate>
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-2">Value*</div>
+                    <div class="col-sm-5">
+                        <input name="value" class="form-control" type="text" data-ng-model="vm.permission.value"
+                               required />
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="error-messages" data-ng-if="submitted && vm.interacted(form.value)" data-ng-messages="form.value.$error">
+                            <div id="requiredMessageForValue" data-ng-message="required">Value is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-2">Name*</div>
+                    <div class="col-sm-5">
+                        <input name="name" class="form-control" type="text" data-ng-model="vm.permission.name"
+                               required />
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="error-messages" data-ng-if="submitted && vm.interacted(form.name)" data-ng-messages="form.name.$error">
+                            <div id="requiredMessageForName" data-ng-message="required">Name is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-2">Description</div>
+                    <div class="col-sm-5">
+                        <input name="description" class="form-control" type="text" data-ng-model="vm.permission.description" />
+                    </div>
+                </div>
+            </div>
+
+            <!--<div class="form-horizontal">
+                <input id="submitButton" class="col-sm-offset-2 infoButton" type="submit" value="Validate" />
+            </div>-->
+
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Remove 15px margin-bottom of first form-group */
+    div.form-horizontal > div.form-group:first-child {
+        margin-bottom: 0 !important;
+    }
+</style>

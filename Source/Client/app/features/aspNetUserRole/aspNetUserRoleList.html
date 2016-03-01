@@ -1,0 +1,296 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2>Server-side remote access</h2>
+        <!-- Filter by relative entity on server-->
+
+        <div class="row">
+            <form class="form-horizontal" role="form">
+                <!-- 2.2.2. One form group foreach property -->
+                <div class="form-group">
+
+                    <!-- 2.2.2.1. Form label -->
+                    <label class="col-sm-1 control-label">User Server:</label>
+                    <div class="col-sm-7">
+
+                        <!-- 2.2.2.1. Form input -->
+                        <select data-ng-options="t.name for t in vm.users" style="width: 100%"
+                                data-ng-change="vm.onUserServerSelectionChange()"
+                                data-ng-model="vm.selectedUserServer" class="form-control" data-z-validate>
+                            <option value="">Select all users</option>
+                        </select>
+
+                    </div>
+                    <!--<a class="infoButton" data-ng-click="vm.addUser()">
+                            <i class="fa fa-plus"></i> Add User
+                    </a>-->
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <form class="form-horizontal" role="form">
+                <!-- 2.2.2. One form group foreach property -->
+                <div class="form-group">
+
+                    <!-- 2.2.2.1. Form label -->
+                    <label class="col-sm-1 control-label">Role Server:</label>
+                    <div class="col-sm-7">
+
+                        <!-- 2.2.2.1. Form input -->
+                        <select data-ng-options="t.name for t in vm.roles" style="width: 100%"
+                                data-ng-change="vm.onRoleServerSelectionChange()"
+                                data-ng-model="vm.selectedRoleServer" class="form-control" data-z-validate>
+                            <option value="">Select all roles</option>
+                        </select>
+
+                    </div>
+                    <!--<a class="infoButton" data-ng-click="vm.addRole()">
+                            <i class="fa fa-plus"></i> Add Role
+                    </a>-->
+                </div>
+            </form>
+        </div>
+        <!-- 1. Search bar -->
+        <div class="form-search">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button id="aspNetUserRoleSearchButton" class="btn btn-default" data-ng-click="vm.searchServer()"><i class="fa fa-search-plus"></i></button>
+                    </div>
+                    <input class="form-control input-sm"
+                           data-ng-model="vm.aspNetUserRoleServerSearch"
+                           placeholder="filter name or abbreviation">
+                </div>
+            </div>
+            <div class="btn-group pull-right">
+                <a class="infoButton"
+                   data-ng-click="vm.refreshServer()">
+                    <i class="fa fa-refresh"></i><span> Refresh</span>
+                </a>
+                <a id="aspNetUserRoleServerAddButton" class="infoButton" href="#/aspNetUserRole/new">
+                    <i class="fa fa-plus"></i> Add AspNetUserRole
+                </a>
+            </div>
+        </div>
+
+        <br /> <br /> <br />
+
+        <!-- 2. Content/main area -->
+        <div class="col-md-12">
+
+            <!-- 2.1 Data list in Portlet box -->
+            <div class="portlet box blue-madison">
+
+                <!-- Portlet Title -->
+                <div class="portlet-title">
+                    <div class="caption">
+                        <div>{{vm.title}} ({{vm.aspNetUserRoleFilteredCountServer}} / {{vm.aspNetUserRoleCountServer}})</div>
+                    </div>
+                    <div class="tools">
+                        <a href="" class="collapse"></a>
+                        <!--<div>Page {{vm.paging.currentPageServer}} of {{vm.paging.pageCountServer}}</div>-->
+                    </div>
+                </div>
+
+                <!-- Portlet Body -->
+                <div class="portlet-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-condensed table-striped">
+                            <thead>
+                                <tr>
+                                    <th data-ng-repeat="thead in vm.theads">
+                                        <a data-ng-click="vm.setSortServer(thead)" href="">{{thead}}</a>
+                                        <span>
+                                            <!-- Change DisplayNames to FieldNames: lowercase first letter then remove spaces -->
+                                            <span data-ng-if="vm.sortingServer.orderBy ==
+                                                      (thead.charAt(0).toLowerCase() + thead.slice(1)).replace(' ','')">
+                                                <i class="fa fa-caret-down" style="color: #00C0F7;"
+                                                   data-ng-show="vm.sortingServer.orderDesc == ''"></i>
+                                                <i class="fa fa-caret-up" style="color: #00C0F7;"
+                                                   data-ng-show="vm.sortingServer.orderDesc == 'desc'"></i>
+                                            </span>
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="a in vm.aspNetUserRolesServerFilter"
+                                    data-ng-click="vm.goToAspNetUserRole(a)"
+                                    title="View details" style="cursor: pointer;">
+                                    <!-- // ADD TABLE DATA HERE with approriate data type and control -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.2. Panel pagination -->
+            <div class="widget-foot">
+                <div class="clearfix"></div>
+                <pagination class="pagination-sm"
+                            total-items="vm.aspNetUserRoleFilteredCountServer"
+                            items-per-page="vm.paging.pageSize"
+                            max-size="vm.paging.maxPagesToShow"
+                            data-ng-model="vm.paging.currentPageServer"
+                            data-ng-change="vm.pageChangedServer()"
+                            boundary-links="true"
+                            previous-text="Prev"
+                            next-text="Next"
+                            first-text="First"
+                            last-text="Last"></pagination>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-12">
+        <h2>Client-side cached data</h2>
+        <!-- Filter by relative entity on local cache-->
+
+        <div class="row">
+            <form class="form-horizontal" role="form">
+                <!-- 2.2.2. One form group foreach property -->
+                <div class="form-group">
+
+                    <!-- 2.2.2.1. Form label -->
+                    <label class="col-sm-1 control-label">User</label>
+                    <div class="col-sm-7">
+
+                        <!-- 2.2.2.1. Form input -->
+                        <select data-ng-options="t.name for t in vm.users" style="width: 100%"
+                                data-ng-change="vm.onUserSelectionChange()"
+                                data-ng-model="vm.selectedUser" class="form-control" data-z-validate>
+                            <option value="">Select all users</option>
+                        </select>
+
+                    </div>
+                    <!--<a class="infoButton" data-ng-click="vm.addUser()">
+                        <i class="fa fa-plus"></i> Add User
+                    </a>-->
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <form class="form-horizontal" role="form">
+                <!-- 2.2.2. One form group foreach property -->
+                <div class="form-group">
+
+                    <!-- 2.2.2.1. Form label -->
+                    <label class="col-sm-1 control-label">Role</label>
+                    <div class="col-sm-7">
+
+                        <!-- 2.2.2.1. Form input -->
+                        <select data-ng-options="t.name for t in vm.roles" style="width: 100%"
+                                data-ng-change="vm.onRoleSelectionChange()"
+                                data-ng-model="vm.selectedRole" class="form-control" data-z-validate>
+                            <option value="">Select all roles</option>
+                        </select>
+
+                    </div>
+                    <!--<a class="infoButton" data-ng-click="vm.addRole()">
+                        <i class="fa fa-plus"></i> Add Role
+                    </a>-->
+                </div>
+            </form>
+        </div>
+        <!-- 1. Search bar -->
+        <div class="form-search">
+
+            <!-- 1.1. Search box -->
+            <input id="aspNetUserRoleSearchTextBox" class="input-sm search-query"
+                   data-ng-model="vm.aspNetUserRoleSearch"
+                   data-ng-keyup="vm.search($event)"
+                   placeholder="live search...">
+
+            <div class="btn-group pull-right">
+
+                <!-- 1.2. Refresh button -->
+                <a class="infoButton"
+                   data-ng-click="vm.refresh()">
+                    <i class="fa fa-refresh"></i><span> Refresh</span>
+                </a>
+
+                <!-- 1.3. Add button -->
+                <a id="aspNetUserRoleClientAddButton" class="infoButton" href="#/aspNetUserRole/new">
+                    <i class="fa fa-plus"></i> Add AspNetUserRole
+                </a>
+            </div>
+        </div>
+
+        <br /> <br /> <br />
+
+        <!-- 2. Content/main area -->
+        <div class="col-md-12">
+
+            <!-- 2.1 Data list in Portlet box -->
+            <div class="portlet box blue-madison">
+
+                <!-- Portlet Title -->
+                <div class="portlet-title">
+                    <div class="caption">
+                        <div>{{vm.title}} ({{vm.aspNetUserRoleFilteredCount}} / {{vm.aspNetUserRoleCount}})</div>
+                    </div>
+                    <div class="tools">
+                        <a href="" class="collapse"></a>
+                        <!--<div>Page {{vm.paging.currentPage}} of {{vm.paging.pageCount}}</div>-->
+                    </div>
+                </div>
+
+                <!-- Portlet Body -->
+                <div class="portlet-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-condensed table-striped">
+                            <thead>
+                                <tr>
+                                    <th data-ng-repeat="thead in vm.theads">
+                                        <a data-ng-click="vm.setSort(thead)" href="">{{thead}}</a>
+                                        <span>
+                                            <!-- Change DisplayNames to FieldNames: lowercase first letter then remove spaces -->
+                                            <span data-ng-if="vm.sorting.orderBy ==
+															(thead.charAt(0).toLowerCase() + thead.slice(1)).replace(' ','')">
+                                                <i class="fa fa-caret-down" style="color: #00C0F7;"
+                                                   data-ng-show="vm.sorting.orderDesc == ''"></i>
+                                                <i class="fa fa-caret-up" style="color: #00C0F7;"
+                                                   data-ng-show="vm.sorting.orderDesc == 'desc'"></i>
+                                            </span>
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="a in vm.aspNetUserRoles"
+                                    data-ng-click="vm.goToAspNetUserRole(a)"
+                                    title="View details" style="cursor: pointer;">
+                                    <!-- // ADD TABLE DATA HERE with approriate data type and control -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 2.2. Panel pagination -->
+            <div class="widget-foot">
+                <div class="clearfix"></div>
+                <!-- Pagination -->
+                <pagination class="pagination-sm"
+                            total-items="vm.aspNetUserRoleFilteredCount"
+                            items-per-page="vm.paging.pageSize"
+                            data-ng-model="vm.paging.currentPage"
+                            data-ng-change="vm.pageChanged()"
+                            max-size="vm.paging.maxPagesToShow"
+                            boundary-links="true"
+                            previous-text="Prev"
+                            next-text="Next"
+                            first-text="First"
+                            last-text="Last"></pagination>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+</div>

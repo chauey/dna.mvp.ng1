@@ -1,0 +1,259 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+if (schemaNames.Count() > 0)
+{
+	var i = 0;
+	foreach (string schemaName in schemaNames)
+	{
+		// Statement
+		List<string> tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+
+		// Remove unwanted tables
+		string[] unwantedTableStrings = {"_", "Asp", "Client", "Test", "Demo", "Auth", "ELAMH", "Audit", "GenChild", "Map", "View", "sys"};
+		foreach (string unwantedString in unwantedTableStrings) {
+			tableNames.RemoveAll(x => x.Contains(unwantedString));
+        }
+#>
+(function () {
+    /**
+     * @description
+     *
+     * Declare and handle settings for routes for navigations in the application.
+     */
+
+    'use strict';
+
+    // #region Set 'routes' constant and config routes
+    angular
+
+        // 1. Get 'app.blocks' module
+        .module('app.blocks')
+
+        // 2. Set 'routes' app constant
+        .constant('routes', getRoutes())
+
+        // 3. Configure routes and route resolvers
+        .config(routeConfigurator);
+
+    // 3.1. Inject dependencies
+    routeConfigurator.inject = ['$stateProvider', '$urlRouterProvider', 'routes'];
+
+    // 3.2. Define routeConfigurator function
+    function routeConfigurator($stateProvider, $urlRouterProvider, routes) {
+
+        // 3.2.1. Loop through all routes
+        routes.forEach(function (route) {
+
+            // 3.2.1.1. Register allowed routes
+            setRoute(route.state, route.config);
+        });
+
+        // 3.2.1.2. Otherwise, redirects to home/dashboard view
+        $urlRouterProvider.otherwise('/');
+
+        function setRoute(state, config) {
+            // Sets resolver for all routes by extending any existing resolvers (or create a new one).
+            config.resolve = angular.extend(config.resolve || {}, {
+                prime: prime
+            });
+            $stateProvider.state(state, config);
+
+            return $stateProvider;
+        }
+    }
+    // #endregion
+
+	// #region Functions implementation
+    prime.$inject = ['datacontext'];
+    function prime(datacontext) {
+        return datacontext.prime();
+    }
+
+    // Define the routes
+    function getRoutes() {
+		var paths = {
+            app: 'app',             // Original Path: "app"
+            appMin: 'appbuild',     // Minified html Path: "appbuild/views"
+            features: '/features'
+        };
+
+        var featuresPath = paths.app + paths.features; // 'app/feafures'
+
+        return [
+            {
+                state: 'Dashboard',
+                config: {
+					url: '/',
+                    controller: 'DashboardController',
+                    controllerAs: 'vm',
+                    templateUrl: featuresPath + '/dashboard/dashboard.html',
+                    settings: {
+                        nav: 1,
+                        content: '<i class="fa fa-home fa-fw"></i> Dashboard',
+                        domainObjectName: 'Admin'
+                    },
+                    label: 'Dashboard Page'
+                }
+            }, {
+                state: 'Styling',
+                config: {
+	                url: '/styling',
+                    controller: 'StylingController',
+                    controllerAs: 'vm',
+                    templateUrl: featuresPath + '/styling/styling.html',
+                    settings: {
+                        nav: 2,
+                        content: '<i class="fa fa-paint-brush fa-fw"></i> Styling Samples',
+                        domainObjectName: ''
+                    },
+                    label: 'Styling'
+                }
+            }, {
+                state: 'Admin',
+                config: {
+	                url: '/admin',
+                    controller: 'AdminController',
+                    controllerAs: 'vm',
+                    templateUrl: featuresPath + '/admin/admin.html',
+                    settings: {
+                        nav: 3,
+                        content: '<i class="fa fa-lock fa-fw"></i> Admin Panel',
+                        domainObjectName: 'Admin'
+                    },
+                    label: 'Admin Panel'
+                }
+            }, {
+                state: 'UIElements',
+                config: {
+	                url: '/ui',
+                    controller: 'UiController',
+                    controllerAs: 'vm',
+                    templateUrl: featuresPath + '/ui/ui.html',
+                    settings: {
+                        nav: 4,
+                        content: '<i class="fa fa-picture-o fa-fw"></i> UI Elements',
+                        domainObjectName: ''
+                    },
+                    label: 'UI Elements'
+                }
+            }, {
+				state: 'WorkInProgress',
+				config: {
+					url: '/workinprogress',
+					controller: 'WipController',
+					controllerAs: 'vm',
+					templateUrl: featuresPath + '/wip/wip.html',
+					settings: {
+						content: '<i class="fa fa-asterisk fa-fw"></i> Work In Progress',
+                        domainObjectName: ''
+					}
+				}
+			}, {
+
+			// #region Membership
+				state: 'Login',
+				config: {
+					url: '/login',
+					controller: 'LoginController',
+					controllerAs: 'vm',
+					templateUrl: featuresPath + '/membership/login.html',
+					settings: {
+                        domainObjectName: ''
+					}
+				}
+			}, {
+				state: 'Register',
+				config: {
+					url: '/register',
+					controller: 'RegisterController',
+					controllerAs: 'vm',
+					templateUrl: featuresPath + '/membership/register.html',
+					settings: {
+                        domainObjectName: ''
+					}
+				}
+			}, {
+				state: 'ManageAccount',
+				config: {
+					url: '/manage',
+					controller: 'ManageController',
+					controllerAs: 'vm',
+					templateUrl: featuresPath + '/membership/manage.html',
+					settings: {
+                        domainObjectName: ''
+					}
+				}
+			}, {
+				state: 'AuthenticationComplete',
+				config: {
+					url: '/authComplete',
+					templateUrl: featuresPath + '/membership/authComplete.html',
+					settings: {}
+				}
+			}, {
+				state: 'AccountAssociation',
+				config: {
+					url: '/associate',
+					controller: 'AssociateController',
+					controllerAs: 'vm',
+					templateUrl: featuresPath + '/membership/associate.html',
+					settings: {
+                        domainObjectName: ''
+					}
+				}
+				// #endregion
+				<#foreach (string tableName in tableNames.OrderBy(x => x))
+				{
+					var entityNamePlural = GetStringIncamelCase(tableName);
+					var entityName = GetStringInSingle(entityNamePlural);
+					
+					var EntityNamePlural = tableName;
+					var EntityName = GetStringInSingle(EntityNamePlural);
+					
+					var DisplayName = GetDisplayNameByUppercaseLetter(EntityName);
+					var DisplayNamePlural = GetStringInPlural(DisplayName);
+
+					i = i + 1;
+				#>
+				}, {
+
+					// <#=DisplayName #> List'
+					state: '<#=EntityName #>List',
+					config: {
+						url: '/<#= entityName #>List',
+						controller: '<#= EntityName #>ListController',
+						controllerAs: 'vm',
+						templateUrl: featuresPath + '/<#= entityName #>/<#= entityName #>List.html',
+						settings: {
+							nav: <#= i #>,
+							content: '<i class="fa fa-file-text-o"></i><#= DisplayNamePlural #>',
+							domainObjectName: '<#= tableName #>'
+						},
+						label: '<#=DisplayNamePlural #>'
+					}
+                }, {
+					// <#=DisplayName #> Item
+					state: '<#=EntityName #>Item',
+					config: {
+					url: '/<#= entityName #>/:id',
+						controller: '<#= EntityName #>ItemController',
+						controllerAs: 'vm',
+						templateUrl: featuresPath + '/<#= entityName #>/<#= entityName #>Item.html',
+                        domainObjectName: '<#= tableName #>'
+					}
+<#}#>
+            }];
+    }
+	// #endregion
+})();
+
+<#
+		SaveOutput("","config.route.js");
+	}
+}
+#>

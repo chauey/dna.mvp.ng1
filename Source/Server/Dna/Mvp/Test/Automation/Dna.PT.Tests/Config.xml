@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TestEnvironment>
+  <TestRunConfiguration>
+      <!--Tempararily not know how to handle this. 0 - non-parallel, 1 - parallel, default is non-parallel-->
+      <Parallel ThreadCount ="3">1</Parallel>
+      <!--It could be no use coz we may not need. 0 - local only, 1 - remote, default is local-->
+      <RemoteControl>1</RemoteControl>
+      <!--Add "-local" to run locally. Only specify DriverName & BrowserName, and no more. 
+      For example, firefox30-local means running firefox on local machine-->
+      <SelectedDriver>chrome-local</SelectedDriver>
+      <URLUnderTest>https://localhost:44300</URLUnderTest>
+      <!--Implicit timeout is a common value applied globally-->
+      <ImplicitTimeOut>20</ImplicitTimeOut>
+      <!--Exlicit timeout is for specifically applying to some elements to be loaded fully on a page invoked by things like JQuery, ...
+        i.e. sorting columns and waiting for records to be rearranged, where implicit timeout does not natively applied. -->
+      <ExplicitTimeOut>10</ExplicitTimeOut>
+      <!--ExcelOleDbConnectionString>Provider=Microsoft.ACE.OLEDB.12.0;Data Source= 'C:\\Workspaces\\DnaCLV2\\Source\\PatientPortalAutomationTest\\TestData.xlsx';Extended Properties='Excel 8.0;HDR=Yes;'</ExcelOleDbConnectionString-->
+      <TestDataSheet>Validation</TestDataSheet>
+  </TestRunConfiguration>
+  <DriverConfigurationList>
+    <!--The below section is for configuration of local test run-->
+    <DriverConfiguration>
+        <DriverName>firefox-remote</DriverName>
+        <BrowserName>firefox</BrowserName>
+        <Version>31.0</Version>
+        <MaxInstances>3</MaxInstances>
+        <Platform>WINDOWS</Platform>
+        <Uri>http://192.168.2.122:8989/wd/hub</Uri>
+    </DriverConfiguration>
+    <DriverConfiguration>
+      <DriverName>chrome</DriverName>
+      <BrowserName>chrome</BrowserName>
+      <Version>36.0.1985.125</Version>
+      <MaxInstances>3</MaxInstances>
+      <Platform>WINDOWS</Platform>
+      <Uri>http://localhost:8990/wd/hub</Uri>
+    </DriverConfiguration>
+    <DriverConfiguration>
+        <DriverName>internet explorer</DriverName>
+        <BrowserName>internet explorer</BrowserName>
+        <Version>11.0.9600.16663</Version>
+        <MaxInstances>3</MaxInstances>
+        <Platform>WINDOWS</Platform>
+        <Uri>http://localhost:8991/wd/hub</Uri>
+    </DriverConfiguration>
+    <DriverConfiguration>
+        <DriverName>firefox-test</DriverName>
+        <BrowserName>*firefox</BrowserName>
+        <Version>30.0</Version>
+        <MaxInstances>5</MaxInstances>
+        <Platform>XP</Platform>
+        <Uri>http://192.168.1.42:5555/wd/hub</Uri>
+    </DriverConfiguration>
+    <DriverConfiguration>
+      <DriverName>firefox-local</DriverName>
+      <BrowserName>firefox</BrowserName>
+      <Version>31.0</Version>
+      <MaxInstances>3</MaxInstances>
+      <Platform>WINDOWS</Platform>
+      <Uri>http://localhost:8989/wd/hub</Uri>
+    </DriverConfiguration>
+    <!--The below section is for configuration of remote test run-->
+    <DriverConfiguration>
+        <DriverName>firefox</DriverName>
+        <BrowserName>firefox</BrowserName>
+        <Version>31.0</Version>
+        <MaxInstances>3</MaxInstances>
+        <Platform>WINDOWS</Platform>
+        <Uri>http://192.168.2.122:8999/wd/hub</Uri>
+    </DriverConfiguration>
+    <DriverConfiguration>
+        <DriverName>chrome36</DriverName>
+        <BrowserName>chrome</BrowserName>
+        <Version>36.0.1985.125</Version>
+        <MaxInstances>3</MaxInstances>
+        <Platform>WINDOWS</Platform>
+        <Uri>http://192.168.2.122:8990/wd/hub</Uri>
+    </DriverConfiguration>
+    <DriverConfiguration>
+        <DriverName>internet explorer 11</DriverName>
+        <BrowserName>internet explorer</BrowserName>
+        <Version>11.0.9600.16663</Version>
+        <MaxInstances>3</MaxInstances>
+        <Platform>WINDOWS</Platform>
+        <Uri>http://192.168.2.122:8991/wd/hub</Uri>
+    </DriverConfiguration>
+  </DriverConfigurationList>
+</TestEnvironment>

@@ -1,0 +1,215 @@
+﻿
+<div class="row">
+
+    <!-- Gallary -->
+    <div class="col-md-6">
+        <div class="container slider">
+
+            <!-- enumerate all photos -->
+            <img data-ng-repeat="attachment in vm.attachments" class="slide" data-ng-src="{{vm.rootFilePath}}{{attachment.filePath}}"
+                 data-ng-swipe-right="showPrev()" data-ng-swipe-left="showNext()" data-ng-show="isActive($index)" onerror="this.src = 'content/images/previewNotAvailable.png';" />
+
+            <!-- prev / next controls -->
+            <a class="arrow prev" data-ng-click="showPrev()"></a>
+            <a class="arrow next" data-ng-click="showNext()"></a>
+
+            <!-- extra navigation controls -->
+            <ul class="galleryNav">
+                <li data-ng-repeat="attachment in vm.attachments" data-ng-class="{'active':isActive($index)}">
+                    <img data-ng-src="{{vm.rootFilePath}}{{attachment.filePath}}" title="{{attachment.fileName}}" data-ng-click="showPhoto($index);" />
+                </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <!--Attachment List-->
+    <div class="col-md-6">
+        <div class="form-search">
+            <input class="input-sm search-query"
+                   data-ng-model="vm.attachmentSearch"
+                   data-ng-keyup="vm.search($event)"
+                   placeholder="live search...">
+            <div class="btn-group pull-right">
+                <a class="infoButton"
+                   data-ng-click="vm.refresh()">
+                    <i class="fa fa-refresh"></i><span> Refresh</span>
+                </a>
+                <!--<a class="infoButton" href="#/attachment/new">
+                        <i class="fa fa-plus"></i> Add Attachment
+                    </a>-->
+            </div>
+        </div>
+
+        <div class="widget wlightblue col-md-12">
+            <div data-dna-widget-header title="{{vm.title}}"
+                 subtitle="{{vm.attachmentFilteredCount}} / {{vm.attachmentCount}}"
+                 right-text="Page {{vm.paging.currentPage}} of {{vm.paging.pageCount}}"
+                 allow-collapse="true">
+            </div>
+
+            <!-- Table View -->
+            <div class="widget-content text-left text-info">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                <th data-ng-repeat="thead in vm.theads">
+                                    <a data-ng-click="vm.setSort(thead)" href="" style="color: #52b9e9">{{thead}}</a>
+                                    <span>
+                                        <span data-ng-if="vm.sorting.orderBy ==
+                                                    (thead.charAt(0).toLowerCase() + thead.slice(1)).replace(' ','')">
+                                            <i class="fa fa-caret-down" data-ng-show="vm.sorting.orderDesc == ''" style="color: #52b9e9"></i>
+                                            <i class="fa fa-caret-up" data-ng-show="vm.sorting.orderDesc == 'desc'" style="color: #52b9e9"></i>
+                                        </span>
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="a in vm.attachments | orderBy:vm.sorting.orderBy:vm.sorting.orderDesc"
+                                data-ng-click="vm.showGallary(a)"
+                                style="cursor: pointer">
+                                <!-- // TODO: DONE - ADD TABLE DATA HERE -->
+                                <td>>{{a.fileName}}
+                                <!--<td></td>
+                                >{
+                                <!--<td>
+                                {{
+                                a.filePath}}</td>-->
+                                <!--<td>
+                                {{a.fileCo
+                                ntent}}</td>-->
+                                <!--<td>
+                                {{a.displayOrder}}<
+                                /td>-->
+                                <!--<td>
+                                {{t.createdD
+                                ate | date: 'MM/dd/yyyy hh:mm:ss.sss a'}}</td>-->
+
+
+                                </tr>
+
+
+                            </tr>
+                        </tbody>
+                        </tr>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="widget-foot">
+                <div class="clearfix"></div>
+                <pagination boundary-links="true"
+                            data-ng-change="vm.pageChanged()"
+                            total-items="vm.attachmentFilteredCount"
+                            items-per-page="vm.paging.pageSize"
+                            data-ng-model="vm.paging.currentPage"
+                            max-size="vm.paging.maxPagesToShow"
+                            class="pagination-sm"
+                            previous-text="Prev"
+                            next-text="Next"
+                            first-text="First"
+                            last-text="Last"></pagination>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Uploader-->
+<div class="row">
+    <div class="col-md-3">
+        <h3>Select files</h3>
+        <div data-ng-show="vm.uploader.isHTML5">
+
+            <!-- 3. nv-file-over uploader="link" over-class="className" -->
+            <div class="well my-drop-zone" nv-file-drop="" nv-file-over="" uploader="vm.uploader">
+                Drop zone
+            </div>
+        </div>
+
+        <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
+        Multiple <br />
+        <input type="file" nv-file-select="" uploader="vm.uploader" multiple /><br />
+        Single <br />
+        <input type="file" nv-file-select="" uploader="vm.uploader" />
+    </div>
+    <div class="col-md-9" style="margin-bottom: 40px">
+        <h3>Recent Upload Queue</h3>
+        <p>Queue length: {{ vm.uploader.queue.length }}</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="50%">Name</th>
+                    <th data-ng-show="vm.uploader.isHTML5">Size</th>
+                    <th data-ng-show="vm.uploader.isHTML5">Progress</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="item in vm.uploader.queue">
+                    <td><strong>{{ item.file.name }}</strong></td>
+                    <td data-ng-show="vm.uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                    <td data-ng-show="vm.uploader.isHTML5">
+                        <div class="progress" style="margin-bottom: 0;">
+                            <div class="progress-bar" role="progressbar" data-ng-style="{ 'width': item.progress + '%' }"></div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <span data-ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                        <span data-ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                        <span data-ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                    </td>
+                    <td nowrap>
+                        <button type="button" class="btn btn-success btn-xs" data-ng-click="item.upload()" data-ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                            <span class="glyphicon glyphicon-upload"></span> Upload
+                        </button>
+                        <button type="button" class="btn btn-warning btn-xs" data-ng-click="item.cancel()" data-ng-disabled="!item.isUploading">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                        </button>
+                        <button type="button" class="btn btn-danger btn-xs" data-ng-click="item.remove()">
+                            <span class="glyphicon glyphicon-trash"></span> Remove
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <div>
+                Queue progress:
+                <div class="progress" style="">
+                    <div class="progress-bar" role="progressbar" data-ng-style="{ 'width': vm.uploader.progress + '%' }"></div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-success btn-s" data-ng-click="vm.uploader.uploadAll()" data-ng-disabled="!vm.uploader.getNotUploadedItems().length">
+                <span class="glyphicon glyphicon-upload"></span> Upload all
+            </button>
+            <button type="button" class="btn btn-warning btn-s" data-ng-click="vm.uploader.cancelAll()" data-ng-disabled="!vm.uploader.isUploading">
+                <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+            </button>
+            <button type="button" class="btn btn-danger btn-s" data-ng-click="vm.uploader.clearQueue()" data-ng-disabled="!vm.uploader.queue.length">
+                <span class="glyphicon glyphicon-trash"></span> Remove all
+            </button>
+        </div>
+    </div>
+</div>
+<style>
+    .my-drop-zone {
+        border: dotted 3px lightgray;
+    }
+
+    .nv-file-over {
+        border: dotted 3px red;
+    }
+    /* Default class applied to drop zones on over */
+    .another-file-over-class {
+        border: dotted 3px green;
+    }
+
+    html, body {
+        height: 100%;
+    }
+</style>

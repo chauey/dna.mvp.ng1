@@ -1,0 +1,21 @@
+<!-- client/app/comment/create.html -->
+
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<header class="hero-unit" id="banner">
+    <div class="container">
+        COMMENTS
+    </div>
+</header>
+
+<div class="container">
+    <form class="thing-form" ng-submit="addComment()" name="commentForm">
+        <label>Syncs in realtime across clients</label>
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="Comment here..." ng-model="newComment" required />
+            <span class="input-group-btn">
+                <input class="btn btn-primary" type="submit" ng-disabled="commentForm.$invalid" value="Post">
+            </span>
+        </p>
+    </form>
+</div>

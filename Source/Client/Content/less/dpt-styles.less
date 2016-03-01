@@ -1,0 +1,176 @@
+/*http://ruby.bvision.com/blog/please-stop-embedding-bootstrap-classes-in-your-html*/
+@import "bootstrap/bootstrap.less";
+
+
+.infoButton {
+    .btn;
+    .btn-info;
+    .buttonMargin;
+}
+
+.defaultButton {
+    .btn;
+    .btn-default;
+    .buttonMargin;
+}
+
+.primaryButton {
+    .btn;
+    .btn-primary;
+    .buttonMargin;
+}
+
+.successButton {
+    .btn;
+    .btn-success;
+    .buttonMargin;
+}
+
+.warningButton {
+    .btn;
+    .btn-warning;
+    .buttonMargin;
+}
+
+.dangerButton {
+    .btn;
+    .btn-danger;
+    .buttonMargin;
+}
+
+.buttonMargin {
+    i {
+        margin-right: 8px;
+    }
+}
+
+.dpt-breadcrumbs {
+    padding: 8px 15px;
+    margin: 10px;
+    margin-left: 0px;
+    list-style: none;
+    border-radius: 0px;
+    font-size: 16px;
+    background-color: white;
+}
+
+.dpt-breadcrumbs > li {
+    display: inline-block;
+}
+
+.dpt-breadcrumbs > li + li:before {
+    content: "/\00a0";
+    padding: 0 5px;
+}
+
+.breadcrumb > .active {
+    color: #777777;
+}
+
+.dpt-datepicker > .dpt-input-group {
+    position: relative;
+    display: table;
+    border-collapse: separate;
+}
+
+.dpt-datepicker > .dpt-input-group > .dpt-input-group-btn {
+    display: table-cell;
+    width: 1%;
+    vertical-align: middle;
+    position: relative;
+    font-size: 0;
+    white-space: nowrap;
+}
+
+.dpt-datepicker > .dpt-input-group > .dpt-input-group-btn > .dpt-btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    position: relative;
+}
+
+.dpt-datepicker > .dpt-input-group > .dpt-input-group-btn > .dpt-btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.dpt-slide {
+    width: 100%;
+}
+
+.nonDraggableImage{
+    -webkit-user-drag: none;
+}
+
+.widget-head{
+    height: 70px !important;
+}
+
+.message-error {
+    color:#F00;
+    font-size:14px;
+}
+
+input.ng-pristine + ul#strength {
+    display:none;
+}
+ul#strength {
+    display:inline;
+    list-style:none;
+    margin:0;
+    margin-left:15px;
+    padding:0;
+    vertical-align:2px;
+}
+.point:last {
+    margin:0 !important;
+}
+.point {
+    background:#DDD;
+    border-radius:2px;
+    display:inline-block;
+    height:5px;
+    margin-right:1px;
+    width:20px;
+}
+#footer {
+    position:fixed;
+    bottom:5px;
+}
+
+/* AngularJS Form Validation Styles */
+.error-messages.ng-active {
+    background: maroon;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 15px;
+    position: relative;
+    
+    :after {
+        position: absolute;
+        top: -10px;
+        content: "";
+        left: 20px;
+        border-style: solid;
+        border-color: transparent transparent maroon;
+        border-width: 5px;
+    }
+}
+
+input.ng-invalid.ng-dirty {
+    border: 1px solid red !important;
+    border-left: 5px solid red !important;
+}

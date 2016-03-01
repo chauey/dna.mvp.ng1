@@ -1,0 +1,300 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+<#@ output extension=".js" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+if (schemaNames.Count() > 0)
+{
+	foreach (string schemaName in schemaNames)
+	{
+		// Statement
+		List<string> tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+		foreach (string tableName in tableNames)
+		{
+			if (!string.IsNullOrEmpty(tableName) && !tableName.StartsWith("webpages_") && !tableName.StartsWith("__")) 
+			{
+				// ----- Declare variables -----
+				//var entityName = "typeOfType";		var entityNamePlural = entityName + "s";
+				//var EntityName = "TypeOfType";		var EntityNamePlural = EntityName + "s";
+				//var DisplayName = "Type Of Type";		var DisplayNamePlural = DisplayName + "s";
+
+				var entityNamePlural = GetStringIncamelCase(tableName);
+				var entityName = GetStringInSingle(entityNamePlural);
+					
+				var EntityNamePlural = tableName;
+				var EntityName = GetStringInSingle(EntityNamePlural);
+					
+				var DisplayNamePlural = EntityNamePlural;
+				var DisplayName = EntityName;
+           
+				// Column Names
+				var PrimaryKeyName = GetPrimaryKeyName(schemaName, tableName, metaDataTable);
+				if(string.IsNullOrEmpty(PrimaryKeyName)) PrimaryKeyName = EntityName + "Id";
+				var primaryKeyName = GetStringIncamelCase(PrimaryKeyName);
+				var columnNames = GetColumnNames(schemaName, tableName, metaDataTable);
+				var mainColumnNames = GetMainColumnNames(schemaName, tableName, metaDataTable);
+                string pkType = GetPKType(schemaName, tableName, metaDataTable);
+
+				var defaultMainColumnName = string.Empty;
+				int index = 0;
+                foreach (string columnName in mainColumnNames)
+                {
+					if (index == 0) defaultMainColumnName = GetStringIncamelCase(columnName);
+					if (columnName.ToLower().Contains("name")) defaultMainColumnName = GetStringIncamelCase(columnName);
+					index++;
+                }
+
+                // Dropdown / Foreign Keys
+				List<string> foreignKeys = GetFKColumnNames(schemaName, tableName, metaDataTable);
+				var foreignKeysIncamelCase = ConvertTocamelCase(foreignKeys);
+#>
+
+(function () {
+    'use strict';
+
+    var serviceId = 'repository.<#= entityName #>';
+
+    angular.module('app').factory(serviceId,
+        ['model', 'repository.abstract', 'zStorage', 'zStorageWip', 'dataService', Repository<#= EntityName #>]);
+
+    function Repository<#= EntityName #>(model, AbstractRepository, zStorage, zStorageWip, dataService) {
+        var entityName = model.entityNames.<#= entityName #>;
+        var controllerName = model.controllerNames.<#= entityName #>;       
+        var service = new dataService(entityName);
+        var nameForFilter = "lastName";
+
+        function Ctor(mgr) {
+            this.serviceId = serviceId;
+            this.entityName = entityName;
+            this.controllerName = controllerName;
+            
+            // Exposed data access functions
+            
+            this.create = create;
+            this.post = post;
+            this.put = put;
+            this.patch = patch;
+            this.delete = deleteFunction;
+            this.getById = getById;
+            this.getCount = getCount;
+            
+            this.getAllServer = getAllServer;
+            this.getFilteredCountServer = getFilteredCountServer;
+            this.getAllWithoutPaging = getAllWithoutPaging;
+
+
+	<# if(foreignKeys.Count > 0) {#>
+            // get by relative ID
+<#
+					for (int j= 0; j < foreignKeys.Count; j++)
+                    {
+						string navProperty = foreignKeys[j].Replace("ID", string.Empty).Replace("Id", string.Empty);
+						string navPropertyIncamelCase = foreignKeysIncamelCase[j].Replace("ID", string.Empty).Replace("Id", string.Empty);#>
+            this.getAllBy<#= foreignKeys[j] #> = getAllBy<#=foreignKeys[j]#> ;
+   <#}
+					}#>
+
+        }
+
+        AbstractRepository.extend(Ctor);
+
+        return Ctor;
+
+        // #region Get Data        
+        function getAllServer(forceRemote, orderBy, orderDesc, page, size, nameForFilter, nameFilter) {
+            return service.getAll(forceRemote, orderBy, orderDesc, page, size, nameForFilter, nameFilter);
+        }
+
+<#if (pkType == "uniqueidentifier")
+{ #>
+
+        function getById(id, forceRemote) {
+            return service.getByIdGuid(id);
+        }
+
+        function put(id, entity) {
+            return service.putByGuid(id, entity);
+        }
+
+        function patch(id, entity) {
+            return service.patchByGuid(id, entity);
+        }
+
+        function deleteFunction(id) {
+            return service.deleteByGuid(id);
+        }
+<# } #>
+<#if (pkType == "nvarchar" || pkType == "varchar")
+{ #>
+
+        function getById(id, forceRemote) {
+            return service.getByIdString(id);
+        }
+
+        function put(id, entity) {
+            return service.putByString(id, entity);
+        }
+
+        function patch(id, entity) {
+            return service.patchByString(id, entity);
+        }
+
+        function deleteFunction(id) {
+            return service.deleteByString(id);
+        }
+<# } #>
+<#if (pkType == "int")
+{ #>
+
+        function getById(id, forceRemote) {
+            return service.getById(id);
+        }
+
+        function put(id, entity) {
+            return service.putById(id, entity);
+        }
+
+        function patch(id, entity) {
+            return service.patchById(id, entity);
+        }
+
+        function deleteFunction(id) {
+            return service.delete(id);
+        }
+<# } #>
+
+        function post(entity) {
+            return service.post(entity);
+        }        
+
+        // #endregion
+
+        // #region Get Counts
+        function getCount(forceRemote) {
+            return service.getCount();
+        }
+
+        function getFilteredCount(<#= defaultMainColumnName #>Filter) {
+            return service.getCount(nameForFilter, filter);
+        }
+
+        function getFilteredCountServer(filter) {
+            return service.getCount(nameForFilter, filter);
+        }
+
+
+        function getAllWithoutPaging(orderBy) {
+            var self = this;
+            orderBy = orderBy || 'name';
+
+
+            return EntityQuery.from(controllerName)
+              .orderBy(orderBy)
+              .using(self.manager).execute()
+              .then(querySucceeded).catch(self._queryFailed);
+
+            function querySucceeded(data) {
+               self.log('Retrieved [<#= EntityNamePlural #>] from remote data source.', data.results.length, true);
+                return data.results;
+            }
+        }
+        // #endregion
+
+        function _<#= defaultMainColumnName #>Predicate(filterValue) {
+            return Predicate
+                .create('<#= defaultMainColumnName #>', 'contains', filterValue);
+                //.or('abbreviation', 'contains', filterValue);
+        }
+	<# if(foreignKeys.Count > 0) {#>
+             // #region Get by relative ID
+<#
+					for (int i = 0; i < foreignKeys.Count; i++)
+                    {
+						string navProperty = foreignKeys[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+						string navPropertyIncamelCase = foreignKeysIncamelCase[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                            string foreignKeyNameIncamelCase = foreignKeysIncamelCase[i];
+#>
+
+
+        function getAllBy<#=foreignKeys[i]#>(forceRemote, orderBy, orderDesc, page, size, relativeID) {
+            var self = this;
+            var take = size || 20;
+            var skip = page ? (page - 1) * size : 0;
+
+            var <#= entityName #>OrderBy = orderBy;
+            if (orderDesc) { <#= entityName #>OrderBy = orderBy + ' ' + orderDesc; }
+
+            // Check cache first
+            if (self.zStorage.areItemsLoaded('<#= entityNamePlural #>') && !forceRemote) {
+                return self.$q.when(getByPage());
+            }
+
+            // Load all <#= entityNamePlural #> to cache via remote query
+            return EntityQuery.from(controllerName)
+                .orderBy(<#= entityName #>OrderBy)
+                .toType(entityName)
+                .using(self.manager).execute()
+                .then(querySucceeded).catch(self._queryFailed);
+
+            function querySucceeded(data) {
+                self.zStorage.areItemsLoaded('<#= entityNamePlural #>', true);
+                self.zStorage.save();
+                self.log('Retrieved [<#= EntityNamePlural #>] from remote data source.', data.results.length, true);
+
+                return getByPage();
+            }
+
+            function getByPage() {
+                // We have <#= EntityName #>, Parent Type and Type that have the same Entity Name = '<#= EntityName #>'
+                // So when we add Nullos for Parent Type and Type, it will add to <#= EntityName #> list automatically
+                // This predicate to remove the Nullos which contain '[Select a '
+                var predicate = Predicate.not(Predicate.create('code', 'contains', '[Select a '));
+
+                if (relativeID) {
+                    var predicateRelativeIDSearch = Predicate.create('<#=foreignKeyNameIncamelCase #>', 'equals', relativeID);
+
+                    predicate = Predicate.or(
+                        predicateRelativeIDSearch
+                    );
+                }
+
+                var <#= entityNamePlural #> = EntityQuery.from(controllerName)
+                    .where(predicate)
+                    .orderBy(<#= entityName #>OrderBy)
+                    .take(take).skip(skip)
+                    .using(self.manager)
+                    .executeLocally();
+
+                return <#= entityNamePlural #>;
+            }
+        }
+
+   <#}
+					}#>
+        // #endregion
+
+
+        function create() {
+            return this.manager.createEntity(entityName, {
+<#if (pkType == "uniqueidentifier")
+{ #>
+
+                <#= primaryKeyName #>: breeze.core.getUuid(),
+<# } #>
+                createdDate: new Date(),
+            });
+        }
+    }
+})();
+
+
+<# 
+				SaveOutput("services", "repository." + entityName + ".js");
+			}
+		}
+	}
+}
+#>

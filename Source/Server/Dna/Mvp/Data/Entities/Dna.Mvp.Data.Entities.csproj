@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{71B8CC89-A03F-45CD-AD04-827F499C53FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Dna.Mvp.Data.Entities</RootNamespace>
+    <AssemblyName>Dna.Mvp.Data.Entities</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+    <StyleCopTreatErrorsAsWarnings>True</StyleCopTreatErrorsAsWarnings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\..\..\..\Packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.DynamicFilters, Version=1.3.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Packages\EntityFramework.DynamicFilters.1.3.14\lib\net40\EntityFramework.DynamicFilters.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\..\..\..\..\Packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccessControlListItem.cs" />
+    <Compile Include="AllDataType.cs" />
+    <Compile Include="Migrations\201505181153048_AddSpacesTable.cs" />
+    <Compile Include="Migrations\201505181153048_AddSpacesTable.Designer.cs">
+      <DependentUpon>201505181153048_AddSpacesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505210533144_combine_scripts_UpdatePrimaryColumnOnAllDataType_and_many_many_user_roles.cs" />
+    <Compile Include="Migrations\201505210533144_combine_scripts_UpdatePrimaryColumnOnAllDataType_and_many_many_user_roles.Designer.cs">
+      <DependentUpon>201505210533144_combine_scripts_UpdatePrimaryColumnOnAllDataType_and_many_many_user_roles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505211025207_add_1-n_for_User_Validation.cs" />
+    <Compile Include="Migrations\201505211025207_add_1-n_for_User_Validation.Designer.cs">
+      <DependentUpon>201505211025207_add_1-n_for_User_Validation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MvpDataContext.cs" />
+    <Compile Include="MvpContext.Filters.cs" />
+    <Compile Include="AspNetRole.cs" />
+    <Compile Include="AspNetUser.cs" />
+    <Compile Include="AspNetUserClaim.cs" />
+    <Compile Include="AspNetUserLogin.cs" />
+    <Compile Include="Attachment.cs" />
+    <Compile Include="AuditLog.cs" />
+    <Compile Include="MvpContext.cs" />
+    <Compile Include="Client.cs" />
+    <Compile Include="Card.cs" />
+    <Compile Include="Core\BaseEntity.cs" />
+    <Compile Include="Migrations\201505040435560_Added_TableRelationships.cs" />
+    <Compile Include="Migrations\201505040435560_Added_TableRelationships.Designer.cs">
+      <DependentUpon>201505040435560_Added_TableRelationships.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505070802362_update_some_table.cs" />
+    <Compile Include="Migrations\201505070802362_update_some_table.Designer.cs">
+      <DependentUpon>201505070802362_update_some_table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Space.cs" />
+    <Compile Include="TableRelationship.cs" />
+    <Compile Include="Customer.cs" />
+    <Compile Include="CustomerGroup.cs" />
+    <Compile Include="CustomerRole.cs" />
+    <Compile Include="CustomerSubscription.cs" />
+    <Compile Include="DomainObject.cs" />
+    <Compile Include="ELMAH_Error.cs" />
+    <Compile Include="Enums\AngularProjectBasePermissions.Enum.cs" />
+    <Compile Include="Enums\AngularProjectBaseResources.Enum.cs" />
+    <Compile Include="Enums\AngularProjectBaseRoles.Enum.cs" />
+    <Compile Include="Filters\ICustomerFilterable.cs" />
+    <Compile Include="Filters\ISystemAccountFilterable.cs" />
+    <Compile Include="Group.cs" />
+    <Compile Include="GroupOwner.cs" />
+    <Compile Include="GroupRole.cs" />
+    <Compile Include="GroupUser.cs" />
+    <Compile Include="Migrations\201503030423246_20150303A_Initialization.cs" />
+    <Compile Include="Migrations\201503030423246_20150303A_Initialization.Designer.cs">
+      <DependentUpon>201503030423246_20150303A_Initialization.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503120527410_ChangeAuditLogTableName.cs" />
+    <Compile Include="Migrations\201503120527410_ChangeAuditLogTableName.Designer.cs">
+      <DependentUpon>201503120527410_ChangeAuditLogTableName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503250741414_AddClientTable.cs" />
+    <Compile Include="Migrations\201503250741414_AddClientTable.Designer.cs">
+      <DependentUpon>201503250741414_AddClientTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503250807361_ChangeStringLengthOfAllowedOrigin.cs" />
+    <Compile Include="Migrations\201503250807361_ChangeStringLengthOfAllowedOrigin.Designer.cs">
+      <DependentUpon>201503250807361_ChangeStringLengthOfAllowedOrigin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503260410320_RemoveCreatedByRelationshipToUsersTable.cs" />
+    <Compile Include="Migrations\201503260410320_RemoveCreatedByRelationshipToUsersTable.Designer.cs">
+      <DependentUpon>201503260410320_RemoveCreatedByRelationshipToUsersTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503300925547_StripeTables.cs" />
+    <Compile Include="Migrations\201503300925547_StripeTables.Designer.cs">
+      <DependentUpon>201503300925547_StripeTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504270534140_AddManyToManyForUsers_Customers.cs" />
+    <Compile Include="Migrations\201504270534140_AddManyToManyForUsers_Customers.Designer.cs">
+      <DependentUpon>201504270534140_AddManyToManyForUsers_Customers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505051050571_Update_Schema_CustomerUserGroupRole.cs" />
+    <Compile Include="Migrations\201505051050571_Update_Schema_CustomerUserGroupRole.Designer.cs">
+      <DependentUpon>201505051050571_Update_Schema_CustomerUserGroupRole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Permission.cs" />
+    <Compile Include="StripeEntity.cs" />
+    <Compile Include="Seeding\Seed.cs" />
+    <Compile Include="Subscription.cs" />
+    <Compile Include="SubscriptionGroup.cs" />
+    <Compile Include="SubscriptionPlan.cs" />
+    <Compile Include="TypeOfType.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="Utilities\PasswordManagement.cs" />
+    <Compile Include="Validation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201503030423246_20150303A_Initialization.resx">
+      <DependentUpon>201503030423246_20150303A_Initialization.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503120527410_ChangeAuditLogTableName.resx">
+      <DependentUpon>201503120527410_ChangeAuditLogTableName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503250741414_AddClientTable.resx">
+      <DependentUpon>201503250741414_AddClientTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503250807361_ChangeStringLengthOfAllowedOrigin.resx">
+      <DependentUpon>201503250807361_ChangeStringLengthOfAllowedOrigin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503260410320_RemoveCreatedByRelationshipToUsersTable.resx">
+      <DependentUpon>201503260410320_RemoveCreatedByRelationshipToUsersTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503300925547_StripeTables.resx">
+      <DependentUpon>201503300925547_StripeTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504270534140_AddManyToManyForUsers_Customers.resx">
+      <DependentUpon>201504270534140_AddManyToManyForUsers_Customers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505040435560_Added_TableRelationships.resx">
+      <DependentUpon>201505040435560_Added_TableRelationships.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505051050571_Update_Schema_CustomerUserGroupRole.resx">
+      <DependentUpon>201505051050571_Update_Schema_CustomerUserGroupRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505070802362_update_some_table.resx">
+      <DependentUpon>201505070802362_update_some_table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505181153048_AddSpacesTable.resx">
+      <DependentUpon>201505181153048_AddSpacesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505210533144_combine_scripts_UpdatePrimaryColumnOnAllDataType_and_many_many_user_roles.resx">
+      <DependentUpon>201505210533144_combine_scripts_UpdatePrimaryColumnOnAllDataType_and_many_many_user_roles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505211025207_add_1-n_for_User_Validation.resx">
+      <DependentUpon>201505211025207_add_1-n_for_User_Validation.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Migrations\20150804_CreateExtendedProperties.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Repository.Pattern.Ef6\Repository.Pattern.Ef6.csproj">
+      <Project>{f68a1d19-93fb-47c1-a22b-42bea3e4fd8c}</Project>
+      <Name>Repository.Pattern.Ef6</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Repository.Pattern\Repository.Pattern.csproj">
+      <Project>{6e682a14-c872-4813-b620-76e108dea683}</Project>
+      <Name>Repository.Pattern</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--Import Project="..\StyleCop\StyleCop.targets" /-->
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,191 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ output extension=".txt" #>
+<#@ include file="Utilities\Database.Utility.tt"#>
+
+<#@ assembly name="Newtonsoft.Json.dll" #>
+<#@ import namespace="Newtonsoft.Json.Serialization" #>
+<#@ import namespace="Newtonsoft.Json.Linq" #>
+<#@ import namespace="Newtonsoft.Json" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+// Required columns
+List<KeyValuePair<string, string>> requiredColumns = new List<KeyValuePair<string, string>>();
+
+// Tables with extended properties
+Dictionary<string, Dictionary<string, JToken>> tableWithColumnExtProperties = new Dictionary<string, Dictionary<string, JToken>>();
+
+// #region Properties with data types
+Dictionary<string, Dictionary<string, string>> tableWithColumnTypes = new Dictionary<string, Dictionary<string, string>>();
+
+// Dictionary with <tableName, propertyName> with each datatype list
+List<KeyValuePair<string, string>> numericProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> datetimeProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> timeProperty = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> bitProperties = new List<KeyValuePair<string, string>>();
+
+// #endregion
+List<string> tableNames = new List<string>();
+List<string> createValidationMethods = new List<string>();
+List<string> applyValidationMethods = new List<string>();
+
+if (schemaNames.Count() > 0)
+{
+    foreach (string schemaName in schemaNames)
+    {
+        // Statement
+        tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+        
+// #region Begin File Content
+#>
+using Breeze.ContextProvider;
+using Breeze.WebApi2;
+using Dna.Mvp.Data.Entities;
+using Dna.Mvp.Helpers;
+using Dna.Mvp.Data.Repository;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Web.Http;
+using System.Web.Http.OData;
+
+namespace Dna.Mvp.Controllers
+{
+    [BreezeController]
+    public class MvpBreezeController : ODataController
+    {
+        #region *** Fields ***
+        private readonly IMvpRepository _repository; 
+        #endregion
+
+        #region *** Constructor ***
+        public MvpBreezeController(IMvpRepository repository)
+        {
+            this._repository = repository;
+        } 
+        #endregion
+
+        #region *** Methods ***
+        #region Save Changes
+        [HttpPost]
+        public SaveResult SaveChanges(JObject saveBundle)
+        {
+            return this._repository.SaveChanges(saveBundle);
+        }
+
+		<#foreach (string tableName in tableNames)
+		{
+			if (!tableName.StartsWith("webpages_") && !tableName.StartsWith("__"))
+            {
+				var entityNamePlural = GetStringIncamelCase(tableName);
+				var entityName = GetStringInSingle(entityNamePlural);#>
+			
+		[HttpPost]
+		[CustomAuthorizeAttribute(ResourceString = "<#=tableName#>", Permission = MvpPermissions.Write)]
+		public SaveResult Save<#=tableName#>(JObject saveBundle)
+        {
+			return this._repository.SaveChanges(saveBundle);
+        } 
+			<#}
+		}#>
+        #endregion
+
+        #region Retrieve Data
+        [HttpGet]
+        public string Metadata()
+        {
+            return this._repository.GetMetadata();
+        }
+
+		<#foreach (string tableName in tableNames)
+		{
+			if (!tableName.StartsWith("webpages_") && !tableName.StartsWith("__"))
+            {
+				var entityNamePlural = GetStringIncamelCase(tableName);
+				var entityName = GetStringInSingle(entityNamePlural);
+				var EntityNamePlural = tableName;
+				var EntityName = GetStringInSingle(EntityNamePlural);#>
+			
+		[HttpGet]
+		//[CustomAuthorizeAttribute(ResourceString = "<#=tableName#>", Permission = MvpPermissions.Read)]
+        public IQueryable<<#=EntityName#>> <#=tableName#>()
+        {
+			return this._repository.Get<#=tableName#>();
+        } 
+			<#}
+		}#>
+        #endregion
+
+        [HttpGet]
+		//[CustomAuthorizeAttribute(ResourceString = "TypeOfType", Permission = MvpPermissions.Read)]
+        public IQueryable<TypeOfType> TypeOfTypes()
+        {
+            return this._repository.GetTypeOfTypes().Where(x => x.TypeOfTypeID != Guid.Empty);
+        }       
+
+		[HttpGet]
+        public object GetAllAccessControlListAndPermissions()
+        {
+            //Returns:
+            // role
+                // domain objects
+                    // permissions
+            List<AccessControlListItem> accessControlList = this._repository.GetAllAccessControlList().ToList();
+            List<Permission> permissions = this._repository.GetPermissions().ToList();
+
+            // Add the Access Control List to Memory Cache with expiration after 60 minutes
+            MemoryCacher.Add("AccessControlList", accessControlList, DateTime.UtcNow.AddHours(1));
+
+            //return accessControlList.AsQueryable();
+            return new { accessControlList, permissions };
+        }
+
+        public void GetUsersDomainObjectPermissions()
+        {
+            // TODO
+            //Returns:
+            // domain objects
+                // permissions
+        }
+
+        public void GetDomainObjectPermissionsByRoles(string[] roles)
+        {
+            // TODO
+            //Returns:
+            // domain objects
+                // permission
+        } 
+        #endregion
+
+        #region Look-up list
+        /// <summary>
+        /// Query returing a 1-element array with a lookups object whose 
+        /// properties are all Rooms, Tracks, and TimeSlots.
+        /// </summary>
+        /// <returns>
+        /// Returns one object, not an IQueryable, 
+        /// whose properties are "rooms", "tracks", "timeslots".
+        /// The items arrive as arrays.
+        /// </returns>
+        [HttpGet]
+        public object Lookups()
+        {
+            var parentTypeOfTypes = _repository.GetParentTypeOfTypes().OrderBy(x => x.Name).ToList();
+            var types = _repository.GetTypeOfTypes().OrderBy(x => x.Name).ToList();
+            var domainObjects = _repository.GetDomainObjects().OrderBy(x => x.Name).ToList();
+            var roles = _repository.GetAspNetRoles().OrderBy(x => x.Name).ToList();
+            var permissions = _repository.GetPermissions().Select(x => new { x.Value, x.Description }).OrderBy(x => x.Value).ToList();
+
+            return new { parentTypeOfTypes, types, domainObjects, roles, permissions };
+        }
+        #endregion
+    }
+}
+<#
+    }
+}
+#>

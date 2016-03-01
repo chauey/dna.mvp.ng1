@@ -1,0 +1,23 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+<script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+
+<header class="hero-unit" id="banner">
+    <div class="container">
+        <h4>Mongoose Schema Types</h4>
+    </div>
+</header>
+
+<div class="container">
+    <br />
+    <a href="/newType"><input class="btn btn-primary" value="Add new schema type"></a><br /><br />
+    <div ui-grid="{ data: stypes }"></div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p>
+            Angular Fullstack
+        </p>
+    </div>
+</footer>

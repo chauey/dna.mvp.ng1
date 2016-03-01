@@ -1,0 +1,19 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="jumbotron" ng-show="isLoggedIn()&&!confirmToken">
+        <h2>Email address confirmation</h2>
+        <p>Look in your mail inbox for an
+          <b>activation message</b>. Just in case, check your spam folder.</p>
+        <p>If you don't find one, push below button.</p>
+        <a href="" ng-click="sendConfirmationMail()" ng-disabled="confirmationMailSend()"
+        class="btn btn-primary pull-center">Send new account activation email</a>
+      </div>
+      <div class="alert alert-danger" ng-show="errors.message">
+        <h4>Email address confirmation failed</h4>
+        <p>The validation token is invalid or has expired. You should signin and ask for a new one.</p>
+      </div>
+    </div>
+  </div>
+</div>

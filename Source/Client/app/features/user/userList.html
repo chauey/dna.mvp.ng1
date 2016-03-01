@@ -1,0 +1,103 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2>Server-side remote access</h2>
+
+        <!-- 1. Search bar -->
+        <div class="form-search">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button id="userSearchButton" class="btn btn-default" data-ng-click="vm.searchServer()"><i class="fa fa-search-plus"></i></button>
+                    </div>
+                    <input class="form-control input-sm"
+                           data-ng-model="vm.userServerSearch"
+                           placeholder="filter name or abbreviation">
+                </div>
+            </div>
+            <div class="btn-group pull-right">
+                <a class="infoButton"
+                   data-ng-click="vm.refreshServer()">
+                    <i class="fa fa-refresh"></i><span> Refresh</span>
+                </a>
+                <a class="infoButton" href="#/user/new">
+                    <i class="fa fa-plus"></i> Add User
+                </a>
+            </div>
+        </div>
+
+        <br /> <br /> <br />
+
+        <!-- 2. Content/main area -->
+        <div class="col-md-12">
+
+            <!-- 2.1 Data list in Portlet box -->
+            <div class="portlet box blue-madison">
+
+                <!-- Portlet Title -->
+                <div class="portlet-title">
+                    <div class="caption">
+                        <div>{{vm.title}} ({{vm.userFilteredCountServer}} / {{vm.userCountServer}})</div>
+                    </div>
+                    <div class="tools">
+                        <a href="" class="collapse"></a>
+                        <!--<div>Page {{vm.paging.currentPageServer}} of {{vm.paging.pageCountServer}}</div>-->
+                    </div>
+                </div>
+
+                <!-- Portlet Body -->
+                <div class="portlet-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-condensed table-striped">
+                            <thead>
+                                <tr>
+                                    <th data-ng-repeat="thead in vm.theads">
+                                        <a data-ng-click="vm.setSortServer(thead)" href="">{{thead}}</a>
+                                        <span>
+                                            <!-- Change DisplayNames to FieldNames: lowercase first letter then remove spaces -->
+                                            <span data-ng-if="vm.sortingServer.orderBy ==
+                                                      (thead.charAt(0).toLowerCase() + thead.slice(1)).replace(' ','')">
+                                                <i class="fa fa-caret-down" style="color: #00C0F7;"
+                                                   data-ng-show="vm.sortingServer.orderDesc == ''"></i>
+                                                <i class="fa fa-caret-up" style="color: #00C0F7;"
+                                                   data-ng-show="vm.sortingServer.orderDesc == 'desc'"></i>
+                                            </span>
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="u in vm.usersServerFilter"
+                                    data-ng-click="vm.goToUser(u)"
+                                    title="View details" style="cursor: pointer;">
+                                    <!-- // ADD TABLE DATA HERE with approriate data type and control -->
+                                    <td>{{u.firstName}}</td>
+                                    <td>{{u.middleName}}</td>
+                                    <td>{{u.lastName}}</td>
+                                    <td>{{u.email}}</td>
+                                    <td>{{u.birthday | date: 'shortDate'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.2. Panel pagination -->
+            <div class="widget-foot">
+                <div class="clearfix"></div>
+                <pagination class="pagination-sm"
+                            total-items="vm.userFilteredCountServer"
+                            items-per-page="vm.pagingServer.pageSize"
+                            max-size="vm.pagingServer.maxPagesToShow"
+                            data-ng-model="vm.pagingServer.currentPage"
+                            data-ng-change="vm.pageChangedServer()"
+                            boundary-links="true"
+                            previous-text="Prev"
+                            next-text="Next"
+                            first-text="First"
+                            last-text="Last"></pagination>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>

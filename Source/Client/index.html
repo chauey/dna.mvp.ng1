@@ -1,0 +1,393 @@
+﻿<!DOCTYPE html>
+<html data-ng-app="app" data ng-strict-di>
+<head>
+    <style>
+        /* This helps the ng-show/ng-hide animations start at the right place. */
+        /* Since Angular has this but needs to load, this gives us the class early. */
+        .ng-hide {
+            display: none !important;
+        }
+    </style>
+
+    <link rel="shortcut icon" href="favicon.ico" />
+    <title data-ng-bind="title">DNA LEAN STARTUP MVP AngularJS Web/Hybrid-mobile Template</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+
+    <script>
+        // Must be first. IE10 mobile viewport fix
+        // DNA: Chau - I wonder if this is for Windows Phone 8 and if it has been fixed: http://mattstow.com/responsive-design-in-ie10-on-windows-phone-8.html
+        if ("-ms-user-select" in document.documentElement.style && navigator.userAgent.match(/IEMobile\/10\.0/)) {
+            var msViewportStyle = document.createElement("style");
+            var mq = "@-ms-viewport{width:auto!important}";
+            msViewportStyle.appendChild(document.createTextNode(mq));
+            document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+        }
+
+    </script>
+    <!-- #region Custom styles -->
+    <!--LESS Server side - Need to install dotless nuget package-->
+    <!--<link rel="stylesheet" type="text/css" href="content/less/dpt-styles.less" />-->
+    <!--LESS Client side - Need to import the less.js-->
+    <!--<link rel="stylesheet/less" type="text/css" href="content/less/dpt-styles.less" />-->
+    <!--<script src="scripts/less.min.js" type="text/javascript"></script>-->
+    <!--<link href="content/gallaryStyle.css" rel="stylesheet" />-->
+    <!-- #endregion -->
+    <!-- #region Vendor styles -->
+    <!-- Bundled and minified style: "styles.min.css", include files:
+         ie10mobile, bootstrap-social, toastr, customtheme, styles, breeze.directives, gallaryStyle -->
+    <!--<link href="contentbuild/css/styles.min.css" rel="stylesheet" />-->
+
+    <link href="Content/css/dpt-styles.css" rel="stylesheet" />
+    <link href="content/ie10mobile.css" rel="stylesheet" />
+    <!--<link href="content/bootstrap.min.css" rel="stylesheet" />--> <!-- Included in dpt-styles.less -->
+    <link href="content/bootstrap-social.css" rel="stylesheet" />
+    <!--<link href="content/font-awesome.min.css" rel="stylesheet" />-->
+    <link href="content/toastr.css" rel="stylesheet" />
+    <!--<link href="content/customtheme.css" rel="stylesheet">-->
+    <!--<link href="content/styles.css" rel="stylesheet" />-->
+    <!--<link href="content/dna-metronic.css" rel="stylesheet" />-->
+
+    <link href="content/breeze.directives.css" rel="stylesheet" />
+
+    <link href="content/wijmo.min.css" rel="stylesheet" />
+    <!--<link href="content/kendo.common.min.css" rel="stylesheet" />
+    <link href="content/kendo.silver.min.css" rel="stylesheet" />-->
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+    <link href="../../../assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../../assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../../assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../../assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
+    <link href="../../../assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- Begin Metronic Style -->
+    <!--<link href="Content/Bundles/metronicGlobal.min.css" rel="stylesheet" />
+    <link href="Content/Bundles/metronicAdminPages.min.css" rel="stylesheet" />-->
+    <!-- End Metronic Style -->
+    <!-- BEGIN THEME STYLES -->
+    <!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
+    <link href="Content/Bundles/themeStyles.min.css" rel="stylesheet" />
+    <!-- END THEME STYLES -->
+
+    <script src="../../../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+    <script src="scripts/angular.js"></script>
+
+
+    <!-- Begin Metronic Scripts -->
+<!--    <script src="Scripts/Bundles/metronicCores.min.js"></script>-->
+<!--    <script src="Scripts/Bundles/metronicSampleData.min.js"></script>-->
+    <!-- End Metronic Scripts -->
+
+    <!--<link href=v rel="stylesheet" type="text/css" />-->
+    <!-- #endregion -->
+    <!--<style type="text/css">
+        .jqstooltip {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            visibility: hidden;
+            background: rgb(0, 0, 0) transparent;
+            background-color: rgba(0,0,0,0.6);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+            -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+            color: white;
+            font: 10px arial, san serif;
+            text-align: left;
+            white-space: nowrap;
+            padding: 5px;
+            border: 1px solid white;
+            z-index: 10000;
+        }
+
+        .jqsfield {
+            color: white;
+            font: 10px arial, san serif;
+            text-align: left;
+        }
+    </style>-->
+</head>
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-quick-sidebar-over-content page-on-load" ng-class="{'page-container-bg-solid': settings.layout.pageBodySolid, 'page-sidebar-closed': settings.layout.pageSidebarClosed}">
+    <!-- BEGIN PAGE SPINNER -->
+    <div ng-spinner-bar class="page-spinner-bar">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+    </div>
+    <!-- END PAGE SPINNER -->
+    <!-- Begin Header -->
+    <div data-ng-controller="HeaderController" class="page-header navbar navbar-fixed-top">
+        <div data-ng-include="'/app/layout/topnav.html'" class="page-header-inner"></div>
+    </div>
+    <!-- End Header -->
+    <div class="clearfix"></div>
+
+    <!-- BEGIN CONTAINER -->
+    <div class="page-container">
+        <!-- BEGIN SIDEBAR -->
+        <div data-ng-controller="SidebarController" data-ng-include="'/app/layout/sidebar.html'" data-ng-show="authentication.isAuth" class="page-sidebar-wrapper"></div>
+        <!-- END SIDEBAR -->
+        <!-- BEGIN CONTENT -->
+        <div class="page-content-wrapper">
+            <div class="page-content">
+                <!-- BEGIN STYLE CUSTOMIZER(optional) -->
+                <!--<div data-ng-controller="ThemePanelController" data-ng-include="'/app/layout/theme-panel.html'" class="theme-panel hidden-xs hidden-sm"></div>-->
+                <!-- END STYLE CUSTOMIZER -->
+                <!-- BEGIN ACTUAL CONTENT -->
+                <div data-ui-view class="fade-in-up"></div>
+                <!--<div data-ui-view class="shuffle-animation">
+                </div>-->
+                <!-- END ACTUAL CONTENT -->
+            </div>
+        </div>
+        <!-- END CONTENT -->
+        <!--<div data-ng-include="'/app/layout/shell.html'"></div>-->
+        <!-- BEGIN QUICK SIDEBAR -->
+        <div data-ng-controller="QuickSidebarController" data-ng-include="'/app/layout/quicksidebar.html'"></div>
+        <!-- END QUICK SIDEBAR -->
+    </div>
+    <!-- END CONTAINER -->
+    <!-- BEGIN FOOTER -->
+    <div data-ng-include="'/app/layout/footer.html'" data-ng-controller="FooterController" class="page-footer"></div>
+    <!-- END FOOTER -->
+    <!--<span data-dna-scroll-to-top></span>-->
+    <!-- #region Vendor scripts -->
+    <script src="scripts/angular-animate.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-touch.min.js"></script>-->
+    <!--<script src="scripts/angular-route.js"></script>-->
+
+    <script src="scripts/angular-sanitize.js"></script>
+    <script src="scripts/angular-local-storage.min.js"></script>
+    <script src="Scripts/angular-messages.js"></script>
+    <script src="scripts/bootstrap.js"></script>
+    <script src="scripts/toastr.js"></script>
+    <script src="scripts/moment.js"></script>
+    <script src="Scripts/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="Scripts/angular-ui-router.js"></script>
+    <script src="Scripts/spin.js"></script>
+    <script src="Scripts/breeze.debug.js"></script>
+    <script src="Scripts/breeze.angular.js"></script>
+    <script src="Scripts/breeze.directives.js"></script>
+    <script src="Scripts/breeze.saveErrorExtensions.js"></script>
+    <script src="Scripts/angular.breeze.storagewip.js"></script>
+    <script src="Scripts/datajs-1.1.3.js"></script>
+
+    <!-- UI elements views -->
+    <script src="Scripts/highcharts.js"></script>
+    <script src="Scripts/highcharts-ng.js"></script>
+    <script src="Scripts/wijmo.min.js"></script>            <!-- Wijmo: Must follow this order -->
+    <script src="Scripts/wijmo.input.min.js"></script>
+    <script src="Scripts/wijmo.grid.min.js"></script>
+    <script src="Scripts/wijmo.chart.min.js"></script>
+    <script src="Scripts/wijmo.angular.min.js"></script>
+
+    <!-- KendoUI: Must follow this order -->
+    <!--<script src="Scripts/kendo.all.min.js"></script>
+    <script src="Scripts/angular-kendo.js"></script>-->
+    <!-- nervgh File Upload -->
+    <script src="scripts/es5-shim.min.js"></script>         <!-- Fix for old browsers -->
+    <script src="scripts/es5-sham.min.js"></script>         <!-- Fix for old browsers -->
+    <script src="scripts/console-sham.js"></script>
+    <script src="scripts/nervgh-angular-file-upload.js"></script>
+
+    <!-- Stripe API -->
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script src="Scripts/angular-payments.min.js"></script>
+
+    <!-- Others -->
+    <script src="Scripts/cycle.js"></script>
+    <script src="Scripts/xeditable.min.js"></script>
+    <script src="Scripts/ng-breadcrumbs.js"></script>
+    <!-- #endregion -->
+    <!-- #region App bootstraping -->
+    <!-- Minified js: We do not need to use all the js below if we use this minified js -->
+    <!--<script src="/appbuild/ngscripts.min.js"></script>-->
+    <!-- App modules -->
+    <script src="app/app.module.js"></script>
+    <script src="app/blocks/blocks.module.js"></script>
+    <script src="app/core/core.module.js"></script>
+    <script src="app/features/features.module.js"></script>
+    <script src="app/layout/layout.module.js"></script>
+    <script src="app/services/data/data.module.js"></script>
+    <script src="app/services/membership/membership.module.js"></script>
+    <script src="app/services/stripe/stripe.module.js"></script>
+    <script src="app/widgets/widgets.module.js"></script>
+    <script src="app/widgets/dnaSimpleCaptcha.js"></script>
+
+    <script src="app/core/config.js"></script>
+    <script src="app/blocks/exception/config.exceptionHandler.js"></script>
+    <script src="app/blocks/route/config.route.js"></script> <!-- UNDONE: Use gulp minified file for now -->
+    <script src="app/blocks/route/routeMediator.js"></script>
+    <script src="app/blocks/route/urlHelper.js"></script>
+
+    <!-- common Modules -->
+    <script src="app/core/common/bootstrap.dialog.js"></script>
+    <script src="app/core/common/common.js"></script>
+    <script src="app/core/common/logger.js"></script>
+    <script src="app/core/common/spinner.js"></script>
+    <!-- #endregion -->
+    <!-- #region App files-->
+    <!-- Base files -->
+    <!--<script src="Scripts/Bundles/layout/layout.min.js"></script>-->
+    <script src="app/layout/shell.js"></script>
+    <script src="app/layout/sidebar.js"></script>
+    <script src="app/layout/topnav.js"></script>
+    <script src="app/layout/quicksidebar.js"></script>
+
+    <!-- Validations -->
+    <!-- TODO: Need to put to bundle -->
+    <script src="app/services/data/validations/allDataType.validation.js"></script>
+    <script src="app/services/data/validations/validation.validation.js"></script>
+
+    <!-- Metronic files -->
+    <!--<script src="Scripts/Bundles/controller/metronicController.min.js"></script>-->
+     <script src="app/features/dashboardMetronic/dashboardMetronicController.js"></script>
+    <script src="app/features/uiBootstrapMetronic/uiBootstrapController.js"></script>
+    <!--<script src="app/features/fileUploadMetronic/fileUploadController.js"></script>-->
+    <script src="app/features/uiSelectMetronic/uiSelectController.js"></script>
+    <script src="app/features/formToolsMetronic/formToolsController.js"></script>
+    <script src="app/features/dateTimePickerMetronic/dateTimePickersController.js"></script>
+    <script src="app/features/customDropdownMetronic/customDropdownController.js"></script>
+    <script src="app/features/treeViewMetronic/treeViewController.js"></script>
+    <script src="app/features/dataTablesMetronic/advanceDataTablesController.js"></script>
+    <script src="app/features/dataTablesMetronic/ajaxDataTablesController.js"></script>
+    <script src="app/features/userProfileMetronic/userProfileController.js"></script>
+    <script src="app/features/taskAndTodoMetronic/taskAndTodoController.js"></script> 
+
+    <!-- Controllers -->
+    <!--<script src="Scripts/Bundles/controller/baseController.min.js"></script>-->
+     <script src="app/features/dashboard/dashboardController.js"></script>
+    <script src="app/features/typeOfType/typeOfTypeListController.js"></script>
+    <script src="app/features/typeOfType/typeOfTypeItemController.js"></script>
+    <script src="app/features/validation/validationListController.js"></script>
+    <script src="app/features/validation/validationItemController.js"></script>
+    <script src="app/features/allDataType/allDataTypeListController.js"></script>
+    <script src="app/features/allDataType/allDataTypeItemController.js"></script>
+    <script src="app/features/user/userListController.js"></script>
+    <script src="app/features/user/userItemController.js"></script>
+    <script src="app/features/styling/stylingController.js"></script>
+    <script src="app/features/admin/adminController.js"></script>
+    <script src="app/features/ui/uiController.js"></script>
+    <script src="app/features/fileUpload/fileUploadController.js"></script>
+    <script src="app/features/wip/wipController.js"></script>
+    <script src="app/features/membership/loginController.js"></script>
+    <script src="app/features/membership/registerController.js"></script>
+    <script src="app/features/membership/manageController.js"></script>
+    <script src="app/features/membership/authComplete.js"></script>
+    <script src="app/features/membership/associateController.js"></script>
+    <script src="app/features/membership/resetPasswordController.js"></script>
+    <script src="app/features/membership/forgotPasswordController.js"></script>
+    <script src="app/features/accessControlListItem/accessControlListItemListController.js"></script>
+    <script src="app/features/accessControlListItem/accessControlListItemItemController.js"></script>
+    <script src="app/features/aspNetRole/aspNetRoleListController.js"></script>
+    <script src="app/features/aspNetRole/aspNetRoleItemController.js"></script>
+    <script src="app/features/domainObject/domainObjectListController.js"></script>
+    <script src="app/features/domainObject/domainObjectItemController.js"></script>
+    <script src="app/features/permission/permissionListController.js"></script>
+    <script src="app/features/permission/permissionItemController.js"></script>
+    <script src="app/features/payment/paymentController.js"></script>
+    <script src="app/features/payment/subscriptionController.js"></script>
+    <script src="app/features/payment/managePaymentController.js"></script>
+    <script src="app/features/payment/addCardController.js"></script> 
+    <script src="app/features/user/userAspNetRolesListService.js"></script>
+    <script src="app/features/user/userAspNetRolesAssignedListService.js"></script>
+    <script src="app/features/payment/paymentController.js"></script>
+    <script src="app/features/payment/subscriptionController.js"></script>
+    <script src="app/features/payment/managePaymentController.js"></script>
+    <script src="app/features/payment/addCardController.js"></script>
+
+    <!-- #endregion -->
+    <!-- #region App services -->
+    <!-- Base files -->
+    <!--<script src="Scripts/Bundles/services/data/data.min.js"></script>-->
+     <script src="app/services/data/datacontext.js"></script>
+    <script src="app/services/data/entityManagerFactory.js"></script>
+    <script src="app/services/data/model.js"></script>
+    <script src="app/services/data/model.validation.js"></script> 
+
+    <!-- Membership services -->
+    <!--<script src="Scripts/Bundles/services/membership/membership.min.js"></script>-->
+     <script src="app/services/membership/authService.js"></script>
+    <script src="app/services/membership/authInterceptorService.js"></script>
+    <script src="app/services/membership/accountService.js"></script> 
+
+    <!-- Stripe services -->
+    <!--<script src="Scripts/Bundles/services/stripe/stripe.min.js"></script>-->
+
+    <!-- Repositories -->
+    <!--<script src="Scripts/Bundles/services/data/repositories/repositories.min.js"></script>-->
+     <script src="app/services/data/repositories/repositories.js"></script>
+    <script src="app/services/data/repositories/repository.abstract.js"></script>
+    <script src="app/services/data/repositories/repository.accessControlListItem.js"></script>
+    <script src="app/services/data/repositories/repository.admin.js"></script>
+    <script src="app/services/data/repositories/repository.allDataType.js"></script>
+    <script src="app/services/data/repositories/repository.aspNetRole.js"></script>
+    <script src="app/services/data/repositories/repository.aspNetUser.js"></script>
+    <script src="app/services/data/repositories/repository.aspNetUserRole.js"></script>
+    <script src="app/services/data/repositories/repository.attachment.js"></script>
+    <script src="app/services/data/repositories/repository.auditLog.js"></script>
+    <script src="app/services/data/repositories/repository.domainObject.js"></script>
+    <script src="app/services/data/repositories/repository.eLMAH_Error.js"></script>
+    <script src="app/services/data/repositories/repository.lookup.js"></script>
+    <script src="app/services/data/repositories/repository.permission.js"></script>
+    <script src="app/services/data/repositories/repository.typeOfType.js"></script>
+    <script src="app/services/data/repositories/repository.user.js"></script> 
+    <script src="app/services/data/repositories/repository.validation.js"></script>
+    <script src="app/services/data/dataService.js"></script>
+    <script src="app/services/data/accessControlList/aclService.js"></script>
+    <!-- Begin DNA Widgets -->
+<!--    <script src="Scripts/Bundles/dnaPlugins.js"></script>-->
+
+    <!--<script src="app/widgets/angular-breadcrumb.min.js"></script>-->
+    <!-- END DNA Widgets -->
+    <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+    <!-- BEGIN CORE JQUERY PLUGINS -->
+    <!--[if lt IE 9]>
+    <script src="../../../assets/global/plugins/respond.min.js"></script>
+    <script src="../../../assets/global/plugins/excanvas.min.js"></script>
+    <![endif]-->
+    <script src="assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+    <!-- END CORE JQUERY PLUGINS -->
+    <!-- BEGIN CORE ANGULARJS PLUGINS -->
+<!--    <script src="assets/global/plugins/angularjs/angular.min.js" type="text/javascript"></script>-->
+<!--    <script src="assets/global/plugins/angularjs/angular-sanitize.min.js" type="text/javascript"></script>-->
+    <script src="assets/global/plugins/angularjs/angular-touch.min.js" type="text/javascript"></script>
+<!--    <script src="assets/global/plugins/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>-->
+    <script src="assets/global/plugins/angularjs/plugins/ocLazyLoad.min.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/angularjs/plugins/ui-bootstrap-tpls.min.js" type="text/javascript"></script>
+    <!-- END CORE ANGULARJS PLUGINS -->
+    <!-- BEGIN APP LEVEL ANGULARJS SCRIPTS -->
+
+    <script src="app/directives.js"></script>
+
+    <!-- END APP LEVEL ANGULARJS SCRIPTS -->
+    <!-- BEGIN APP LEVEL JQUERY SCRIPTS -->
+    <script src="assets/global/scripts/metronic.js" type="text/javascript"></script>
+    <script src="assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
+    <script src="assets/admin/layout/scripts/quick-sidebar.js" type="text/javascript"></script>
+    <script src="assets/admin/layout/scripts/demo.js" type="text/javascript"></script>
+    <!-- END APP LEVEL JQUERY SCRIPTS -->
+    <!-- Metronic Plugin-->
+    <!--<script src="assets/global/plugins/datatables/all.min.js"></script>-->
+
+    <script type="text/javascript">
+        /* Init Metronic's core jquery plugins and layout scripts */
+        $(document).ready(function () {
+
+            Metronic.init(); // Run metronic theme
+            Metronic.setAssetsPath('../../../assets/'); // Set the assets folder path
+        });
+
+    </script>
+    <!-- END JAVASCRIPTS -->
+
+</body>
+</html>

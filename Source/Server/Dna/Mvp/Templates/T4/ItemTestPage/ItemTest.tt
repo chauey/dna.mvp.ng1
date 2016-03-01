@@ -1,0 +1,316 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+<#@ output extension=".cs" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+if (schemaNames.Count() > 0)
+{
+	foreach (string schemaName in schemaNames)
+	{
+		// Statement
+		List<string> tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+		foreach (string tableName in tableNames)
+		{
+			if (!string.IsNullOrEmpty(tableName)) 
+			{
+				// ----- Declare variables -----
+				//var entityName = "typeOfType";		var entityNamePlural = entityName + "s";
+				//var EntityName = "TypeOfType";		var EntityNamePlural = EntityName + "s";
+				//var DisplayName = "Type Of Type";		var DisplayNamePlural = DisplayName + "s";
+
+				string entityNamePlural = GetStringIncamelCase(tableName);
+				string entityName = GetStringInSingle(entityNamePlural);
+					
+				string EntityNamePlural = tableName;
+				string EntityName = GetStringInSingle(EntityNamePlural);
+					
+				string DisplayNamePlural = EntityNamePlural;
+				string DisplayName = EntityName;
+
+				// Column Names
+				//var PrimaryKeyName = GetPrimaryKeyName(schemaName, tableName, metaDataTable);
+				//if(string.IsNullOrEmpty(PrimaryKeyName)) PrimaryKeyName = EntityName + "Id";
+				//var primaryKeyName = GetStringIncamelCase(PrimaryKeyName);
+				List<string> columnNames = GetColumnNames(schemaName, tableName, metaDataTable);
+				List<string> mainColumnNames = GetMainColumnNames(schemaName, tableName, metaDataTable);
+				List<string> mainColumnNamesIncamelCase = ConvertTocamelCase(mainColumnNames);
+				Dictionary<string, string> mainColumnNamesWithTypes = GetMainColumnNamesWithTypes(schemaName, tableName, metaDataTable);
+				Dictionary<string, int> mainColumnNamesWithLengths = GetMainColumnNamesWithLengths(schemaName, tableName, metaDataTable);
+                Dictionary<string, string> mainColumnNamesWithExtProperties = GetMainColumnNamesWithExtProperties(schemaName, tableName, metaDataTable);
+                List<string> requiredColumnNames = GetRequiredColumns(schemaName, tableName, metaDataTable);
+
+				// Dropdown / Foreign Keys
+				List<string> foreignKeys = GetFKColumnNames(schemaName, tableName, metaDataTable);
+				List<string> foreignKeysIncamelCase = ConvertTocamelCase(foreignKeys);
+#>
+using System;
+using System.Data;
+using System.IO;
+using Dna.Mvp.Automation;
+using Dna.Mvp.Automation.Models;
+using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.Events;
+
+namespace Dna.Mvp.Tests
+{
+    [TestFixture]
+    public class <#= EntityName #>Test
+    {
+        private Driver _driver;
+
+        [SetUp]
+        public void Init()
+        {
+            // Use this initialization to run one instance at a time locally
+            _driver = new Driver();
+        }
+
+        [TearDown]
+        public void Close()
+        {
+            // uncomment if want to close the driver after running a testcase
+            _driver.Close();
+        }
+		
+		#region Tests
+		
+<#if (mainColumnNames.Count > 0) 
+{
+	// loops and creates Test for each field/column
+    for (int i = 0; i < mainColumnNames.Count; i++)
+    {
+        if (mainColumnNamesWithTypes[mainColumnNames[i]] == "bit")
+        {
+            continue;
+        }
+        // If current field has date-type of date-time
+        else if (
+            mainColumnNamesWithTypes[mainColumnNames[i]] == "date" ||
+            mainColumnNamesWithTypes[mainColumnNames[i]] == "time" ||
+            mainColumnNamesWithTypes[mainColumnNames[i]] == "datetime" ||
+            mainColumnNamesWithTypes[mainColumnNames[i]] == "datetime2" ||
+            mainColumnNamesWithTypes[mainColumnNames[i]] == "smalldatetime")                                       
+        {
+            // If current field has Required constraint
+            if (requiredColumnNames.IndexOf(mainColumnNames[i]) < 0)
+            {#>
+        [Test]
+        public void <#=mainColumnNames[i]#>RequiredTest(IWebDriver driver)
+        {
+            /** Assign **/
+            <#=EntityName#>Page page = new <#=EntityName#>Page(driver);
+
+            /** Act **/
+            
+            // goes to the main page.
+            page.GoTo();
+
+            // waits 2 seconds for the page to load completely.
+            AutomationService.Wait(2);
+
+            // performs a click action to add new <#=EntityName#>
+            page.Add<#=EntityName#>();
+			
+			// TODO: implement the Assert template code for date-time later
+        }
+            <#}#>
+        <#}
+		// If current field has data-type of number
+		else if (
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "bigint" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "decimal" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "int" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "money" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "numeric" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "smallint" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "smallmoney" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "tinyint" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "float" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "real")
+		{
+			if (requiredColumnNames.IndexOf(mainColumnNames[i]) < 0)
+            {#>
+		[Test]
+        public void <#=mainColumnNames[i]#>RequiredTest(IWebDriver driver)
+        {
+            /** Assign **/
+            <#=EntityName#>Page page = new <#=EntityName#>Page(driver);
+
+            /** Act **/
+            
+            // goes to the main page.
+            page.GoTo();
+
+            // waits 2 seconds for the page to load completely.
+            AutomationService.Wait(2);
+
+            // performs a click action to add new <#=EntityName#>
+            page.Add<#=EntityName#>();
+			
+			// sends an empty string to the numeric field and submit/save the form/view.
+			page.Input<#= mainColumnNames[i] #>TextBox("").Save();
+			
+			/** Assert **/
+			
+			// Check if the validation error is displayed
+			bool isErrorMessageDisplay = page.ErrorMessageFor<#=mainColumnNames[i]#>.Displayed;
+			Assert.IsTrue(isErrorMessageDisplay);
+			
+			// Check if the message is right
+			string validationErrorMessage = page.ErrorMessageFor<#=mainColumnNames[i]#>.Text;
+			// TODO: create T4 template for the error validation message for more asserting?
+			//Assert.IsTrue(string.Compare(validationErrorMessage, generatedErrorMessage) == 0);
+        }
+			<#}
+			// test with a random character for these numeric fields. 
+			else {#>
+		[Test]
+        public void <#=mainColumnNames[i]#>InvalidValueTest(IWebDriver driver)
+        {
+            /** Assign **/
+            <#=EntityName#>Page page = new <#=EntityName#>Page(driver);
+
+            /** Act **/
+            
+            // goes to the main page.
+            page.GoTo();
+
+            // waits 2 seconds for the page to load completely.
+            AutomationService.Wait(2);
+
+            // performs a click action to add new <#=EntityName#>
+            page.Add<#=EntityName#>();
+			
+			// sends an empty string to the numeric field and submit/save the form/view.
+			page.Input<#= mainColumnNames[i] #>TextBox("a").Save();
+			
+			/** Assert **/
+			
+			// Check if the validation error is displayed
+			bool isErrorMessageDisplay = page.ErrorMessageFor<#=mainColumnNames[i]#>.Displayed;
+			Assert.IsTrue(isErrorMessageDisplay);
+			
+			// Check if the message is right
+			string validationErrorMessage = page.ErrorMessageFor<#=mainColumnNames[i]#>.Text;
+			// TODO: create T4 template for the error validation message for more asserting?
+			//Assert.IsTrue(string.Compare(validationErrorMessage, generatedErrorMessage) == 0);
+        }
+			<#}#>
+		<#}
+		// If current field has data-type of characters/strings
+		else if (
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "char" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "nchar" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "varchar" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "nvarchar" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "text" ||
+			mainColumnNamesWithTypes[mainColumnNames[i]] == "ntext")
+		{
+			// this field is required
+			if (requiredColumnNames.IndexOf(mainColumnNames[i]) < 0)
+            {#>
+		[Test]
+        public void <#=mainColumnNames[i]#>RequiredTest(IWebDriver driver)
+        {
+            /** Assign **/
+            <#=EntityName#>Page page = new <#=EntityName#>Page(driver);
+
+            /** Act **/
+            
+            // goes to the main page.
+            page.GoTo();
+
+            // waits 2 seconds for the page to load completely.
+            AutomationService.Wait(2);
+
+            // performs a click action to add new <#=EntityName#>
+            page.Add<#=EntityName#>();
+			
+			// sends an empty string to the numeric field and submit/save the form/view.
+			page.Input<#= mainColumnNames[i] #>TextBox("").Save();
+			
+			/** Assert **/
+			
+			// Check if the validation error is displayed
+			bool isErrorMessageDisplay = page.ErrorMessageFor<#=mainColumnNames[i]#>.Displayed;
+			Assert.IsTrue(isErrorMessageDisplay);
+			
+			// Check if the message is right
+			string validationErrorMessage = page.ErrorMessageFor<#=mainColumnNames[i]#>.Text;
+			// TODO: create T4 template for the error validation message for more asserting?
+			//Assert.IsTrue(string.Compare(validationErrorMessage, generatedErrorMessage) == 0);
+        }
+			<#}
+			// this field has length constraint
+			else if (mainColumnNamesWithLengths.ContainsKey(mainColumnNames[i]))
+			{
+				int columnMaxLength = 0;
+				
+				// try-get the max-length value... 
+				bool succeeded = mainColumnNamesWithLengths.TryGetValue(mainColumnNames[i], out columnMaxLength);
+				if (succeeded)
+				{
+					string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+					Random random = new Random();
+					
+					// generates random string with number of character = max-length + 1
+					string result = new string(
+						Enumerable.Repeat(chars, columnMaxLength + 1)
+						.Select(s => s[random.Next(s.Length)])
+						.ToArray());#>
+		[Test]
+        public void <#=mainColumnNames[i]#>LengthTest(IWebDriver driver)
+        {
+            /** Assign **/
+            <#=EntityName#>Page page = new <#=EntityName#>Page(driver);
+			int <#=mainColumnNamesIncamelCase[i]#>MaxLength = <#=columnMaxLength#>;
+			
+            /** Act **/
+            
+            // goes to the main page.
+            page.GoTo();
+
+            // waits 2 seconds for the page to load completely.
+            AutomationService.Wait(2);
+
+            // performs a click action to add new <#=EntityName#>
+            page.Add<#=EntityName#>();
+			
+			// sends the generated string that passes the max-length limit
+			// to the numeric field and submit/save the form/view.
+			page.Input<#= mainColumnNames[i] #>TextBox(<#=result#>).Save();
+			
+			/** Assert **/
+			
+			// Check if the validation error is displayed
+			bool isErrorMessageDisplay = page.ErrorMessageFor<#=mainColumnNames[i]#>.Displayed;
+			Assert.IsTrue(isErrorMessageDisplay);
+			
+			// Check if the message is right
+			string validationErrorMessage = page.ErrorMessageFor<#=mainColumnNames[i]#>.Text;
+			// TODO: create T4 template for the error validation message for more asserting?
+			//Assert.IsTrue(string.Compare(validationErrorMessage, generatedErrorMessage) == 0);
+        }
+				<#}#>
+			<#}#>
+		<#}#>
+    <#}#>
+<#}#>
+		
+		#endregion
+	}
+}
+<# 
+				SaveOutput(entityName, EntityName + "Test.cs");
+			}
+		}
+	}
+}
+#>

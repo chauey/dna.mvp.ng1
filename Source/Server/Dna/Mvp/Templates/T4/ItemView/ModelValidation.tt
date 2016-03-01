@@ -1,0 +1,260 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+<#@ output extension=".js" #>
+
+<#@ assembly name="Newtonsoft.Json.dll" #>
+<#@ import namespace="Newtonsoft.Json.Serialization" #>
+<#@ import namespace="Newtonsoft.Json.Linq" #>
+<#@ import namespace="Newtonsoft.Json" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+List<KeyValuePair<string, string>> requiredColumns = new List<KeyValuePair<string, string>>();
+Dictionary<string, Dictionary<string, JToken>> tableWithColumnExtProperties = new Dictionary<string, Dictionary<string, JToken>>();
+Dictionary<string, Dictionary<string, string>> tableWithColumnTypes = new Dictionary<string, Dictionary<string, string>>();
+List<string> tableNames = new List<string>();
+List<string> createValidationMethods = new List<string>();
+List<string> applyValidationMethods = new List<string>();
+
+if (schemaNames.Count() > 0)
+{
+    foreach (string schemaName in schemaNames)
+    {
+        // Statement
+        tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+        foreach (string tableName in tableNames)
+        {
+            if (!string.IsNullOrEmpty(tableName) && !tableName.StartsWith("webpages_") && !tableName.StartsWith("__")) 
+            {
+                var entityNamePlural = GetStringIncamelCase(tableName);
+                var entityName = GetStringInSingle(entityNamePlural);
+
+                // Add required columns to list
+                foreach (var requiredColumn in GetRequiredColumns(schemaName, tableName, metaDataTable))
+                {
+                    requiredColumns.Add(new KeyValuePair<string, string>(tableName, requiredColumn));
+                }
+
+                // Add extended properties to list
+                Dictionary<string, JToken> extPropertiesDictionary = new Dictionary<string, JToken>();
+                tableWithColumnExtProperties.Add(tableName, extPropertiesDictionary);
+                var extProperties = GetMainColumnNamesWithExtProperties(schemaName, tableName, metaDataTable);
+                foreach (var extProperty in extProperties)
+                {
+                    JToken extPropertyJson = ((JObject)JsonConvert.DeserializeObject(extProperty.Value))["validations"][0];
+                    extPropertiesDictionary.Add(extProperty.Key, extPropertyJson);
+                }
+                 
+                // Add columns with types to list
+                Dictionary<string, string> columnTypesDictionary = new Dictionary<string, string>();
+                tableWithColumnTypes.Add(tableName, columnTypesDictionary);
+                var columnTypes = GetMainColumnNamesWithTypes(schemaName, tableName, metaDataTable);
+                foreach (var columnType in columnTypes)
+                {
+                    columnTypesDictionary.Add(columnType.Key, columnType.Value);
+                }
+            }
+        }
+    }
+}
+#>
+
+(function () {
+/**
+ * @description
+ * 
+ * App service to handle Breeze built-in and custom validations:
+ * - Create.
+ * - Register.
+ * - Apply.
+ */
+
+    'use strict';
+    var serviceId = 'model.validation';
+    angular.module('app.services.data').factory(serviceId, ['common', modelValidation]);
+
+    function modelValidation(common) {
+        var entityNames;
+        var log = common.logger.getLogFn(serviceId);
+        var Validator = breeze.Validator;
+
+        // Add custom validations variables here
+        var requireReferenceValidator
+        <#foreach (var tableWithColumnExtProp in tableWithColumnExtProperties.Where(t => t.Value.Any()))
+        {
+            foreach (var extProp in tableWithColumnExtProp.Value)
+            {#>
+                ,<#=extProp.Key + "CustomValidator"#>
+            <#}
+        }#>
+        ;
+
+        var service = {
+            applyValidators: applyValidators,
+            createAndRegister: createAndRegister
+        };
+
+        return service;
+
+        
+        // #region Create & apply validations       
+        // #region Required
+        function applyRequireReferenceValidators(metadataStore) {
+            var entityType;
+            var navigations;
+
+            <#foreach (string tableName in tableNames)
+            {
+                if (!requiredColumns.Any(r => r.Key == tableName) || tableName.StartsWith("webpages_") || tableName.StartsWith("__"))
+                {
+                    continue;
+                }
+            #>
+
+                // Get entity type of the table
+                entityType = metadataStore.getEntityType('<#=tableName#>');
+
+                // Get all required columns
+                navigations = [
+                <#foreach (var column in requiredColumns.Where(r => r.Key == tableName))
+                {#>
+                    '<#=column.Value#>', 
+                <#}#>
+                ];
+                
+                // Push validation
+                navigations.forEach(function (propertyName) {
+                    entityType.getProperty(propertyName).validators
+                        .push(requireReferenceValidator);
+                });
+            <#}#>
+        }
+
+        function createRequireReferenceValidator() {
+            var name = 'requireReferenceEntity';
+
+            // isRequired = true so zValidate directive displays required indicator
+            var ctx = {
+                messageTemplate: 'Missing %displayName%',
+                isRequired: true
+            };
+            var val = new Validator(name, valFunction, ctx);
+            return val;
+
+            // passes if reference has a value and is not the nullo (whose id === 0)
+            function valFunction(value) {
+                return value ? value.id !== 0 : false;
+            }
+        }
+        // #endregion
+
+
+        // #region Integer
+        function createIntegerCustomValidator() {
+            var val = Validator.makeRegExpValidator(
+                'integerCustom', //'integer' coincides Breeze built-in validation name
+                /^[1-9]\d*$/, //starts with 0-9 and digit only
+                "'%value%' is not a positive integer.");
+            return val;
+        }
+
+        <#foreach (var tableWithColumnType in tableWithColumnTypes.Where(t => t.Value.Any()))
+        {
+            foreach (var columnType in tableWithColumnType.Value)
+            {
+                string applyValidationMethod = "apply" + columnType.Key + "IntegerValidators";
+                applyValidationMethods.Add(applyValidationMethod);
+                
+            #>
+                function <#=applyValidationMethod#>(metadataStore) {
+                    // Get entity type of the table
+                    var entityType = metadataStore.getEntityType('<#=tableWithColumnType.Key#>');
+
+                    // Get Integer columns
+
+                    // Push vaidation
+                    
+                }
+            <#}
+        }#>
+        // #endregion
+
+
+        // #region Extended Properties
+        <#foreach (var tableWithColumnExtProp in tableWithColumnExtProperties.Where(t => t.Value.Any()))
+        {
+            foreach (var extProp in tableWithColumnExtProp.Value)
+            {
+                string createValidationMethod = "create" + extProp.Key + "CustomValidator";
+                string applyValidationMethod = "apply" + extProp.Key + "CustomValidators";
+                createValidationMethods.Add(createValidationMethod);
+                applyValidationMethods.Add(applyValidationMethod);
+                
+            #>
+                function <#=createValidationMethod#>() {
+                    var val = Validator.makeRegExpValidator(
+                        '<#=extProp.Value["type"]#>',
+                        <#=extProp.Value["regularExpression"]#>,
+                        "<#=extProp.Value["errorMessageTemplate"]#>");
+                    return val;
+                }
+
+                function <#=applyValidationMethod#>(metadataStore) {
+                    var entityType = metadataStore.getEntityType('<#=tableWithColumnExtProp.Key#>');
+                    entityType.getProperty('<#=extProp.Key#>').validators
+                        .push(<#=extProp.Key + "CustomValidator"#>);
+                }
+            <#}
+        }#>
+        // #endregion
+        // #endregion
+
+
+        // #region Validation configurations
+        // This function is called in model.extendMetadata()
+        // Apply Breeze & custom validations
+        function applyValidators(metadataStore)
+        {
+            // Required
+            applyRequireReferenceValidators(metadataStore);
+
+            // Extended properties
+            <#foreach (string applyValidationMethod in applyValidationMethods)
+            {#>
+                <#=applyValidationMethod#>(metadataStore);
+            <#}#>
+
+            // datatype
+            // int
+
+            // data constraints
+            // maxlength
+
+            //,,,
+        }
+
+        // This function is called in model.configureMetadataStore()
+        // Create & register custom validations
+        function createAndRegister(eNames) {
+            entityNames = eNames;
+
+            // Required
+            Validator.register(createRequireReferenceValidator());
+
+            // Extended properties
+            <#foreach (string createValidationMethod in createValidationMethods)
+            {#>
+                <#=createValidationMethod.Substring(6)#> = <#=createValidationMethod#>();
+                Validator.register(<#=createValidationMethod.Substring(6)#>);
+            <#}#>
+
+            ////log('Validators created and registered.', null, serviceId, false);
+        }
+        // #endregion        
+    }
+})();
+
+<# 
+    SaveOutput(string.Empty, "model.validation.js");
+#>

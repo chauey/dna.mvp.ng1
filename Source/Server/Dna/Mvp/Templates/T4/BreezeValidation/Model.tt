@@ -1,0 +1,176 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+<#@ output extension=".js" #>
+
+<#@ assembly name="Newtonsoft.Json.dll" #>
+<#@ import namespace="Newtonsoft.Json.Serialization" #>
+<#@ import namespace="Newtonsoft.Json.Linq" #>
+<#@ import namespace="Newtonsoft.Json" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+// Required columns
+List<KeyValuePair<string, string>> requiredColumns = new List<KeyValuePair<string, string>>();
+
+// Tables with extended properties
+Dictionary<string, Dictionary<string, JToken>> tableWithColumnExtProperties = new Dictionary<string, Dictionary<string, JToken>>();
+
+// #region Properties with data types
+Dictionary<string, Dictionary<string, string>> tableWithColumnTypes = new Dictionary<string, Dictionary<string, string>>();
+
+// Dictionary with <tableName, propertyName> with each datatype list
+List<KeyValuePair<string, string>> numericProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> datetimeProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> timeProperty = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> bitProperties = new List<KeyValuePair<string, string>>();
+
+// #endregion
+List<string> tableNames = new List<string>();
+List<string> createValidationMethods = new List<string>();
+List<string> applyValidationMethods = new List<string>();
+
+if (schemaNames.Count() > 0)
+{
+    foreach (string schemaName in schemaNames)
+    {
+        // Statement
+        tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+        
+// #region Begin File Content
+#>
+(function () {
+/**
+ * @description
+ * 
+ * App service to config Breeze metdata store:
+ * - Entity & controller names.
+ * - Configure and extend metadataStore.
+ */
+
+    'use strict';
+
+    var serviceId = 'model';
+
+    angular.module('app.services.data').factory(serviceId, [
+	<#foreach (string tableName in tableNames)
+    {
+		if (!tableName.StartsWith("webpages_") && !tableName.StartsWith("__"))
+        {
+			var entityNamePlural = GetStringIncamelCase(tableName);
+			var entityName = GetStringInSingle(entityNamePlural);#>
+															'<#=entityName#>.validation', 
+		<#}
+	}#>
+															model
+														   ]);
+
+    function model(
+	<# var i = 0;
+	foreach (string tableName in tableNames)
+    {
+		if (!tableName.StartsWith("webpages_") && !tableName.StartsWith("__"))
+        {
+			var entityNamePlural = GetStringIncamelCase(tableName);
+			var entityName = GetStringInSingle(entityNamePlural);
+			if (i == tableNames.Count - 1)
+			{#>
+				<#=entityName#>Validation
+			<#}
+			else
+			{#>
+				<#=entityName#>Validation,
+			<#}#>
+	<#i++;
+		}
+	}#>	
+	) {
+        var entityNames = {
+		<#foreach (string tableName in tableNames)
+		{
+			if (!tableName.StartsWith("webpages_") && !tableName.StartsWith("__"))
+            {
+				var entityNamePlural = GetStringIncamelCase(tableName);
+				var entityName = GetStringInSingle(entityNamePlural);
+				var EntityName = GetStringInSingle(tableName);#>
+			<#=entityName#>: '<#=EntityName#>', 
+			<#}
+		}#>
+            // Add more entity names here
+        };
+
+        var controllerNames = {
+		<#foreach (string tableName in tableNames)
+		{
+			if (!tableName.StartsWith("webpages_") && !tableName.StartsWith("__"))
+            {
+				var entityNamePlural = GetStringIncamelCase(tableName);
+				var entityName = GetStringInSingle(entityNamePlural);#>
+			<#=entityName#>: '<#=tableName#>', 
+			<#}
+		}#>
+            // Add more controller names here
+        };
+
+        var service = {
+            configureMetadataStore: configureMetadataStore,
+            entityNames: entityNames,
+            controllerNames: controllerNames,
+            createNullos: createNullos,
+            extendMetadata: extendMetadata
+        };
+
+        return service;
+
+        function configureMetadataStore() {
+            // Create and register validations
+			<#foreach (string tableName in tableNames)
+			{
+				if (!tableName.StartsWith("webpages_") && !tableName.StartsWith("__"))
+				{
+					var entityNamePlural = GetStringIncamelCase(tableName);
+					var entityName = GetStringInSingle(entityNamePlural);#>
+				<#=entityName#>Validation.createAndRegister(entityNames); 
+				<#}
+			}#>            
+        }
+
+        // This function is called in model.prime.extendMetadata
+        function extendMetadata(metadataStore) {
+            // Apply validations
+			<#foreach (string tableName in tableNames)
+			{
+				if (!tableName.StartsWith("webpages_") && !tableName.StartsWith("__"))
+				{
+					var entityNamePlural = GetStringIncamelCase(tableName);
+					var entityName = GetStringInSingle(entityNamePlural);#>
+				<#=entityName#>Validation.applyValidators(metadataStore);
+				<#}
+			}#>            
+        }
+
+        // Not currently used this method, from BreezeController instead
+        function createNullos(manager) {
+            var unchanged = breeze.EntityState.Unchanged;
+
+            //createNullo(entityNames.typeOfType);
+            // Just need to create nullo for the entity type that is not included in lookup lists
+            // Add more Nullos here
+
+            function createNullo(entityName, values) {
+                var initialValues = values || { name: ' [Select a ' + entityName + ']' };
+                return manager.createEntity(entityName, initialValues, unchanged);
+            }
+        }
+    }
+})();
+
+<#
+// #endregion End File Content
+			SaveOutput(string.Empty, "model.js");
+			//}
+        //}
+    }
+}
+#>

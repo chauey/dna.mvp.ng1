@@ -1,0 +1,94 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container">
+    <div class="row">
+        <h1 class="page-header">DOMAIN OBJECTS list</h1>
+        <div class="col-lg-8">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Is Active</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="do in domainobjects" style="cursor: pointer">
+                        <td>
+                            <div ng-hide="do.editing">{{do.name}}</div>
+                            <div>
+                                <form ng-submit="doneEditing(do)">
+                                    <strong>
+                                        <em>
+                                            <input type="text" class="form-control" ng-show="do.editing" ng-model="do.name" ng-blur="doneEditing(do)" autofocus />
+                                        </em>
+                                    </strong>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-hide="do.editing">{{do.description}}</div>
+                            <div>
+                                <form ng-submit="doneEditing(do)">
+                                    <strong>
+                                        <em>
+                                            <input type="text" class="form-control" ng-show="do.editing" ng-model="do.description" ng-blur="doneEditing(do)" autofocus
+                                            />
+                                        </em>
+                                    </strong>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-hide="do.editing">{{do.isActive}}</div>
+                            <div>
+                                <form ng-submit="doneEditing(do)">
+                                    <strong>
+                                        <em>
+                                            <input type="checkbox" class="form-control" ng-show="do.editing" ng-model="do.isActive" ng-blur="doneEditing(do)" autofocus
+                                            />
+                                        </em>
+                                    </strong>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <button ng-hide="do.editing" type="button" class="btn btn-primary" ng-click="editDO(do)">Edit</button>
+                            <button ng-show="do.editing" type="button" class="btn btn-success" ng-blur="doneEditing(do)">Save</button>
+                            <button ng-hide="do.editing" type="button" class="btn btn-danger" ng-click="deleteDO(do)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="Domain object name..." ng-model="doName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Description</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="Domain object description..." ng-model="doDesc">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="chkActive" class="col-sm-3 control-label">Is Active</label>
+                    <div class="col-sm-8">
+                        <input id="chkActive" type="checkbox" class="form-control" ng-model="doActive">
+                    </div>
+                </div>
+                <span class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary" ng-click="addDO()">Add New</button>
+                </span>
+            </form>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+    <div class="container">
+        <p>MVP | MEAN</div>
+</footer>

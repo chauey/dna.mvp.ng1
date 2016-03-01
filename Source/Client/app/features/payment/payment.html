@@ -1,0 +1,62 @@
+﻿
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-madison">
+            <div class="portlet-title">
+                <div class="caption">
+                    Stripe Payment
+                </div>
+            </div>
+            <div class="portlet-body">
+                <form name="myForm"
+                      class="form-horizontal" role="form"
+                      stripe-form="stripeCallback">
+
+                    <div class="form-group">
+                        <label for="CardNumber" class="col-sm-1 control-label">Card number</label>
+                        <div class="col-sm-7">
+                            <input id="CardNumber"
+                                   type="text" class="input-block-level"
+                                   payments-validate="card" payments-format="card" payments-type-model="type"
+                                   data-ng-model="number"
+                                   data-ng-class="myForm.number.$card.type" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="NameOnCard" class="col-sm-1 control-label">Name on card </label>
+                        <div class="col-sm-7">
+                            <input id="NameOnCard"
+                                   type="text" class="input-block-level" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Expiry" class="col-sm-1 control-label">Expiry</label>
+                        <div class="col-sm-7">
+                            <input id="Expiry"
+                                   type="text" class="input-block-level"
+                                   data-ng-model="expiry"
+                                   payments-validate="expiry" payments-format="expiry" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="CVC" class="col-sm-1 control-label">CVC</label>
+                        <div class="col-sm-7">
+                            <input id="CVC"
+                                   type="text" class="input-block-level"
+                                   data-ng-model="cvc"
+                                   payments-validate="cvc" payments-format="cvc" payments-type-model="type" />
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="left">
+                            <button type="submit" class="btn btn-primary btn-large">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,113 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container">
+    <div class="row">
+        <h1 class="page-header">MONGOOSE SCHEMA TYPES list</h1>
+        <div class="col-lg-8">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>String</th>
+                        <th>Number</th>
+                        <th>Date</th>
+                        <th>Boolean</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="mst in msts">
+                        <td>
+                            <div ng-hide="mst.editing">{{mst.string}}</div>
+                            <div>
+                                <form ng-submit="doneEditing(mst)">
+                                    <strong>
+                                        <em>
+                                            <input type="text" class="form-control" ng-show="mst.editing" ng-model="mst.string" ng-blur="doneEditing(mst)" autofocus
+                                            />
+                                        </em>
+                                    </strong>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-hide="mst.editing">{{mst.number}}</div>
+                            <div>
+                                <form ng-submit="doneEditing(mst)">
+                                    <strong>
+                                        <em>
+                                            <input type="text" class="form-control" ng-show="mst.editing" ng-model="mst.number" ng-blur="doneEditing(mst)" autofocus
+                                            />
+                                        </em>
+                                    </strong>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-hide="mst.editing">{{mst.date}}</div>
+                            <div>
+                                <form ng-submit="doneEditing(mst)">
+                                    <strong>
+                                        <em>
+                                            <input type="date" class="form-control" ng-show="mst.editing" ng-model="mst.date" ng-blur="doneEditing(mst)" autofocus />
+                                        </em>
+                                    </strong>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-hide="mst.editing">{{mst.boolean}}</div>
+                            <div>
+                                <form ng-submit="doneEditing(mst)">
+                                    <strong>
+                                        <em>
+                                            <input type="checkbox" class="form-control" ng-show="mst.editing" ng-model="mst.boolean" ng-blur="doneEditing(mst)" autofocus
+                                            />
+                                        </em>
+                                    </strong>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <button ng-hide="mst.editing" type="button" class="btn btn-primary" ng-click="editMst(mst)">Edit</button>
+                            <button ng-show="mst.editing" type="button" class="btn btn-success" ng-blur="doneEditing(mst)">Save</button>
+                            <button ng-hide="mst.editing" type="button" class="btn btn-danger" ng-click="deleteMst(mst)">Delete</button>
+                        </td>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4">
+            <form class="form-horizontal" name="mstForm">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">String</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" ng-model="mstString" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Number</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" ng-model="mstNumber" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Date</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control" ng-model="mstDate" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Boolean</label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" class="form-control" ng-model="mstBoolean" />
+                    </div>
+                </div>
+                <span class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary" ng-click="createMst()" ng-disabled="mstForm.$invalid">Add New</button>
+                </span>
+            </form>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+    <div class="container">
+        <p>MVP | MEAN</div>
+</footer>

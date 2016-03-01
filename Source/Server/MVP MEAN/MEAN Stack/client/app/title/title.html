@@ -1,0 +1,51 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container">
+    </br>
+    <div class="row">
+        <h1 class="col-lg-8">Roles list</h1>
+        <form class="form-group col-lg-4">
+            <p class="input-group">
+                <input type="text" class="form-control" placeholder="More role here..." ng-model="newtitle">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary" ng-click="addTitle()">Add New</button>
+                </span>
+            </p>
+        </form>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Role name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="title in titles" style="cursor: pointer">
+                <a>
+                <td>
+                    <div ng-hide="title.editing">{{title.name}}</div>
+                    <div>
+                        <form ng-submit="doneEditing(title)">
+                            <strong>
+                                <em>
+                                    <input type="text" class="form-control" ng-show="title.editing" ng-model="title.name" ng-blur="doneEditing(title)" autofocus
+                                    />
+                                </em>
+                            </strong>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <button ng-hide="title.editing" type="button" class="btn btn-primary" ng-click="editTitle(title)">Edit</button>
+                    <button ng-show="title.editing" type="button" class="btn btn-success" ng-blur="doneEditing(title)">Save</button>
+                    <button ng-hide="title.editing" type="button" class="btn btn-danger" ng-click="deleteTitle(title)">Delete</button>
+                </td>
+                </a>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<footer class="footer">
+    <div class="container">
+        <p>MVP | MEAN</div>
+</footer>

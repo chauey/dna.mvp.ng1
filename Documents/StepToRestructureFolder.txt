@@ -1,0 +1,8 @@
+1. Put all solution files into AllSolutions folder.
+2. Put all packages into Packages folder.
+3. Put all source code folder into Source folder with the approriate structure (such as: Dna\AngularProjectBase\...).
+4. Rename all the sln files and change their projects paths.
+5. Rename all the csproj or vbproj files and change their nuget package paths.
+6. Update all path in the path in the Packages\repositories.config file to point to the packages.config in every project.
+7. Search and replace all "AngularProjectBase" to the "new project name" in entire solution (notice the case)
+

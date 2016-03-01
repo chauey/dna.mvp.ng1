@@ -1,0 +1,137 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ output extension=".txt" #>
+<#@ include file="Utilities\Database.Utility.tt"#>
+
+<#@ assembly name="Newtonsoft.Json.dll" #>
+<#@ import namespace="Newtonsoft.Json.Serialization" #>
+<#@ import namespace="Newtonsoft.Json.Linq" #>
+<#@ import namespace="Newtonsoft.Json" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+// Required columns
+List<KeyValuePair<string, string>> requiredColumns = new List<KeyValuePair<string, string>>();
+
+// Tables with extended properties
+Dictionary<string, Dictionary<string, JToken>> tableWithColumnExtProperties = new Dictionary<string, Dictionary<string, JToken>>();
+
+// #region Properties with data types
+Dictionary<string, Dictionary<string, string>> tableWithColumnTypes = new Dictionary<string, Dictionary<string, string>>();
+
+// Dictionary with <tableName, propertyName> with each datatype list
+List<KeyValuePair<string, string>> numericProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> datetimeProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> timeProperty = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> bitProperties = new List<KeyValuePair<string, string>>();
+
+// #endregion
+List<string> tableNames = new List<string>();
+List<string> createValidationMethods = new List<string>();
+List<string> applyValidationMethods = new List<string>();
+
+if (schemaNames.Count() > 0)
+{
+    foreach (string schemaName in schemaNames)
+    {
+        // Statement
+        tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+        
+// #region Begin File Content
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Breeze.ContextProvider;
+using Breeze.ContextProvider.EF6;
+using Dna.Mvp.Data.Entities;
+using Newtonsoft.Json.Linq;
+
+namespace Dna.Mvp.Data.Repository.Repositories
+{
+    public class MvpRepository : IMvpRepository
+    {
+        private readonly EFContextProvider<MvpContext>
+            _contextProvider = new EFContextProvider<MvpContext>();
+
+        public string Metadata
+        {
+            get { return this._contextProvider.Metadata(); }
+        }
+
+        private MvpContext Context
+        {
+            get { return this._contextProvider.Context; }
+        }
+
+        public string GetMetadata()
+        {
+            return this._contextProvider.Metadata();
+        }
+
+        public SaveResult SaveChanges(JObject saveBundle)
+        {
+            return this._contextProvider.SaveChanges(saveBundle);
+        }
+
+		<#foreach (string tableName in tableNames)
+		{
+            if (!tableName.StartsWith("webpages_") && !tableName.StartsWith("__"))
+            {
+				var EntityNamePlural = tableName;
+				var EntityName = GetStringInSingle(EntityNamePlural);#>
+
+		public IQueryable<<#=EntityName#>> Get<#=EntityNamePlural#>()
+        {
+            return this.Context.<#=EntityNamePlural#>;
+        }
+			<#}
+		}#>
+
+        public IQueryable<TypeOfType> GetParentTypeOfTypes()
+        {
+            return this.Context.TypeOfTypes.Where(x => x.ParentID == null || x.ParentID == Guid.Empty);
+        }
+
+        public IQueryable<User> GetProviders()
+        {
+            // Get Providers from User table, filter by firstname contains 'Provider', wait Dzung for UserType column
+            return this.Context.Users.Where(p => p.FirstName.StartsWith("Provider"));
+        }
+
+		#region CPT
+        public IQueryable<CptCodeSet> GetUserCptCodeSetsByUserID(string userID)
+        {
+            var cptCodeSetIDs =
+                from s in this.GetUserCptCodeSets()
+                where s.UserID.ToString() == userID
+                select s.CptCodeSetID;
+
+            return (from cpt in this.GetCptCodeSets()
+                    where cptCodeSetIDs.Contains(cpt.CptCodeSetID)
+                    select cpt).AsQueryable();
+        }
+
+        public IQueryable<IcdCodeSet> GetUserIcdCodeSetsByUserID(string userID)
+        {
+            var icdCodeSetIDs =
+                from s in this.GetUserIcdCodeSets()
+                where s.UserID.ToString() == userID
+                select s.IcdCodeSetID;
+
+            return (from icd in this.GetIcdCodeSets()
+                    where icdCodeSetIDs.Contains(icd.IcdCodeSetID)
+                    select icd).AsQueryable();
+        }
+
+        #endregion
+    }
+}
+
+<#
+    }
+}
+#>

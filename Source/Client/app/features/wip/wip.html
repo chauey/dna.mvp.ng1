@@ -1,0 +1,15 @@
+﻿<button class="infoButton"
+        data-ng-click="vm.cancelAllWip()" data-ng-disabled="!vm.wip.length">
+    <i class="fa fa-undo"></i> Cancel All Work in Progress
+</button>
+<div class="widget wlightblue">
+    <div data-dna-widget-header title="{{vm.title}}"
+         subtitle="{{vm.wip.length}}"></div>
+
+    <!-- Include wipwidget.html -->
+    <div class="widget-content" data-ng-include="'/app/features/wip/wipwidget.html'">
+    </div>
+    <div class="widget-foot">
+        <div class="clearfix"></div>
+    </div>
+</div>

@@ -1,0 +1,275 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C418CD13-98A2-4957-92E8-B824E69A0CEC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Dna.AngularProjectBase.Templates.T4</RootNamespace>
+    <AssemblyName>Dna.AngularProjectBase.Templates.T4</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\..\..\AllSolutions\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DatabaseInformation\AngularProjectBaseModelForT4Template.Designer.cs" />
+    <Compile Include="DatabaseInformation\AngularProjectBaseModelForT4Template1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AngularProjectBaseModelForT4Template.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="ItemTestPage\ItemPage.cs" />
+    <Compile Include="ItemTestPage\ItemPage1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemPage.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ItemTestPage\ItemTest.cs" />
+    <Compile Include="ItemTestPage\ItemTest1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemTest.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteConfig\RouteConfig.cs" />
+    <Compile Include="RouteConfig\RouteConfig1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RouteConfig.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\Database.Utility.cs" />
+    <Compile Include="Utilities\Database.Utility1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Database.Utility.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AngularProjectBaseRepository1.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AngularProjectBaseRepository.tt</DependentUpon>
+    </Content>
+    <Content Include="BreezeController.txt" />
+    <Content Include="BreezeController1.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BreezeController.tt</DependentUpon>
+    </Content>
+    <Content Include="BreezeValidation\Model.js" />
+    <Content Include="BreezeValidation\Model1.js">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model.tt</DependentUpon>
+    </Content>
+    <Content Include="BreezeValidation\ModelValidation.js" />
+    <Content Include="BreezeValidation\ModelValidation1.js">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelValidation.tt</DependentUpon>
+    </Content>
+    <Content Include="DatabaseInformation\Class.txt" />
+    <Content Include="DatabaseInformation\Class1.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Class.tt</DependentUpon>
+    </Content>
+    <Content Include="DatabaseInformation\Database.txt" />
+    <Content Include="DatabaseInformation\Database1.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Database.tt</DependentUpon>
+    </Content>
+    <Content Include="DatabaseInformation\Model.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model.tt</DependentUpon>
+    </Content>
+    <Content Include="EntityRepository\EntityRepository.js" />
+    <Content Include="EntityRepository\EntityRepository1.js">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityRepository.tt</DependentUpon>
+    </Content>
+    <Content Include="IAngularProjectBaseRepository.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IAngularProjectBaseRepository.tt</DependentUpon>
+    </Content>
+    <Content Include="ItemController\ItemController.js" />
+    <Content Include="ItemController\ItemController1.js">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemController.tt</DependentUpon>
+    </Content>
+    <Content Include="ItemController\ManyToManyListService.js">
+      <DependentUpon>ManyToManyListService.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Content>
+    <Content Include="ItemView\ItemView.html">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemView.tt</DependentUpon>
+    </Content>
+    <Content Include="ItemView\ItemView1.html" />
+    <Content Include="ItemView\ModelValidation.js" />
+    <Content Include="ItemView\ModelValidation1.js">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelValidation.tt</DependentUpon>
+    </Content>
+    <Content Include="ListController\ListController.js" />
+    <Content Include="ListController\ListController1.js">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ListController.tt</DependentUpon>
+    </Content>
+    <Content Include="ListView\ListView.html" />
+    <Content Include="ListView\ListView1.html">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ListView.tt</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AngularProjectBaseRepository.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AngularProjectBaseRepository1.txt</LastGenOutput>
+    </None>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="BreezeController.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BreezeController1.txt</LastGenOutput>
+    </None>
+    <None Include="BreezeValidation\Model.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Model1.js</LastGenOutput>
+    </None>
+    <None Include="BreezeValidation\ModelValidation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ModelValidation1.js</LastGenOutput>
+    </None>
+    <EntityDeploy Include="DatabaseInformation\AngularProjectBaseModelForT4Template.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AngularProjectBaseModelForT4Template1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DatabaseInformation\AngularProjectBaseModelForT4Template.edmx.diagram">
+      <DependentUpon>AngularProjectBaseModelForT4Template.edmx</DependentUpon>
+    </None>
+    <None Include="DatabaseInformation\Class.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Class1.txt</LastGenOutput>
+    </None>
+    <None Include="DatabaseInformation\Database.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Database1.txt</LastGenOutput>
+    </None>
+    <None Include="DatabaseInformation\Model.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Model.txt</LastGenOutput>
+    </None>
+    <None Include="DatabaseInformation\VisualStudioHelper.ttinclude" />
+    <None Include="EntityRepository\EntityRepository.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EntityRepository1.js</LastGenOutput>
+    </None>
+    <None Include="IAngularProjectBaseRepository.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IAngularProjectBaseRepository.txt</LastGenOutput>
+    </None>
+    <None Include="ItemController\ItemController.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ItemController1.js</LastGenOutput>
+    </None>
+    <None Include="ItemController\ManyToManyListService.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ManyToManyListService.js</LastGenOutput>
+    </None>
+    <None Include="ItemTestPage\ItemPage.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ItemPage1.cs</LastGenOutput>
+    </None>
+    <None Include="ItemTestPage\ItemTest.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ItemTest1.cs</LastGenOutput>
+    </None>
+    <None Include="ItemView\ItemView.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ItemView.html</LastGenOutput>
+    </None>
+    <None Include="ItemView\ModelValidation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ModelValidation1.js</LastGenOutput>
+    </None>
+    <None Include="ListController\ListController.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ListController1.js</LastGenOutput>
+    </None>
+    <None Include="ListView\ListView.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ListView1.html</LastGenOutput>
+    </None>
+    <None Include="RouteConfig\RouteConfig.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RouteConfig1.cs</LastGenOutput>
+    </None>
+    <None Include="Utilities\Database.Utility.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Database.Utility1.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

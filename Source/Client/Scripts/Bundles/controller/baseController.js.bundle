@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bundle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://vswebessentials.com/schemas/v1/bundle.xsd">
+  <settings>
+    <!--Determines if the bundle file should be automatically optimized after creation/update.-->
+    <minify>true</minify>
+    <!--Determine whether to generate/re-generate this bundle on building the solution.-->
+    <runOnBuild>false</runOnBuild>
+    <!--Specifies a custom subfolder to save files to. By default, compiled output will be placed in the same folder and nested under the original file.-->
+    <outputDirectory />
+  </settings>
+  <!--The order of the <file> elements determines the order of the files in the bundle.-->
+  <files>
+    <file>/app/features/dashboard/dashboardController.js</file>
+    <file>/app/features/typeOfType/typeOfTypeListController.js</file>
+    <file>/app/features/typeOfType/typeOfTypeItemController.js</file>
+    <file>/app/features/validation/validationListController.js</file>
+    <file>/app/features/validation/validationItemController.js</file>
+    <file>/app/features/allDataType/allDataTypeListController.js</file>
+    <file>/app/features/allDataType/allDataTypeItemController.js</file>
+    <file>/app/features/user/userListController.js</file>
+    <file>/app/features/user/userItemController.js</file>
+    <file>/app/features/styling/stylingController.js</file>
+    <file>/app/features/admin/adminController.js</file>
+    <file>/app/features/ui/uiController.js</file>
+    <file>/app/features/fileUpload/fileUploadController.js</file>
+    <file>/app/features/wip/wipController.js</file>
+    <file>/app/features/membership/loginController.js</file>
+    <file>/app/features/membership/registerController.js</file>
+    <file>/app/features/membership/manageController.js</file>
+    <file>/app/features/membership/authComplete.js</file>
+    <file>/app/features/membership/associateController.js</file>
+    <file>/app/features/accessControlListItem/accessControlListItemListController.js</file>
+    <file>/app/features/accessControlListItem/accessControlListItemItemController.js</file>
+    <file>/app/features/aspNetRole/aspNetRoleListController.js</file>
+    <file>/app/features/aspNetRole/aspNetRoleItemController.js</file>
+    <file>/app/features/domainObject/domainObjectListController.js</file>
+    <file>/app/features/domainObject/domainObjectItemController.js</file>
+    <file>/app/features/permission/permissionListController.js</file>
+    <file>/app/features/permission/permissionItemController.js</file>
+    <file>/app/features/payment/paymentController.js</file>
+    <file>/app/features/payment/subscriptionController.js</file>
+    <file>/app/features/payment/managePaymentController.js</file>
+    <file>/app/features/payment/addCardController.js</file>
+  </files>
+</bundle>

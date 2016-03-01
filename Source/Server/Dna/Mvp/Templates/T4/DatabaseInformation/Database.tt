@@ -1,0 +1,89 @@
+﻿<#@ template debug="true" hostspecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+<#@ output extension=".txt" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+if (schemaNames.Count() > 0)
+{
+	foreach (string schemaName in schemaNames)
+	{
+		// Get all table propertyNames
+		var tableNames = (from r in metaDataTable.Rows.OfType<DataRow>()
+					where r["SchemaName"].ToString() == schemaName
+					select r["ObjectName"].ToString()).Distinct();
+		string objectType = "Table";
+
+		if (tableNames.Count() > 0) 
+		{
+			// iterate all tables
+			foreach (string tableName in tableNames)
+			{
+				if (!string.IsNullOrEmpty(FormatName(tableName, schemaName)) && !tableName.StartsWith("webpages_") && !tableName.StartsWith("__")) 
+				{
+					WriteLine(objectType + " [" + schemaName + "].[" + tableName + "]");
+					PushIndent("\t");
+		
+					// Get all Property Names
+					var propertyNames = (from r in metaDataTable.Rows.OfType<DataRow>()
+									where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName
+									select r["Name"].ToString()).Distinct();
+
+					// iterate all properties
+					foreach (string propertyName in propertyNames)
+					{
+						if (!string.IsNullOrEmpty(propertyName)) 
+						{
+							if (objectType == "Table") 
+							{
+								ICollection<string> columnData = new List<string>();
+							
+								var data = (from r in metaDataTable.Rows.OfType<DataRow>()
+											where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName && r["Name"].ToString() == propertyName
+											select new { 
+												IsNullable = (r["IsNullable"].ToString() == "YES"), 
+												Type = r["Type"].ToString(), 
+												Length = r["Length"].ToString(), 
+												IsPK = (r["PK"].ToString() == "PRIMARY KEY"),
+												ExtPropertyName = r["ExtPropertyName"] == null ? "" : r["ExtPropertyName"].ToString(),
+												ExtPropertyValue = r["ExtPropertyValue"] == null ? "" : r["ExtPropertyValue"].ToString()
+											}).FirstOrDefault();
+								
+								// Check if property is Primary Key
+								if (data.IsPK) 
+								{
+									columnData.Add("PK");
+								}
+
+								// Add max length attribute
+								columnData.Add(data.Type 
+									+ (string.IsNullOrEmpty(data.Length) ? string.Empty : "(" + (data.Length == "-1" ? "max" : data.Length) +")" ));
+
+								// Add required attribute
+								columnData.Add(data.IsNullable ? "NULL" : "NOT NULL");
+
+								// Add Extended Properties
+								columnData.Add(((!string.IsNullOrEmpty(data.ExtPropertyName) && !string.IsNullOrEmpty(data.ExtPropertyValue)) ? (data.ExtPropertyName + ": " + data.ExtPropertyValue) : ""));
+
+								WriteLine("Column " + propertyName + "(" + string.Join(", ", columnData.ToArray())+ ")");
+							}
+							else 
+							{
+								WriteLine("[" + schemaName + "].[" + tableName + "].[" + propertyName + "]");
+							}
+						}
+					}
+			
+					PopIndent();
+					WriteLine("");
+				}
+			}	
+
+			PopIndent();
+			WriteLine("");
+		}
+	}
+}
+#>

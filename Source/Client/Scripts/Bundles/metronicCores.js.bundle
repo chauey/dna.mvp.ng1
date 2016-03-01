@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bundle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://vswebessentials.com/schemas/v1/bundle.xsd">
+  <settings>
+    <!--Determines if the bundle file should be automatically optimized after creation/update.-->
+    <minify>true</minify>
+    <!--Determine whether to generate/re-generate this bundle on building the solution.-->
+    <runOnBuild>false</runOnBuild>
+    <!--Specifies a custom subfolder to save files to. By default, compiled output will be placed in the same folder and nested under the original file.-->
+    <outputDirectory />
+  </settings>
+  <!--The order of the <file> elements determines the order of the files in the bundle.-->
+  <files>
+    <file>/assets/global/plugins/morris/morris.js</file>
+    <file>/assets/global/plugins/morris/raphael-min.js</file>
+    <file>/assets/global/plugins/jquery.sparkline.min.js</file>
+    <file>/assets/global/plugins/angularjs/plugins/angular-file-upload/angular-file-upload.min.js</file>
+    <file>/assets/global/plugins/angularjs/plugins/ui-select/select.min.js</file>
+    <file>/assets/global/plugins/fuelux/js/spinner.min.js</file>
+    <file>/assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js</file>
+    <file>/assets/global/plugins/jquery.input-ip-address-control-1.0.min.js</file>
+    <file>/assets/global/plugins/bootstrap-pwstrength/pwstrength-bootstrap.min.js</file>
+    <file>/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js</file>
+    <file>/assets/global/plugins/jquery-tags-input/jquery.tagsinput.min.js</file>
+    <file>/assets/global/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js</file>
+    <file>/assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js</file>
+    <file>/assets/global/plugins/typeahead/handlebars.min.js</file>
+    <file>/assets/global/plugins/typeahead/typeahead.bundle.min.js</file>
+    <file>/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js</file>
+    <file>/assets/global/plugins/clockface/js/clockface.js</file>
+    <file>/assets/global/plugins/bootstrap-daterangepicker/moment.min.js</file>
+    <file>/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js</file>
+    <file>/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js</file>
+    <file>/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js</file>
+    <file>/assets/global/plugins/bootstrap-select/bootstrap-select.min.js</file>
+    <file>/assets/global/plugins/select2/select2.min.js</file>
+    <file>/assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js</file>
+    <file>/assets/global/plugins/jstree/dist/jstree.min.js</file>
+    <file>/assets/global/plugins/datatables/all.min.js</file>
+    <file>/assets/global/scripts/datatable.js</file>
+    <file>/assets/global/plugins/jquery.sparkline.min.js</file>
+    <file>/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js</file>
+    <file>/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js</file>
+  </files>
+</bundle>

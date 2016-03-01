@@ -1,0 +1,8 @@
+Test Case ID,Name of Test Case,Integer,String,Age,Day,Day Of Before Date,Date Format,Credit Card,Email,Phone,URL,Zip,Starts With DNA,Contains DNA
+Validation-01,ValidateRequiredIntegerValue,,,,,,,,,,,,,
+Validation-02,ValidateInvalidIntegerValue,invalid,,,,,,,,,,,,
+Validation-03,ValidateOutOfRangeAgeValue,,,200,,,,,,,,,,
+Validation-04,ValidateAgeValueNotInInteger,,,a,,,,,,,,,,
+Validation-05,PickDay,,,,8,,dd-MM-yyyy,,,,,,,
+Validation-06,CheckValidationPage,,This is string,151,18,20,dd-MM-yyyy,11111222223333344444,aaa@aaa,aa,aaa.com,a,a,a
+Validation-07,ValidateAllFields,,,0,,,,1.23457E+16,a,1.23457E+15,a,123456,a,a

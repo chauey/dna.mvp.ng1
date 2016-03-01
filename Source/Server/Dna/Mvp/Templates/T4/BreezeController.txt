@@ -1,0 +1,2718 @@
+﻿
+
+ 
+ 
+
+
+
+
+
+
+using Breeze.ContextProvider;
+using Breeze.WebApi2;
+using Dna.Mvp.Data.Entities;
+using Dna.Mvp.Helpers;
+using Dna.Mvp.Data.Repository;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Web.Http;
+using System.Web.Http.OData;
+
+namespace Dna.Mvp.Controllers
+{
+    [BreezeController]
+    [Authorize]
+    public class BreezeController : ODataController
+    {
+        #region *** Fields ***
+        private readonly IMvpRepository _repository; 
+        #endregion
+
+        #region *** Constructor ***
+        public BreezeController(IMvpRepository repository)
+        {
+            this._repository = repository;
+        } 
+        #endregion
+
+        #region *** Methods ***
+        #region Save Changes
+        [HttpPost]
+        public SaveResult SaveChanges(JObject saveBundle)
+        {
+            return this._repository.SaveChanges(saveBundle);
+        }
+
+					
+		[HttpPost]
+		public SaveResult SaveAccessControlListItems(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveAllDataTypes(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveAspNetRoles(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveAspNetUserClaims(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveAspNetUserLogins(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveAspNetUserRoles(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveAspNetUsers(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveAttachments(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveAuditLog(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveClients(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveCptCodes(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveCptCodeSets(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveCptCodeSetsCptCodes(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveCptCodeVersions(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveDnaGenChildTestTable(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveDnaGenParentTestTable(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveDomainObjects(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveDurandalAuth_UserProfiles(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveELMAH_Error(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveFormRoles(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveForms(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveHospitalCptCodeSets(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveHospitalIcdCodeSets(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveHospitalPatients(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveHospitals(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveIcdCodes(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveIcdCodeSets(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveIcdCodeSetsIcdCodes(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveIcdCodeVersions(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveMapComments(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveMapPlaceMarks(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveMaps(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveMapUsers(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SavePatients(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SavePatientTracking(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SavePatientTrackingCptCodes(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SavePatientTrackingIcdCodes(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SavePatientTrackingImages(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SavePatientTrackingNotes(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SavePermissions(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveReferenceCodes(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveReferenceCodeTypes(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveRefreshTokens(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveStatuses(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult Savesysdiagrams(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveSystemCptCodeSets(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveSystemIcdCodeSets(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveTypeOfTypes(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveUserCptCodeSets(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveUserHospitals(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveUserIcdCodeSets(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveUserPatients(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveUsers(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpPost]
+		public SaveResult SaveValidations(JObject saveBundle)
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Write | MvpPermissionTypes.Delete))
+            {
+                return this._repository.SaveChanges(saveBundle);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+			        #endregion
+
+        #region Retrieve Data
+        [HttpGet]
+        public string Metadata()
+        {
+            return this._repository.GetMetadata();
+        }
+
+					
+		[HttpGet]
+        public IQueryable<AccessControlListItem> AccessControlListItems()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetAccessControlListItems();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<AllDataType> AllDataTypes()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetAllDataTypes();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<AspNetRole> AspNetRoles()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetAspNetRoles();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<AspNetUserClaim> AspNetUserClaims()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetAspNetUserClaims();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<AspNetUserLogin> AspNetUserLogins()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetAspNetUserLogins();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<AspNetUserRole> AspNetUserRoles()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetAspNetUserRoles();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<AspNetUser> AspNetUsers()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetAspNetUsers();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<Attachment> Attachments()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetAttachments();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<AuditLog> AuditLog()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetAuditLog();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<Client> Clients()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetClients();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<CptCode> CptCodes()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetCptCodes();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<CptCodeSet> CptCodeSets()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetCptCodeSets();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<CptCodeSetsCptCode> CptCodeSetsCptCodes()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetCptCodeSetsCptCodes();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<CptCodeVersion> CptCodeVersions()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetCptCodeVersions();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<DnaGenChildTestTable> DnaGenChildTestTable()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetDnaGenChildTestTable();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<DnaGenParentTestTable> DnaGenParentTestTable()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetDnaGenParentTestTable();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<DomainObject> DomainObjects()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetDomainObjects();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<DurandalAuth_UserProfile> DurandalAuth_UserProfiles()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetDurandalAuth_UserProfiles();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<ELMAH_Error> ELMAH_Error()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetELMAH_Error();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<FormRole> FormRoles()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetFormRoles();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<Form> Forms()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetForms();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<HospitalCptCodeSet> HospitalCptCodeSets()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetHospitalCptCodeSets();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<HospitalIcdCodeSet> HospitalIcdCodeSets()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetHospitalIcdCodeSets();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<HospitalPatient> HospitalPatients()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetHospitalPatients();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<Hospital> Hospitals()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetHospitals();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<IcdCode> IcdCodes()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetIcdCodes();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<IcdCodeSet> IcdCodeSets()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetIcdCodeSets();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<IcdCodeSetsIcdCode> IcdCodeSetsIcdCodes()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetIcdCodeSetsIcdCodes();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<IcdCodeVersion> IcdCodeVersions()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetIcdCodeVersions();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<MapComment> MapComments()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetMapComments();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<MapPlaceMark> MapPlaceMarks()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetMapPlaceMarks();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<Map> Maps()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetMaps();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<MapUser> MapUsers()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetMapUsers();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<Patient> Patients()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetPatients();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<PatientTracking> PatientTracking()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetPatientTracking();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<PatientTrackingCptCode> PatientTrackingCptCodes()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetPatientTrackingCptCodes();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<PatientTrackingIcdCode> PatientTrackingIcdCodes()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetPatientTrackingIcdCodes();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<PatientTrackingImage> PatientTrackingImages()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetPatientTrackingImages();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<PatientTrackingNote> PatientTrackingNotes()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetPatientTrackingNotes();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<Permission> Permissions()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetPermissions();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<ReferenceCode> ReferenceCodes()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetReferenceCodes();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<ReferenceCodeType> ReferenceCodeTypes()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetReferenceCodeTypes();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<RefreshToken> RefreshTokens()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetRefreshTokens();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<Status> Statuses()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetStatuses();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<sysdiagram> sysdiagrams()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.Getsysdiagrams();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<SystemCptCodeSet> SystemCptCodeSets()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetSystemCptCodeSets();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<SystemIcdCodeSet> SystemIcdCodeSets()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetSystemIcdCodeSets();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<TypeOfType> TypeOfTypes()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetTypeOfTypes();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<UserCptCodeSet> UserCptCodeSets()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetUserCptCodeSets();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<UserHospital> UserHospitals()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetUserHospitals();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<UserIcdCodeSet> UserIcdCodeSets()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetUserIcdCodeSets();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<UserPatient> UserPatients()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetUserPatients();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<User> Users()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetUsers();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+						
+		[HttpGet]
+        public IQueryable<Validation> Validations()
+        {
+			// Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity, 
+																			this._repository, 
+																			resource, 
+																			MvpPermissionTypes.Read))
+            {
+                return this._repository.GetValidations();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        } 
+			
+        public IQueryable<IcdCodeSet> GetAllIcdCodeSetsByHospitalID(Guid hospitalID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.Icd,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data                
+                var icdCodeIDs =
+                    from hi in this._repository.GetHospitalIcdCodeSets()
+                    where hi.HospitalID == hospitalID
+                    select hi.IcdCodeSetID;
+
+                return (from icd in this._repository.GetIcdCodeSets()
+                        where icdCodeIDs.Contains(icd.IcdCodeSetID)
+                        select icd).AsQueryable();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        [HttpGet]
+        public IQueryable<CptCodeSet> GetAllCptCodeSetsByHospitalID(Guid hospitalID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.Cpt,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data                
+                var cptCodeIDs =
+                    from hi in this._repository.GetHospitalCptCodeSets()
+                    where hi.HospitalID == hospitalID
+                    select hi.CptCodeSetID;
+
+                return (from cpt in this._repository.GetCptCodeSets()
+                        where cptCodeIDs.Contains(cpt.CptCodeSetID)
+                        select cpt).AsQueryable();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        [HttpGet]
+        public List<Patient> GetAllPatientsByHospitalID(Guid hospitalID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.Patient,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data                
+                var patientIDs =
+                    from hp in this._repository.GetHospitalPatients()
+                    where hp.HospitalID == hospitalID
+                    select hp.PatientID;
+
+                return (from p in this._repository.GetPatients()
+                        where patientIDs.Contains(p.PatientID)
+                        select p).ToList();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        [HttpGet]
+        public Hospital GetHospitalByPatientID(Guid patientID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.Patient,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data                
+                var hospitalIDs =
+                    from hp in this._repository.GetHospitalPatients()
+                    where hp.PatientID == patientID
+                    select hp.HospitalID;
+
+                return (from p in this._repository.GetHospitals()
+                        where hospitalIDs.Contains(p.HospitalID)
+                        select p).OrderBy(x => x.CreatedDate).FirstOrDefault();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        #endregion
+
+        [HttpGet]
+        public IQueryable<TypeOfType> TypeOfTypes()
+        {
+            // Get the MvpResource base on the resource name
+            var resource = Utilities.GetResourceGroupOfThisResouce(this._repository, Utilities.GetCurrentMethod());
+
+            // Check if the the current role has permission to this resource
+            if (resource != MvpResources.None &&
+                Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            resource,
+                                                                            MvpPermissionTypes.Read))
+            {
+                return this._repository.GetTypeOfTypes().Where(x => x.TypeOfTypeID != Guid.Empty);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        #region CPT
+        [HttpGet]
+        public IQueryable<CptCode> GetAllCptCodesBySetID(Guid setID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.Cpt,
+                                                                            MvpPermissionTypes.Read))
+            {
+                var cptCodeIDs = from x in _repository.GetCptCodeSetsCptCodes()
+                                 where x.CptCodeSetID == setID
+                                 select x.CptCodeID;
+
+                return (from cpt in _repository.GetCptCodes()
+                        where cptCodeIDs.Contains(cpt.CptCodeID)
+                        select cpt).AsQueryable();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        [HttpGet]
+        public CptCodeSetsCptCode GetCptCodeSetsCptCodeByForeignKeys(Guid cptCodeSetID, Guid cptCodeID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.Cpt,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data
+                return this._repository.GetCptCodeSetsCptCodes()
+                    .SingleOrDefault(
+                        i => i.CptCodeSetID == cptCodeSetID &&
+                             i.CptCodeID == cptCodeID);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        [HttpGet]
+        public IQueryable<CptCodeSet> UserCptCodeSetsByUserID(string userID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.Cpt,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data
+                return this._repository.GetUserCptCodeSetsByUserID(userID);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        [HttpGet]
+        public IQueryable<IcdCodeSet> UserIcdCodeSetsByUserID(string userID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.Icd,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data                
+                return this._repository.GetUserIcdCodeSetsByUserID(userID);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        #endregion
+
+        #region ICD
+        //GetPatientTrackingIcdCode
+        [HttpGet]
+        public IQueryable<PatientTrackingIcdCode> GetPatientTrackingIcdCode(Guid patientTrackingID, Guid icdCodeID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.PatientTracking,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data                
+                var patientTrackingIcdCode =
+                    from hi in this._repository.GetPatientTrackingIcdCodes()
+                    where hi.PatientTrackingID == patientTrackingID && hi.IcdCodeID == icdCodeID
+                    select hi;
+
+                return patientTrackingIcdCode;
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        //GetPatientTrackingCptCode
+        [HttpGet]
+        public IQueryable<PatientTrackingCptCode> GetPatientTrackingCptCode(Guid patientTrackingID, Guid cptCodeID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.PatientTracking,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data                
+                var patientTrackingCptCode =
+                    from hi in this._repository.GetPatientTrackingCptCodes()
+                    where hi.PatientTrackingID == patientTrackingID && hi.CptCodeID == cptCodeID
+                    select hi;
+
+                return patientTrackingCptCode;
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        [HttpGet]
+        public IQueryable<IcdCode> GetAllIcdCodesBySetID(Guid setID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.Icd,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data                
+                var icdCodeIDs = from x in _repository.GetIcdCodeSetsIcdCodes()
+                                 where x.IcdCodeSetID == setID
+                                 select x.IcdCodeID;
+
+                return (from icd in _repository.GetIcdCodes()
+                        where icdCodeIDs.Contains(icd.IcdCodeID)
+                        select icd).AsQueryable();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        [HttpGet]
+        public IQueryable<IcdCode> GetAllIcdCodesByTrackingID(Guid trackingID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.PatientTracking,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data                
+                var cptCodeIDs = from x in _repository.GetPatientTrackingIcdCodes()
+                                 where x.PatientTrackingID == trackingID
+                                 select x.IcdCodeID;
+
+                return (from icd in _repository.GetIcdCodes()
+                        where cptCodeIDs.Contains(icd.IcdCodeID)
+                        select icd).AsQueryable();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        [HttpGet]
+        public IQueryable<CptCode> GetAllCptCodesByTrackingID(Guid trackingID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.PatientTracking,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data                
+                var cptCodeIDs = from x in _repository.GetPatientTrackingCptCodes()
+                                 where x.PatientTrackingID == trackingID
+                                 select x.CptCodeID;
+
+                return (from cpt in _repository.GetCptCodes()
+                        where cptCodeIDs.Contains(cpt.CptCodeID)
+                        select cpt).AsQueryable();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        [HttpGet]
+        public IQueryable<PatientTrackingNote> GetAllPatientTrackingNoteTrackingID(Guid trackingID)
+        {
+            // Check if the the current role has permission to this resource
+            if (Utilities.CheckIfCurrentRoleHasPermissionToThisResource_DB(User.Identity as ClaimsIdentity,
+                                                                            this._repository,
+                                                                            MvpResources.PatientTracking,
+                                                                            MvpPermissionTypes.Read))
+            {
+                // Return Data                
+                var notes = from x in _repository.GetPatientTrackingNotes()
+                            where x.PatientTrackingID == trackingID
+                            select x;
+
+                return notes.AsQueryable();
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+        #endregion
+        #endregion
+
+        #region Look-up list
+        /// <summary>
+        /// Query returing a 1-element array with a lookups object whose 
+        /// properties are all Rooms, Tracks, and TimeSlots.
+        /// </summary>
+        /// <returns>
+        /// Returns one object, not an IQueryable, 
+        /// whose properties are "rooms", "tracks", "timeslots".
+        /// The items arrive as arrays.
+        /// </returns>
+        [HttpGet]
+        public object Lookups()
+        {
+            var parentTypeOfTypes = _repository.GetParentTypeOfTypes().OrderBy(x => x.Name).ToList();
+            var types = _repository.GetTypeOfTypes().OrderBy(x => x.Name).ToList();
+
+            var cptCodeVersions = _repository.GetCptCodeVersions().OrderBy(cv => cv.Name).ToList();
+
+            var patients = _repository.GetPatients().OrderBy(cv => cv.FirstName).ToList();
+            var hospitals = _repository.GetHospitals().OrderBy(cv => cv.HospitalID).ToList();
+
+            var hospitalPatients = _repository.GetHospitalPatients().ToList();
+
+            //// Insert first empty items
+            //parentTypeOfTypes.Insert(0, new TypeOfType() { TypeOfTypeID = new Guid(Guid.Empty.ToString().Replace("0", "1")), Name = "[Select a Parent]" });
+            //types.Insert(0, new TypeOfType() { TypeOfTypeID = Guid.Empty, Name = "[Select a Type]" });
+
+            var statuss = _repository.GetStatuses().ToList();
+            var icdCodeVersions = _repository.GetIcdCodeVersions().ToList();
+
+            return new { parentTypeOfTypes, types, cptCodeVersions, patients, hospitals, hospitalPatients, statuss, icdCodeVersions };
+        }
+        #endregion
+
+        // Diagnostic
+        [HttpGet]
+        public string Ping()
+        {
+            return "pong";
+        } 
+    }
+}

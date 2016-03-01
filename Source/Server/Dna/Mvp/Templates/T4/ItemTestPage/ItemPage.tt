@@ -1,0 +1,226 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+<#@ output extension=".cs" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+if (schemaNames.Count() > 0)
+{
+	foreach (string schemaName in schemaNames)
+	{
+		// Statement
+		List<string> tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+		foreach (string tableName in tableNames)
+		{
+			if (!string.IsNullOrEmpty(tableName)) 
+			{
+				// ----- Declare variables -----
+				//var entityName = "typeOfType";		var entityNamePlural = entityName + "s";
+				//var EntityName = "TypeOfType";		var EntityNamePlural = EntityName + "s";
+				//var DisplayName = "Type Of Type";		var DisplayNamePlural = DisplayName + "s";
+
+				var entityNamePlural = GetStringIncamelCase(tableName);
+				var entityName = GetStringInSingle(entityNamePlural);
+					
+				var EntityNamePlural = tableName;
+				var EntityName = GetStringInSingle(EntityNamePlural);
+					
+				var DisplayNamePlural = EntityNamePlural;
+				var DisplayName = EntityName;
+
+				// Column Names
+				//var PrimaryKeyName = GetPrimaryKeyName(schemaName, tableName, metaDataTable);
+				//if(string.IsNullOrEmpty(PrimaryKeyName)) PrimaryKeyName = EntityName + "Id";
+				//var primaryKeyName = GetStringIncamelCase(PrimaryKeyName);
+				var columnNames = GetColumnNames(schemaName, tableName, metaDataTable);
+				var mainColumnNames = GetMainColumnNames(schemaName, tableName, metaDataTable);
+				var mainColumnNamesIncamelCase = ConvertTocamelCase(mainColumnNames);
+				var mainColumnNamesWithTypes = GetMainColumnNamesWithTypes(schemaName, tableName, metaDataTable);
+
+				// Dropdown / Foreign Keys
+				List<string> foreignKeys = GetFKColumnNames(schemaName, tableName, metaDataTable);
+				var foreignKeysIncamelCase = ConvertTocamelCase(foreignKeys);
+
+
+#>
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using System.Text.RegularExpressions;
+namespace Dna.Mvp.Automation
+{
+    public class <#= EntityName #>Page
+    {
+        public IWebDriver Webdriver { get; set; }
+
+        #region Constructors
+        public <#= EntityName #>Page()
+        {
+        }
+
+        public <#= EntityName #>Page(IWebDriver webdriver)
+        {
+            Webdriver = webdriver;
+        }
+        #endregion
+
+        #region Properties
+        public IWebElement BackButton
+        {
+            get
+            {
+                return AutomationService.SearchElement(this.Webdriver, By.Id("<#= entityName #>BackButton"), 10);
+            }
+        }
+
+        public IWebElement CancelButton
+        {
+            get
+            {
+                return AutomationService.SearchElement(this.Webdriver, By.Id("<#= entityName #>CancelButton"), 10);
+            }
+        }
+
+        public IWebElement SaveButton
+        {
+            get
+            {
+                return AutomationService.SearchElement(this.Webdriver, By.Id("<#= entityName #>SaveButton"), 10);
+            }
+        }
+
+        public IWebElement DeleteButton
+        {
+            get
+            {
+                return AutomationService.SearchElement(this.Webdriver, By.Id("<#= entityName #>DeleteButton"), 10);
+            }
+        }
+
+        <# if (mainColumnNames.Count > 0) 
+        {
+            for (int i = 0; i < mainColumnNames.Count; i++)
+            {#>
+                 <#if (mainColumnNamesWithTypes[mainColumnNames[i]] == "bit")
+                 { // Check-box #>
+        public IWebElement <#= mainColumnNames[i] #>CheckBox
+        {
+             get
+             {
+                 return AutomationService.SearchElement(this.Webdriver, By.Id("<#= mainColumnNamesIncamelCase[i] #>CheckBox"), 10);
+             }
+        }
+                 <#}
+                else if (mainColumnNamesWithTypes[mainColumnNames[i]] == "date" || mainColumnNamesWithTypes[mainColumnNames[i]] == "datetime")
+                { // DateTime #>
+        
+        public IWebElement <#= mainColumnNames[i] #>DatePicker
+        {
+            get
+            {
+                return AutomationService.SearchElement(this.Webdriver, By.Id("<#= mainColumnNames[i] #>DatePicker"), 10);
+            }
+        }
+
+        public IWebElement <#= mainColumnNames[i] #>DatePickerButton
+        {
+            get
+            {
+                return AutomationService.SearchElement(this.Webdriver, By.Id("<#= entityName #><#= GetStringInPascalCase(mainColumnNamesIncamelCase[i]) #>DatePickerButton"), 10);
+            }
+        }
+                <#}
+                else
+{ // TextBox #> 
+        public IWebElement <#= mainColumnNames[i] #>TextBox
+        {
+            get
+            {
+                return AutomationService.SearchElement(this.Webdriver, By.Id("<#= mainColumnNames[i] #>TextBox"), 10);
+            }
+        }
+                <#}#>
+            <#}#>
+        <#}#>
+        
+        #endregion
+        
+        #region Methods
+        public void GoTo()
+        {
+            AutomationService.SearchElement(this.Webdriver, By.XPath("//a[@href='#/<#= entityName #>']")).Click();
+        }
+
+        public <#= EntityName #>Page Add<#= EntityName #>()
+        {
+            AutomationService.SearchElement(this.Webdriver, By.LinkText("Add <#= DisplayName #>"), 10).Click();
+            return this;
+        }
+
+        public <#= EntityName #>Page Save()
+        {
+            this.SaveButton.Click();
+            return this;
+        }
+
+        public <#= EntityName #>Page Cancel()
+        {
+            this.CancelButton.Click();
+            return this;
+        }
+
+        public <#= EntityName #>Page Delete()
+        {
+            this.DeleteButton.Click();
+            return this;
+        }
+
+        public <#= EntityName #>Page Back()
+        {
+            this.BackButton.Click();
+            return this;
+        }
+
+        <# if(mainColumnNames.Count > 0) 
+        {
+            for (int i = 0; i < mainColumnNames.Count; i++)
+            {#>
+                 <#if (mainColumnNamesWithTypes[mainColumnNames[i]] == "bit")
+                 { // Check-box #>
+        public <#= EntityName #>Page Click<#= mainColumnNames[i] #>CheckBox()
+        {
+            this.<#= mainColumnNames[i] #>CheckBox.Click();
+            return this;
+        }
+                 <#}
+                else if (mainColumnNamesWithTypes[mainColumnNames[i]] == "date" || mainColumnNamesWithTypes[mainColumnNames[i]] == "datetime")
+                { // DateTime #>
+        
+        public <#= EntityName #>Page Select<#= mainColumnNames[i] #>DatePickerButton(string dateTime)
+        {
+            this.<#= mainColumnNames[i] #>DatePickerButton.SelectByText(dateTime);
+            return this;
+        }
+                <#}
+                else
+                { // TextBox #> 
+        public <#= EntityName #>Page Input<#= mainColumnNames[i] #>TextBox(string value)
+        {
+            this.<#= mainColumnNames[i] #>TextBox.SendKeys(value, true);
+            return this;
+        }
+                <#}#>
+            <#}#>
+        <#}#>
+        
+        #endregion
+    }
+}
+<# 
+				SaveOutput(entityName, EntityName + "Page.cs");
+			}
+		}
+	}
+}
+#>

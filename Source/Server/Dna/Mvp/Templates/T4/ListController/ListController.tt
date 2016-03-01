@@ -1,0 +1,385 @@
+﻿<#@ template debug="true" hostspecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+<#@ output extension=".js" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+if (schemaNames.Count() > 0)
+{
+	foreach (string schemaName in schemaNames)
+	{
+		// Statement
+		List<string> tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+		foreach (string tableName in tableNames)
+		{
+			if (!string.IsNullOrEmpty(tableName) && !tableName.StartsWith("webpages_") && !tableName.StartsWith("__")) 
+			{
+				// ----- Declare variables -----
+				//var entityName = "typeOfType";		var entityNamePlural = entityName + "s";
+				//var EntityName = "TypeOfType";		var EntityNamePlural = EntityName + "s";
+				//var DisplayName = "Type Of Type";		var DisplayNamePlural = DisplayName + "s";
+
+				string entityNamePlural = GetStringIncamelCase(tableName);
+				string entityName = GetStringInSingle(entityNamePlural);
+					
+				string EntityNamePlural = tableName;
+				string EntityName = GetStringInSingle(EntityNamePlural);
+					
+				string DisplayNamePlural = EntityNamePlural;
+				string DisplayName = EntityName;
+			
+				// Column Names
+				var PrimaryKeyName = GetPrimaryKeyName(schemaName, tableName, metaDataTable);
+				if(string.IsNullOrEmpty(PrimaryKeyName)) PrimaryKeyName = EntityName + "Id";
+				var primaryKeyName = GetStringIncamelCase(PrimaryKeyName);
+				List<string> columnNames = GetColumnNames(schemaName, tableName, metaDataTable);
+				List<string> mainColumnNames = GetMainColumnNames(schemaName, tableName, metaDataTable);
+				
+				//
+				string theadsString = string.Empty;
+				string defaultOrderColumnName = string.Empty;
+				int index = 0;
+                foreach (string columnName in mainColumnNames)
+                {
+					if (index == 0) defaultOrderColumnName = GetStringIncamelCase(columnName);
+					if (columnName.ToLower().Contains("name")) defaultOrderColumnName = GetStringIncamelCase(columnName);
+					theadsString += "'" + columnName + "',";
+					index++;
+                }
+				
+				// Remove the last comma
+				if(!string.IsNullOrEmpty(theadsString) && theadsString.EndsWith(","))  theadsString = theadsString.Substring(0, theadsString.LastIndexOf(","));
+
+                // Dropdown / Foreign Keys
+				List<string> foreignKeys = GetFKColumnNames(schemaName, tableName, metaDataTable);
+				var foreignKeysIncamelCase = ConvertTocamelCase(foreignKeys);
+#>// 0. IIFE (Immediately-invoked function expression)
+(function () {
+	'use strict';
+
+	var controllerId = '<#= entityName #>ListController';
+
+	// 1. Add controller to module
+	angular
+		.module('app.features')
+		.controller(controllerId, <#= EntityName #>ListController);
+
+	// 2. Inject dependencies
+	<#= EntityName #>ListController.$inject = ['$location', 'common', 'config', 'datacontext'];
+
+	// 3. Define controller
+	function <#= EntityName #>ListController($location, common, config, datacontext) {
+		
+		// #region 3.1. Setup variables and functions
+		var getLogFn = common.logger.getLogFn;
+		var log = getLogFn(controllerId);
+		var keyCodes = config.keyCodes;
+
+		var vm = this;
+		// #endregion
+
+		// #region 3.2. Expose public bindable interface
+		// #region Breeze client-side cached
+		vm.<#= entityNamePlural #> = [];
+		vm.<#= entityName #>Count = 0;
+		vm.<#= entityName #>FilteredCount = 0;
+		vm.<#= entityName #>Search = '';
+
+		vm.title = '<#= DisplayNamePlural #>';
+		vm.refresh = refresh;
+		vm.search = search;
+		vm.goTo<#= EntityName #> = goTo<#= EntityName #>;
+
+		vm.paging = {
+			currentPage: 1,
+            currentPageServer: 1,
+			maxPagesToShow: 5,
+			pageSize: 15
+		};
+		vm.pageChanged = pageChanged;
+		Object.defineProperty(vm.paging, 'pageCount', {
+			get: function () {
+				return Math.floor(vm.<#= entityName #>FilteredCount / vm.paging.pageSize) + 1;
+			}
+		});
+
+		vm.setSort = setSort;
+		vm.theads = [<#= theadsString #>]; // Table headers
+		vm.sorting = {
+			orderBy: '<#= defaultOrderColumnName #>',
+			orderDesc: ''
+		};
+		// #endregion
+
+        // #region server-side remote acess
+        
+        vm.<#= entityNamePlural #>Server = [];
+        vm.<#= entityNamePlural #>ServerFilter = [];
+        vm.<#= entityName #>CountServer = 0;
+        vm.<#= entityName #>FilteredCountServer = 0;
+        vm.<#= entityName #>ServerSearch = '';
+        vm.set<#= EntityNamePlural #>ServerFilter = set<#= EntityNamePlural #>ServerFilter;
+
+        vm.refreshServer = refreshServer;
+        vm.searchServer = searchServer;
+
+        vm.pageChangedServer = pageChangedServer;
+        Object.defineProperty(vm.paging, 'pageCountServer', {
+            get: function () {
+                return Math.floor(vm.<#= entityName #>FilteredCountServer / vm.paging.pageSize) + 1;
+            }
+        });
+
+        vm.setSortServer = setSortServer;
+        vm.sortingServer = {
+			orderBy: '<#= defaultOrderColumnName #>',
+			orderDesc: ''
+		};
+
+<# if(foreignKeys.Count > 0) {#>
+       // fields for relative entities 
+
+<#
+					for (int j= 0; j < foreignKeys.Count; j++)
+                    {
+						string navProperty = foreignKeys[j].Replace("ID", string.Empty).Replace("Id", string.Empty);
+						string navPropertyIncamelCase = foreignKeysIncamelCase[j].Replace("ID", string.Empty).Replace("Id", string.Empty);#>
+        vm.selected<#=navProperty #> = null;
+        vm.selected<#=navProperty #>Server = null;
+   <#}
+					}#>
+      
+        // #endregion
+		// #endregion
+
+		// 3.3. Run activate method
+		activate();
+
+		// #region 3.4. Implement private functions
+		function activate() {
+			common.activateController([get<#= EntityNamePlural#>Server()
+<# if(foreignKeys.Count > 0) { // load relative entities#>
+<#
+					for (int j= 0; j < foreignKeys.Count; j++)
+                    {
+						string navProperty = foreignKeys[j].Replace("ID", string.Empty).Replace("Id", string.Empty);
+						string navPropertyIncamelCase = foreignKeysIncamelCase[j].Replace("ID", string.Empty).Replace("Id", string.Empty);#>
+    ,get<#=navProperty #>s()
+   <#}
+					}#>
+
+], controllerId)
+				.then(function () { log('Activated <#= DisplayNamePlural #> View.'); });
+		}
+
+<# if(foreignKeys.Count > 0) {#>
+<#
+					for (int j= 0; j < foreignKeys.Count; j++)
+                    {
+						string navProperty = foreignKeys[j].Replace("ID", string.Empty).Replace("Id", string.Empty);
+						string navPropertyIncamelCase = foreignKeysIncamelCase[j].Replace("ID", string.Empty).Replace("Id", string.Empty);#>
+  function get<#=navProperty #>s() {
+            return datacontext.<#=navPropertyIncamelCase #>.getAllWithoutPaging().then(function (data) {
+                vm.<#=navPropertyIncamelCase #>s = data;
+            });
+        }
+   <#}
+}#>
+
+		function get<#= EntityNamePlural #>(forceRefresh) {
+			return datacontext.<#= entityName #>.getAll(
+                    forceRefresh,
+                    vm.sorting.orderBy,
+                    vm.sorting.orderDesc,
+				    vm.paging.currentPage,
+                    vm.paging.pageSize,
+                    vm.<#= entityName #>Search)
+				.then(function (data) {
+					vm.<#= entityNamePlural #> = data;
+					
+                    if (!vm.<#= entityName #>Count || forceRefresh) {
+						// Only grab the full count once or on refresh
+						get<#= EntityName #>Count();
+					}
+					get<#= EntityName #>FilteredCount();
+					return data;
+				}
+			);
+		}
+
+		function get<#= EntityNamePlural #>Server(forceRefresh) {
+            return datacontext.<#= entityName #>.getAllServer(
+                    forceRefresh,
+                    vm.sortingServer.orderBy,
+                    vm.sortingServer.orderDesc,
+                    vm.paging.currentPageServer,
+                    vm.paging.pageSize,
+                    vm.<#= entityName #>ServerSearch)
+                .then(function(data) {
+                    vm.<#= entityNamePlural #>ServerFilter = data;
+
+                    if (!vm.<#= entityName #>FilteredCountServer || forceRefresh) {
+                        get<#= EntityName #>CountServer();
+                    }
+
+                    get<#= EntityName #>FilteredCountServer();
+
+                    return data;
+                });
+        }
+
+		// #region Get Counts
+		function get<#= EntityName #>Count() {
+			return datacontext.<#= entityName #>.getCount().then(function (data) {
+				return vm.<#= entityName #>Count = data;
+			});
+		}
+
+		function get<#= EntityName #>FilteredCount() {
+            vm.<#= entityName #>FilteredCount = datacontext.<#= entityName #>.getFilteredCount(vm.<#= entityName #>Search);
+		}
+
+		function get<#= EntityName #>CountServer() {
+            return datacontext.<#= entityName #>.getCount().then(function (data) {
+                return vm.<#= entityName #>CountServer = data;
+            });
+        }
+
+        function get<#= EntityName #>FilteredCountServer() {
+            datacontext.<#= entityName #>.getFilteredCountServer(vm.<#= entityName #>ServerSearch)
+                .then(function(count) {
+                    vm.<#= entityName #>FilteredCountServer = count;
+                });
+        }
+		// #endregion
+
+		// #region Paging/Sorting/Filtering
+		function pageChanged() {
+			get<#= EntityNamePlural #>();
+		}
+
+		function pageChangedServer() {
+            get<#= EntityNamePlural #>Server();
+        }
+
+		function refresh() { get<#= EntityNamePlural #>(true); }
+		function refreshServer() { get<#= EntityNamePlural #>Server(true); }
+
+		function search($event) {
+			if ($event.keyCode === keyCodes.esc) { vm.<#= entityName #>Search = ''; }
+			get<#= EntityNamePlural #>();
+		}
+
+		function searchServer() {
+            return get<#= EntityNamePlural #>Server();
+        }
+
+        function set<#= EntityNamePlural #>ServerFilter(<#= entityName #>) {
+            var textContains = common.textContains;
+            var searchText = vm.<#= entityNamePlural #>ServerSearch;
+
+            var isMatch = searchText
+                ? textContains(<#= entityName #>.name, searchText)
+                || textContains(<#= entityName #>.abbreviation, searchText)
+                : true;
+            return isMatch;
+        }
+
+        function setSort(field) {
+            field = common.lowerCaseFirstLetter(field);
+            field = common.replaceSpecialCharacters(field, ' ');
+
+            vm.sorting.orderBy = field;
+            if (vm.sorting.orderDesc == '') { vm.sorting.orderDesc = 'desc'; }
+            else { vm.sorting.orderDesc = ''; }
+
+            get<#= EntityNamePlural #>();
+        }
+
+        function setSortServer(field) {
+            field = common.lowerCaseFirstLetter(field);
+            field = common.replaceSpecialCharacters(field, ' ');
+
+            vm.sortingServer.orderBy = field;
+            if (vm.sortingServer.orderDesc == '') { vm.sortingServer.orderDesc = 'desc'; }
+            else { vm.sortingServer.orderDesc = ''; }
+
+            return get<#= EntityNamePlural #>Server();
+        }
+		// #endregion
+
+		function goTo<#= EntityName #>(<#= entityName #>) {
+			if (<#= entityName #> && <#= entityName #>.<#= primaryKeyName #>) {
+				$location.path('/<#= entityName #>/' + <#= entityName #>.<#= primaryKeyName #>);
+			}
+		}
+
+<#if(foreignKeys.Count > 0) {#>
+  // #region Relative entities
+
+<#
+                        for (int i= 0; i < foreignKeys.Count; i++)
+                        {
+                            string navProperty = foreignKeys[i].Replace("ID", string.Empty).Replace("Id", string.Empty);
+                            string navPropertyIncamelCase = foreignKeysIncamelCase[i].Replace("ID", string.Empty).Replace("Id", string.Empty);#>
+
+        vm.on<#=navProperty#>SelectionChange = function () {
+            // get all <#=EntityNamePlural#> (from local) by <#=foreignKeys[i]#>.
+            if (vm.selected<#=navProperty#> != null) {
+                datacontext.<#=entityName#>.getAllBy<#=foreignKeys[i]#>(
+                    false,
+                    vm.sorting.orderBy,
+                    vm.sorting.orderDesc,
+				    vm.paging.currentPage,
+                    vm.paging.pageSize,
+                    vm.selected<#=navProperty#>.<#=foreignKeysIncamelCase[i]#>)
+                .then(function (results) {
+                    vm.<#=entityNamePlural#> = results;
+                    vm.<#=entityName#>FilteredCount = results.length;
+                });
+            }
+            else {
+                get<#= EntityNamePlural #>(false);
+            }
+        }
+
+        vm.on<#=navProperty#>ServerSelectionChange = function () {
+            // get all Patients (from local) by Hospital ID.
+            if (vm.selected<#=navProperty#>Server != null) {
+                datacontext.<#=entityName#>.getAllBy<#=navProperty#>ID(
+                    true,
+                    vm.sorting.orderBy,
+                    vm.sorting.orderDesc,
+				    vm.paging.currentPage,
+                    vm.paging.pageSize,
+                    vm.selected<#=navProperty#>Server.cptCodeVersionID)
+                .then(function (results) {
+                    vm.<#= entityNamePlural #>ServerFilter = results;
+                    vm.<#=entityName#>FilteredCountServer = results.length;
+                });
+            }
+            else {
+                get<#= EntityNamePlural #>Server(true);
+            }
+        }
+   <#}#>
+        // #endregion
+
+<#}#>
+
+
+
+		// #endregion
+	}
+	// #endregion
+})();
+
+<# 
+				SaveOutput(entityName, entityName + "ListController.js");
+			}
+		}
+	}
+}
+#>

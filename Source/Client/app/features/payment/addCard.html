@@ -1,0 +1,96 @@
+﻿<section class="mainbar">
+    <section class="matter">
+        <div class="container-fluid">
+
+            <!-- 1. Buttons -->
+            <div>
+
+                <!-- 1.1. Back button -->
+                <button id="cardBackButton" class="infoButton"
+                        data-ng-click="vm.goBack()">
+                    <i class="fa fa-arrow-left"></i>Back
+                </button>
+
+                <!-- 1.4. Delete button -->
+                <button id="cardDeleteButton" class="dangerButton"
+                        data-ng-click="vm.deletecard()"
+                        data-ng-show="addNewCard">
+                    <i class="fa fa-trash-o"></i>Delete
+                </button>
+
+                <!-- 1.5. Has changes * -->
+                <span data-ng-show="vm.hasChanges"
+                      class="dissolve-animation ng-hide">
+                    <i class="fa fa-asterisk fa-asterisk-large"></i>
+                </span>
+            </div>
+
+            <!-- 2. Content/main area -->
+            <div class="widget wlightblue">
+
+                <!-- 2.1. Panel header -->
+                <div data-dna-widget-header title="Edit {{vm.card.last4 || 'New card'}}"></div>
+
+                <!-- 2.2. Panel form -->
+                <div class="widget-content user">
+                    
+                    <!-- 2.2.2. Main form contains many form groups -->
+                    <form id="paymentForm"
+                          class="form-horizontal"
+                          stripe-form="stripeCallback">
+                        <!-- Card Number-->
+                        <div class="form-group">
+                            <label for="CardNumber"
+                                   class="col-sm-1 control-label">Card Number</label>
+                            <div class="col-sm-7">
+                                <input id="CardNumber"
+                                       class="form-control"
+                                       placeholder="Card Number"
+                                       payments-validate="card" payments-format="card"
+                                       data-ng-model="number">
+                            </div>
+                        </div>
+
+                        <!-- CVC -->
+                        <div class="form-group">
+                            <label for="CVC" class="col-sm-1 control-label">CVC</label>
+                            <div class="col-sm-7">
+                                <input id="CVC"
+                                       class="form-control"
+                                       placeholder="XXX"
+                                       payments-validate="cvc" payments-format="cvc"
+                                       data-ng-model="cvc">
+                            </div>
+                        </div>
+
+                        <!-- Expiration -->
+                        <div class="form-group">
+                            <label for="Expiration" class="col-sm-1 control-label">Expiration</label>
+                            <div class="col-sm-7">
+                                <input id="Expiration"
+                                       class="form-control"
+                                       placeholder="MM/YY"
+                                       payments-validate="expiry" payments-format="expiry"
+                                       data-ng-model="expiry">
+                            </div>
+                        </div>
+
+                        <div class="form-group"
+                             data-ng-show="addNewCard">
+                            <label class="col-sm-1 control-label">Set card as default?</label>
+                            <div class="col-sm-7 pull-left">
+                                <input type="checkbox"
+                                       class="form-control pull-left checkbox"
+                                       data-ng-model="setAsDefault">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button class="form-control btn btn-primary" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+

@@ -1,0 +1,49 @@
+﻿<#@ template debug="true" hostspecific="true" #>
+<#@ output extension=".txt" #>
+
+<#@ assembly name="EnvDTE" #> 
+<#@ import namespace="EnvDTE" #>
+<#@ include file="VisualStudioHelper.ttinclude"#>
+
+<#
+VsCodeModel vsCodeModel = new VsCodeModel(VisualStudioHelper);
+
+// Get Project to loop through all the classes
+var project = VisualStudioHelper.GetProject("Dna.Mvp.Data.Entities");
+
+// get all class items from the code model
+var allClasses = vsCodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false);
+
+// iterate all classes
+foreach(EnvDTE.CodeClass codeClass in allClasses)
+{
+	WriteLine("Class " + codeClass.FullName);
+
+    // iterate all properties
+    var allProperties = vsCodeModel.GetAllCodeElementsOfType(codeClass.Members, EnvDTE.vsCMElement.vsCMElementProperty, true);
+    foreach(EnvDTE.CodeProperty property in allProperties)
+    {
+		ICollection<string> columnData = new List<string>();
+		columnData.Add(property.Type.AsString);
+
+		// iterate all attributes
+		foreach (var codeAttribute in property.Attributes.OfType<EnvDTE.CodeAttribute>())
+        {
+			// Do not add codeAttribute with Name = "Column"
+			if (!string.Equals(codeAttribute.Name.ToString(), "Column"))
+				columnData.Add(codeAttribute.Name.ToString());
+
+			// Do not add codeAttribute with empty Value
+			if (!string.IsNullOrEmpty(codeAttribute.Value.ToString()))
+				columnData.Add(codeAttribute.Value.ToString());
+        }
+
+		PushIndent("\t");
+		WriteLine("Property " + property.Name + (columnData.Count == 0 ? string.Empty : "(" + string.Join(", ", columnData.ToArray())+ ")"));
+		PopIndent();
+    }
+
+	PopIndent();
+	WriteLine("");
+}
+#>

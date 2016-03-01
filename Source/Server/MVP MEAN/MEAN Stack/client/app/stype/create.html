@@ -1,0 +1,33 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<header class="hero-unit" id="banner">
+    <div class="container">
+        <h4>Mongoose Schema Types</h4>
+    </div>
+</header>
+
+<div class="container">
+    <form class="thing-form" ng-submit="newType()" name="commentForm">
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="String..." ng-model="stringMdl" required />
+            <input type="text" class="form-control" placeholder="Number..." ng-model="numberMdl" required />
+            <input type="date" class="form-control" ng-model="dateMdl" required />
+            <!--<input type="file" name="pic" accept="image/*" ng-model="bufferMdl">-->
+            <input type="checkbox" class="form-control" ng-model="booleanMdl" required />
+            <!--<input type="text" class="form-control" placeholder="Mixed..." ng-model="mixedMdl" required />-->
+            <!--<input type="text" class="form-control" placeholder="Object Id..." ng-model="objectIdMdl" required />-->
+        </p>
+        <span class="input-group-btn">
+            <input class="btn btn-primary" type="submit" ng-disabled="commentForm.$invalid" value="Create new schema type">
+            <a href="/stype" class="btn btn-success">Back</a>
+        </span>
+    </form>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p>
+            Angular Fullstack
+        </p>
+    </div>
+</footer>

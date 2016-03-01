@@ -1,0 +1,1287 @@
+<#@ template  debug="true" hostSpecific="true"#>
+
+<#@ assembly name="System" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="System.Windows.Forms" #>
+<#@ assembly name="System.Data" #>
+<#@ assembly name="System.XML" #>
+<#@ assembly name="System.Configuration" #>
+<#@ assembly name="EnvDTE" #>
+
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Configuration" #> 
+<#@ import namespace="System.Data.SqlClient" #>
+
+<#@ include file="EF.Utility.CS.ttinclude"#>
+
+<#+  
+// ---------------- Read Database Schema 3 --------------------------------
+DataTable GetMetaDataTable()
+{
+	ExeConfigurationFileMap configFile = new ExeConfigurationFileMap();
+	configFile.ExeConfigFilename = GetConfigFile();
+	var config = ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);
+	string ConnectionString = config.ConnectionStrings.ConnectionStrings["MvpContext"].ConnectionString;
+	SqlConnection connection = new SqlConnection(ConnectionString);
+	connection.Open();
+	
+	string queryTables = @"
+		SELECT DISTINCT T.TABLE_SCHEMA AS [SchemaName], 
+		T.TABLE_NAME AS [ObjectName], 
+		C.COLUMN_NAME AS [Name], 
+		C.IS_NULLABLE AS [IsNullable], 
+		C.DATA_TYPE AS [Type], 
+		C.CHARACTER_MAXIMUM_LENGTH AS [Length], 
+		TC.CONSTRAINT_TYPE AS [PK],
+		C.ORDINAL_POSITION,
+		ExtProp.name AS [ExtPropertyName],
+		ExtProp.value AS [ExtPropertyValue]
+		--, ExtProp.*
+		FROM INFORMATION_SCHEMA.TABLES T
+			INNER JOIN INFORMATION_SCHEMA.COLUMNS C ON C.TABLE_SCHEMA = T.TABLE_SCHEMA AND C.TABLE_NAME = T.TABLE_NAME
+			LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE K ON K.TABLE_SCHEMA = T.TABLE_SCHEMA AND K.TABLE_NAME = T.TABLE_NAME AND K.COLUMN_NAME = C.COLUMN_NAME
+			LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC ON TC.CONSTRAINT_NAME = K.CONSTRAINT_NAME AND TC.CONSTRAINT_TYPE = 'PRIMARY KEY'
+			INNER JOIN SYS.TABLES AS SysTbls ON T.TABLE_NAME = SysTbls.Name
+			INNER JOIN SYS.COLUMNS AS SysColumns ON SysTbls.[object_id] = SysColumns.[object_id] AND SysColumns.name = C.COLUMN_NAME
+			LEFT JOIN SYS.EXTENDED_PROPERTIES AS ExtProp
+				 ON ExtProp.[major_id] = SysTbls.[object_id] AND ExtProp.[minor_id] = SysColumns.[column_id]
+		WHERE T.TABLE_TYPE = 'BASE TABLE'
+		ORDER BY T.TABLE_SCHEMA, T.TABLE_NAME, C.ORDINAL_POSITION";
+	
+	SqlDataAdapter adapterTables = new SqlDataAdapter(queryTables, connection);
+	DataTable metaDataTable = new DataTable();
+	adapterTables.Fill(metaDataTable);
+
+	return metaDataTable;
+}
+
+List<string> GetSchemaNames(DataTable metaDataTable)
+{
+	return (from r in metaDataTable.Rows.OfType<DataRow>()
+			select r["SchemaName"].ToString()).Distinct().ToList();
+}
+
+List<string> GetTableNames(string schemaName, string objectType, DataTable metaData)
+{
+	return (from r in metaData.Rows.OfType<DataRow>()
+			where r["SchemaName"].ToString() == schemaName
+			select r["ObjectName"].ToString()).Distinct().ToList();
+}
+
+List<string> GetColumnNames(string schemaName, string tableName, DataTable metaData)
+{
+	if (!string.IsNullOrEmpty(FormatName(tableName, schemaName))) 
+	{
+		return (from r in metaData.Rows.OfType<DataRow>()
+				where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName
+				select r["Name"].ToString()).Distinct().ToList();
+
+		//foreach (string name in names)
+		//{
+			//if (!string.IsNullOrEmpty(name)) 
+			//{
+				//if (objectType == "Table") 
+				//{
+					//ICollection<string> columnData = new List<string>();
+							
+					//var data = (from r in metaData.Rows.OfType<DataRow>()
+						//		where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == objectName && r["Name"].ToString() == name
+							//	select new { IsNullable = (r["IsNullable"].ToString() == "YES"), Type = r["Type"].ToString(), Length = r["Length"].ToString(), IsPK = (r["PK"].ToString() == "PRIMARY KEY") }).FirstOrDefault();
+							
+					//if (data.IsPK) 
+					//{
+						//columnData.Add("PK");
+					//}
+
+					//columnData.Add(data.Type + (string.IsNullOrEmpty(data.Length) ? string.Empty : "(" + (data.Length == "-1" ? "max" : data.Length) +")"));
+					//columnData.Add(data.IsNullable ? "NULL" : "NOT NULL");
+				//}
+				//else 
+				//{
+				//}
+            //}
+		//}
+    }
+
+	return new List<string>();
+}
+
+List<string> GetMainColumnNames(string schemaName, string tableName, DataTable metaData) // without unneccessary columns like: Created, CreatedBy, Updated, UpdatedBy and IsActive
+{
+	List<string> columnNames = new List<string>();
+	if (!string.IsNullOrEmpty(FormatName(tableName, schemaName))) 
+	{
+		columnNames = (from r in metaData.Rows.OfType<DataRow>()
+						where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName
+						select r["Name"].ToString()).Distinct().ToList();
+
+		List<string> unneccessaryColumnNames = new List<string>()
+        { "Created", "Updated", "CreatedDate", "UpdatedDate", "CreateBy", "UpdateBy", "CreatedBy", "UpdatedBy", "CreateUser", "UpdateUser", "IsActive" };
+
+        foreach (var columnName in columnNames)
+        {
+			var data = (from r in metaData.Rows.OfType<DataRow>()
+						where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName && r["Name"].ToString() == columnName
+						select new { IsNullable = (r["IsNullable"].ToString() == "YES"), Type = r["Type"].ToString(), Length = r["Length"].ToString(), IsPK = (r["PK"].ToString() == "PRIMARY KEY") }).FirstOrDefault();
+							
+			if (data.IsPK) 
+			{
+				unneccessaryColumnNames.Add(columnName);
+			}
+        }
+
+		columnNames = columnNames.Where(x => !unneccessaryColumnNames.Contains(x) && !x.ToLower().EndsWith("id")).ToList();		
+    }
+
+	return columnNames;
+}
+
+string GetPrimaryKeyName(string schemaName, string tableName, DataTable metaData) // Get Primary Key Name
+{
+	// It will return empty string if a table has more than one primary key.
+
+	List<string> columnNames = new List<string>();
+	if (!string.IsNullOrEmpty(FormatName(tableName, schemaName))) 
+	{
+		columnNames = (from r in metaData.Rows.OfType<DataRow>()
+						where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName
+						select r["Name"].ToString()).Distinct().ToList();
+
+        foreach (var columnName in columnNames)
+        {
+			var data = (from r in metaData.Rows.OfType<DataRow>()
+						where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName && r["Name"].ToString() == columnName
+						select new { IsPK = (r["PK"].ToString() == "PRIMARY KEY") }).FirstOrDefault();
+							
+			if (data.IsPK) 
+			{
+				return columnName;
+			}
+        }
+    }
+
+	return string.Empty;
+}
+
+Dictionary<string, string> GetMainColumnNamesWithTypes(string schemaName, string tableName, DataTable metaData) // without unneccessary columns like: Created, CreatedBy, Updated, UpdatedBy and IsActive
+{
+	Dictionary<string, string> results = new Dictionary<string, string>();
+	if (!string.IsNullOrEmpty(FormatName(tableName, schemaName))) 
+	{
+		var columnNamesWithTypes = (from r in metaData.Rows.OfType<DataRow>()
+									where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName
+									select new { Name = r["Name"].ToString(), Type = r["Type"].ToString() }).Distinct().ToList();
+
+		List<string> unneccessarycolumnNamesWithTypes = new List<string>()
+        { "Created", "Updated", "CreatedDate", "UpdatedDate", "CreateBy", "UpdateBy", "CreatedBy", "UpdatedBy", "CreateUser", "UpdateUser", "IsActive" };
+
+        foreach (var column in columnNamesWithTypes)
+        {
+			var data = (from r in metaData.Rows.OfType<DataRow>()
+						where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName && r["Name"].ToString() == column.Name
+						select new { IsNullable = (r["IsNullable"].ToString() == "YES"), Type = r["Type"].ToString(), Length = r["Length"].ToString(), IsPK = (r["PK"].ToString() == "PRIMARY KEY") }).FirstOrDefault();
+							
+			if (data.IsPK) 
+			{
+				unneccessarycolumnNamesWithTypes.Add(column.Name);
+			}
+        }
+
+		columnNamesWithTypes = columnNamesWithTypes.Where(x => !unneccessarycolumnNamesWithTypes.Contains(x.Name) && !x.Name.ToString().ToLower().EndsWith("id")).ToList();	
+		
+        foreach (var column in columnNamesWithTypes)
+        {
+			results.Add(column.Name.ToString(), column.Type.ToString());
+        }	
+    }
+
+	return results;
+}
+
+    private string GetPKType(string schemaName, string tableName, DataTable metaData)
+    {
+        Dictionary<string, string> results = new Dictionary<string, string>();
+        if (!string.IsNullOrEmpty(FormatName(tableName, schemaName)))
+        {
+            var columnNamesWithTypes = (from r in metaData.Rows.OfType<DataRow>()
+                where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName
+                select new {Name = r["Name"].ToString(), Type = r["Type"].ToString()}).Distinct().ToList();
+
+            List<string> unneccessarycolumnNamesWithTypes = new List<string>()
+            {
+                "Created",
+                "Updated",
+                "CreatedDate",
+                "UpdatedDate",
+                "CreateBy",
+                "UpdateBy",
+                "CreatedBy",
+                "UpdatedBy",
+                "CreateUser",
+                "UpdateUser",
+                "IsActive"
+            };
+
+            foreach (var column in columnNamesWithTypes)
+            {
+                var data = (from r in metaData.Rows.OfType<DataRow>()
+                    where
+                        r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName &&
+                        r["Name"].ToString() == column.Name
+                    select
+                        new
+                        {
+                            IsNullable = (r["IsNullable"].ToString() == "YES"),
+                            Type = r["Type"].ToString(),
+                            Length = r["Length"].ToString(),
+                            IsPK = (r["PK"].ToString() == "PRIMARY KEY")
+                        }).FirstOrDefault();
+
+                if (data.IsPK)
+                {
+                    return column.Type;
+                }
+            }
+        }
+            return string.Empty;
+    }
+
+    Dictionary<string, string> GetMainColumnNamesWithExtProperties(string schemaName, string tableName, DataTable metaData) // without unneccessary columns like: Created, CreatedBy, Updated, UpdatedBy and IsActive
+{
+	Dictionary<string, string> results = new Dictionary<string, string>();
+	if (!string.IsNullOrEmpty(FormatName(tableName, schemaName))) 
+	{
+		var columnNamesWithExtProperties =
+            (from r in metaData.Rows.OfType<DataRow>()
+			where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName && r["ExtPropertyName"].ToString() == "DnaMetaData"
+			select new { Name = r["Name"].ToString(), ExtPropertyValue = r["ExtPropertyValue"].ToString() }).Distinct().ToList();
+
+		List<string> unneccessarycolumnNamesWithExtProperties = new List<string>()
+        { "Created", "Updated", "CreatedDate", "UpdatedDate", "CreateBy", "UpdateBy", "CreatedBy", "UpdatedBy", "CreateUser", "UpdateUser", "IsActive" };
+
+        foreach (var column in columnNamesWithExtProperties)
+        {
+			var data = (from r in metaData.Rows.OfType<DataRow>()
+						where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName && r["Name"].ToString() == column.Name
+						select new { IsPK = (r["PK"].ToString() == "PRIMARY KEY") }).FirstOrDefault();
+							
+			if (data.IsPK) 
+			{
+				unneccessarycolumnNamesWithExtProperties.Add(column.Name);
+			}
+        }
+
+		columnNamesWithExtProperties = columnNamesWithExtProperties.Where(x => !unneccessarycolumnNamesWithExtProperties.Contains(x.Name) && !x.Name.ToString().ToLower().EndsWith("id")).ToList();	
+		
+        foreach (var column in columnNamesWithExtProperties)
+        {
+			results.Add(column.Name, column.ExtPropertyValue);
+        }	
+    }
+
+	return results;
+}
+
+Dictionary<string, int> GetMainColumnNamesWithLengths(string schemaName, string tableName, DataTable metaData) // without unneccessary columns like: Created, CreatedBy, Updated, UpdatedBy and IsActive
+{
+	Dictionary<string, int> results = new Dictionary<string, int>();
+	if (!string.IsNullOrEmpty(FormatName(tableName, schemaName))) 
+	{
+		var columnNamesWithExtProperties =
+            (from r in metaData.Rows.OfType<DataRow>()
+			where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName
+			select new { Name = r["Name"].ToString(), Length = r["Length"].ToString() }).Distinct().ToList();
+
+		List<string> unneccessarycolumnNamesWithExtProperties = new List<string>()
+        { "Created", "Updated", "CreatedDate", "UpdatedDate", "CreateBy", "UpdateBy", "CreatedBy", "UpdatedBy", "CreateUser", "UpdateUser", "IsActive" };
+
+        foreach (var column in columnNamesWithExtProperties)
+        {
+			var data = (from r in metaData.Rows.OfType<DataRow>()
+						where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName && r["Name"].ToString() == column.Name
+						select new { IsPK = (r["PK"].ToString() == "PRIMARY KEY") }).FirstOrDefault();
+							
+			if (data.IsPK) 
+			{
+				unneccessarycolumnNamesWithExtProperties.Add(column.Name);
+			}
+        }
+
+		columnNamesWithExtProperties = columnNamesWithExtProperties.Where(x => !unneccessarycolumnNamesWithExtProperties.Contains(x.Name) && !x.Name.ToString().ToLower().EndsWith("id")).ToList();	
+		
+        foreach (var column in columnNamesWithExtProperties)
+        {
+            int columnLength;
+            if (int.TryParse(column.Length, out columnLength))
+            {
+                if (columnLength > 0)
+                {
+                    results.Add(GetStringIncamelCase(column.Name), columnLength);
+                }
+            }
+        }	
+    }
+
+	return results;
+}
+
+List<string> GetRequiredColumns(string schemaName, string tableName, DataTable metaData) // without unneccessary columns like: Created, CreatedBy, Updated, UpdatedBy and IsActive
+{
+	List<string> results = new List<string>();
+	if (!string.IsNullOrEmpty(FormatName(tableName, schemaName))) 
+	{
+        var requiredColumns =
+            (from r in metaData.Rows.OfType<DataRow>()
+            where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName && r["IsNullable"].ToString() != "YES"
+            select new { Name = r["Name"].ToString()})
+            .Distinct().ToList();
+
+		List<string> unneccessaryRequiredColumns = new List<string>()
+        { "Created", "Updated", "CreatedDate", "UpdatedDate", "CreateBy", "UpdateBy", "CreatedBy", "UpdatedBy", "CreateUser", "UpdateUser", "IsActive" };
+
+        foreach (var column in requiredColumns)
+        {
+			var data = (from r in metaData.Rows.OfType<DataRow>()
+						where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == tableName && r["Name"].ToString() == column.Name
+						select new { IsPK = (r["PK"].ToString() == "PRIMARY KEY") }).FirstOrDefault();
+							
+			if (data.IsPK) 
+			{
+				unneccessaryRequiredColumns.Add(column.Name);
+			}
+        }
+
+		requiredColumns = requiredColumns.Where(x => !unneccessaryRequiredColumns.Contains(x.Name) && !x.Name.ToLower().EndsWith("id")).ToList();	
+		
+        foreach (var column in requiredColumns)
+        {
+			results.Add(column.Name);
+        }	
+    }
+
+	return results;
+}
+
+List<string> ConvertTocamelCase(List<string> list) 
+{
+	List<string> camelCaseList = new List<string>();
+    foreach (string item in list)
+    {
+		 camelCaseList.Add(GetStringIncamelCase(item));
+    }
+
+	return camelCaseList;
+}
+
+    string GetManyToManyListService(string mainTableName, List<string> manyToManyTableNames)
+    {
+        string result = string.Empty;
+        foreach (var manyToManyTableName in manyToManyTableNames)
+        {
+            result += "'" + mainTableName + manyToManyTableName + "ListService',";
+        }
+
+        return result.TrimEnd(',');
+    }
+
+List<string> GetManyToManyTableNames(string tableName) 
+{
+	ExeConfigurationFileMap configFile = new ExeConfigurationFileMap();
+	configFile.ExeConfigFilename = GetConfigFile();
+	var config = ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);
+	string ConnectionString = config.ConnectionStrings.ConnectionStrings["MvpContext"].ConnectionString;
+	SqlConnection connection = new SqlConnection(ConnectionString);
+	connection.Open();
+	
+	string queryTables = @"
+		SELECT * FROM TableRelationships 
+		WHERE Table1Name='{0}' OR Table2Name='{0}'";
+    queryTables = string.Format(queryTables, tableName);
+	SqlDataAdapter adapterTables = new SqlDataAdapter(queryTables, connection);
+    //adapterTables.SelectCommand.Parameters.Add("@tableName",SqlDbType.NVarChar,int.MaxValue,"tabl")
+	DataTable manyToManyTables = new DataTable();
+	adapterTables.Fill(manyToManyTables);
+
+
+	List<string> manyToManyTableNameList = new List<string>();
+		var table1NameList = (from r in manyToManyTables.Rows.OfType<DataRow>()
+						select r["Table1Name"].ToString()).Distinct().ToList();
+		var table2NameList = (from r in manyToManyTables.Rows.OfType<DataRow>()
+						select r["Table2Name"].ToString()).Distinct().ToList();
+		manyToManyTableNameList.AddRange(table1NameList);
+		manyToManyTableNameList.AddRange(table2NameList);
+    if (manyToManyTableNameList.Contains(tableName))
+    {
+        manyToManyTableNameList.Remove(tableName);
+    }
+    return manyToManyTableNameList;
+}
+
+List<string> GetFKColumnNames(string schemaName, string tableName, DataTable metaData) 
+{
+	ExeConfigurationFileMap configFile = new ExeConfigurationFileMap();
+	configFile.ExeConfigFilename = GetConfigFile();
+	var config = ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);
+	string ConnectionString = config.ConnectionStrings.ConnectionStrings["MvpContext"].ConnectionString;
+	SqlConnection connection = new SqlConnection(ConnectionString);
+	connection.Open();
+	
+	string queryTables = @"
+		SELECT TABLE_NAME
+		   , CONSTRAINT_NAME
+		   , COLUMN_NAME
+		   , ORDINAL_POSITION
+		FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+		WHERE CONSTRAINT_NAME IN (
+		   SELECT CONSTRAINT_NAME
+		   FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS)
+		ORDER BY TABLE_NAME, ORDINAL_POSITION";
+	
+	SqlDataAdapter adapterTables = new SqlDataAdapter(queryTables, connection);
+	DataTable metaDataTable = new DataTable();
+	adapterTables.Fill(metaDataTable);
+
+
+	List<string> fkColumnNames = new List<string>();
+	string primaryKeyName = GetPrimaryKeyName(schemaName, tableName, metaData);
+	if (!string.IsNullOrEmpty(FormatName(tableName, schemaName))) 
+	{
+		fkColumnNames = (from r in metaDataTable.Rows.OfType<DataRow>()
+						where r["TABLE_NAME"].ToString() == tableName && r["COLUMN_NAME"].ToString() != primaryKeyName
+						select r["COLUMN_NAME"].ToString()).Distinct().ToList();
+    }
+
+	return fkColumnNames;
+}
+
+void GenerateDatabaseObject(string schemaName, string objectType, DataTable metaData) 
+{
+	var objectNames = (from r in metaData.Rows.OfType<DataRow>()
+					   where r["SchemaName"].ToString() == schemaName
+					   select r["ObjectName"].ToString()).Distinct();
+
+	if (objectNames.Count() > 0) 
+	{
+		////WriteLine("/// <summary>");
+		////WriteLine("/// " + objectType + " names in [" + schemaName + "] schema.");
+		////WriteLine("/// </summary>");
+		////WriteLine("public static class " + objectType + "Names");
+		////WriteLine("{");
+		////PushIndent("\t");
+
+		foreach (string objectName in objectNames)
+		{
+			if (!string.IsNullOrEmpty(objectName)) 
+			{
+				////WriteLine("/// <summary>");
+				////WriteLine("/// " + objectType + " [" + schemaName + "].[" + objectName + "]");
+				////WriteLine("/// </summary>");
+				////WriteLine("public const string " + FormatName(objectName, schemaName) + " = \"" + objectName + "\";");
+            }
+		}
+
+		//PopIndent();
+		//WriteLine("}"); // end ObjectNames
+		//WriteLine("");
+
+		//WriteLine("/// <summary>");
+		//WriteLine("/// " + objectType + "s in [" + schemaName + "] schema.");
+		//WriteLine("/// </summary>");
+		//WriteLine("public static class " + objectType + "s");
+		//WriteLine("{");
+		//PushIndent("\t");
+
+		foreach (string objectName in objectNames)
+		{
+			if (!string.IsNullOrEmpty(FormatName(objectName, schemaName))) 
+			{
+				//WriteLine("/// <summary>");
+				//WriteLine("/// " + objectType + " [" + schemaName + "].[" + objectName + "]");
+				//WriteLine("/// </summary>");
+				//WriteLine("public static class " + FormatName(objectName, schemaName));
+				//WriteLine("{");
+				//PushIndent("\t");
+		
+				var names = (from r in metaData.Rows.OfType<DataRow>()
+							 where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == objectName
+							 select r["Name"].ToString()).Distinct();
+
+				foreach (string name in names)
+				{
+					if (!string.IsNullOrEmpty(name)) 
+					{
+						if (objectType == "Table") 
+						{
+							ICollection<string> columnData = new List<string>();
+							
+							var data = (from r in metaData.Rows.OfType<DataRow>()
+										where r["SchemaName"].ToString() == schemaName && r["ObjectName"].ToString() == objectName && r["Name"].ToString() == name
+										select new { IsNullable = (r["IsNullable"].ToString() == "YES"), Type = r["Type"].ToString(), Length = r["Length"].ToString(), IsPK = (r["PK"].ToString() == "PRIMARY KEY") }).FirstOrDefault();
+							
+							if (data.IsPK) 
+							{
+								columnData.Add("PK");
+							}
+
+							columnData.Add(data.Type + (string.IsNullOrEmpty(data.Length) ? string.Empty : "(" + (data.Length == "-1" ? "max" : data.Length) +")"));
+							columnData.Add(data.IsNullable ? "NULL" : "NOT NULL");
+
+							//WriteLine("/// <summary>");
+							//WriteLine("/// Column " + name + "(" + string.Join(", ", columnData.ToArray())+ ")");
+							//WriteLine("/// </summary>");
+						}
+						else 
+						{
+							//WriteLine("/// <summary>");
+							//WriteLine("/// [" + schemaName + "].[" + objectName + "].[" + name + "]");
+							//WriteLine("/// </summary>");
+						}
+						//WriteLine("public const string " + FormatName(name, objectName) + " = \"" + name + "\";");
+                    }
+				}
+			
+				//PopIndent();
+				//WriteLine("}");
+				//WriteLine("");
+            }
+		}	
+
+		//PopIndent();
+		//WriteLine("}"); // End Objects
+		//WriteLine("");
+	}
+}
+
+string FormatName(string name, string enclosingType)
+{
+	string trimChars = "#\'/-+ ";
+
+    foreach (char ch in trimChars.ToCharArray())
+    {
+		 name = name.Replace(ch.ToString(), string.Empty);
+    }
+	
+	if (name == enclosingType) 
+	{
+		name = name + "_";
+	}
+
+	return name;
+}
+
+string GetConfigFile()
+{
+    IServiceProvider _ServiceProvider = (IServiceProvider)Host;
+    EnvDTE.DTE dte = (EnvDTE.DTE)_ServiceProvider.GetService(typeof(EnvDTE.DTE));
+    Array activeSolutionProjects = (Array)dte.ActiveSolutionProjects;
+    EnvDTE.Project project = (EnvDTE.Project)activeSolutionProjects.GetValue(0);
+	System.IO.FileInfo fileInfo = new System.IO.FileInfo(project.FullName);
+
+	foreach (EnvDTE.ProjectItem item in project.ProjectItems)
+	{
+		if (item.Name.Equals("App.config", StringComparison.InvariantCultureIgnoreCase) 
+	     || item.Name.Equals("Web.config", StringComparison.InvariantCultureIgnoreCase)) 
+		{
+			return fileInfo.Directory.FullName + "\\" + item.Name;
+        }
+	}
+
+	return String.Empty;
+}
+// ---------------- End: Read Database Schema 3 --------------------------------
+#>
+
+<#+
+
+public void SaveOutput(string directoryName, string outputFileName)
+{
+    string templateDirectory = Path.GetDirectoryName(Host.TemplateFile + @"\..\..\Generated\" + directoryName + @"\");
+    if (!Directory.Exists(templateDirectory))
+    {
+		 Directory.CreateDirectory(templateDirectory);
+    }
+
+    string outputFilePath = Path.Combine(templateDirectory, outputFileName);
+    File.WriteAllText(outputFilePath, this.GenerationEnvironment.ToString()); 
+
+    this.GenerationEnvironment.Remove(0, this.GenerationEnvironment.Length);
+}
+
+public string GetStringIncamelCase(string inputString)
+{
+	if (!string.IsNullOrEmpty(inputString))
+	{
+		return inputString.First().ToString().ToLower() + inputString.Substring(1);
+    }
+
+	return string.Empty;
+}
+
+public string GetStringInPascalCase(string inputString)
+{
+	if (!string.IsNullOrEmpty(inputString))
+	{
+		return inputString.First().ToString().ToUpper() + inputString.Substring(1);
+	}
+
+	return string.Empty;
+}
+
+public string GetStringInPlural(string inputString)
+{
+    if (!string.IsNullOrEmpty(inputString))
+	{
+		if (inputString.EndsWith("s"))
+		{
+			return inputString + "es";
+		}
+		if (inputString.EndsWith("y"))
+		{
+			 return inputString.Substring(0, inputString.Length - 1) + "ies";
+		}
+		if (inputString.EndsWith("f"))
+		{
+			 return inputString.Substring(0, inputString.Length - 1) + "ves";
+		}
+		else
+		{
+			return inputString + "s";
+		}
+	}
+
+	return string.Empty;
+}
+
+public string GetStringInSingle(string inputString)
+{
+	if (!string.IsNullOrEmpty(inputString))
+	{
+		if (inputString.EndsWith("ses") || inputString.EndsWith("ches") || inputString.EndsWith("xes"))
+		{
+			return inputString.Substring(0, inputString.Length - 2);
+		}
+		if (inputString.EndsWith("ies"))
+		{
+			 return inputString.Substring(0, inputString.Length - 3) + "y";
+		}
+		if (inputString.EndsWith("ves"))
+		{
+			 return inputString.Substring(0, inputString.Length - 3) + "f";
+		}
+		else
+		{
+			return inputString.EndsWith("s") ? inputString.Substring(0, inputString.Length - 1) : inputString;
+		}
+	}
+
+	return string.Empty;
+}
+
+// Add 1 space before each uppercase letter except the first one
+// Then lowercase words like "Of", "For", "And", "Or", ...
+public string GetDisplayNameByUppercaseLetter(string inputString)
+{
+	inputString = Regex.Replace(inputString, @"(?<!_)([A-Z])", " $1");
+	// a, an, the, and, but, or, for, nor, on, at, to, from, by
+	string[] shouldBeLowercaseWords = { "An", "Of", "And", "Or" };
+	foreach (string shouldBeLowercaseWord in shouldBeLowercaseWords) {
+		inputString = inputString.Replace(shouldBeLowercaseWord, shouldBeLowercaseWord.ToLower());
+    }
+
+	return inputString;
+}
+
+public const string TemplateId = "CSharp_DbContext_Types_EF5";
+
+public class CodeStringGenerator
+{
+    private readonly CodeGenerationTools _code;
+    private readonly TypeMapper _typeMapper;
+    private readonly MetadataTools _ef;
+
+    public CodeStringGenerator(CodeGenerationTools code, TypeMapper typeMapper, MetadataTools ef)
+    {
+        ArgumentNotNull(code, "code");
+        ArgumentNotNull(typeMapper, "typeMapper");
+        ArgumentNotNull(ef, "ef");
+
+        _code = code;
+        _typeMapper = typeMapper;
+        _ef = ef;
+    }
+
+    public string Property(EdmProperty edmProperty)
+    {
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "{0} {1} {2} {{ {3}get; {4}set; }}",
+            Accessibility.ForProperty(edmProperty),
+            _typeMapper.GetTypeName(edmProperty.TypeUsage),
+            _code.Escape(edmProperty),
+            _code.SpaceAfter(Accessibility.ForGetter(edmProperty)),
+            _code.SpaceAfter(Accessibility.ForSetter(edmProperty)));
+    }
+
+    public string NavigationProperty(NavigationProperty navigationProperty)
+    {
+        var endType = _typeMapper.GetTypeName(navigationProperty.ToEndMember.GetEntityType());
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "{0} {1} {2} {{ {3}get; {4}set; }}",
+            AccessibilityAndVirtual(Accessibility.ForProperty(navigationProperty)),
+            navigationProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many ? ("ICollection<" + endType + ">") : endType,
+            _code.Escape(navigationProperty),
+            _code.SpaceAfter(Accessibility.ForGetter(navigationProperty)),
+            _code.SpaceAfter(Accessibility.ForSetter(navigationProperty)));
+    }
+    
+    public string AccessibilityAndVirtual(string accessibility)
+    {
+        return accessibility + (accessibility != "private" ? " virtual" : "");
+    }
+    
+    public string EntityClassOpening(EntityType entity)
+    {
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "{0} {1}partial class {2}{3}",
+            Accessibility.ForType(entity),
+            _code.SpaceAfter(_code.AbstractOption(entity)),
+            _code.Escape(entity),
+            _code.StringBefore(" : ", _typeMapper.GetTypeName(entity.BaseType)));
+    }
+    
+    public string EnumOpening(SimpleType enumType)
+    {
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "{0} enum {1} : {2}",
+            Accessibility.ForType(enumType),
+            _code.Escape(enumType),
+            _code.Escape(_typeMapper.UnderlyingClrType(enumType)));
+        }
+    
+    public void WriteFunctionParameters(EdmFunction edmFunction, Action<string, string, string, string> writeParameter)
+    {
+        var parameters = FunctionImportParameter.Create(edmFunction.Parameters, _code, _ef);
+        foreach (var parameter in parameters.Where(p => p.NeedsLocalVariable))
+        {
+            var isNotNull = parameter.IsNullableOfT ? parameter.FunctionParameterName + ".HasValue" : parameter.FunctionParameterName + " != null";
+            var notNullInit = "new ObjectParameter(\"" + parameter.EsqlParameterName + "\", " + parameter.FunctionParameterName + ")";
+            var nullInit = "new ObjectParameter(\"" + parameter.EsqlParameterName + "\", typeof(" + parameter.RawClrTypeName + "))";
+            writeParameter(parameter.LocalVariableName, isNotNull, notNullInit, nullInit);
+        }
+    }
+    
+    public string ComposableFunctionMethod(EdmFunction edmFunction, string modelNamespace)
+    {
+        var parameters = _typeMapper.GetParameters(edmFunction);
+        
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "{0} IQueryable<{1}> {2}({3})",
+            AccessibilityAndVirtual(Accessibility.ForMethod(edmFunction)),
+            _typeMapper.GetTypeName(_typeMapper.GetReturnType(edmFunction), modelNamespace),
+            _code.Escape(edmFunction),
+            string.Join(", ", parameters.Select(p => p.FunctionParameterType + " " + p.FunctionParameterName).ToArray()));
+    }
+    
+    public string ComposableCreateQuery(EdmFunction edmFunction, string modelNamespace)
+    {
+        var parameters = _typeMapper.GetParameters(edmFunction);
+        
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<{0}>(\"[{1}].[{2}]({3})\"{4});",
+            _typeMapper.GetTypeName(_typeMapper.GetReturnType(edmFunction), modelNamespace),
+            edmFunction.NamespaceName,
+            edmFunction.Name,
+            string.Join(", ", parameters.Select(p => "@" + p.EsqlParameterName).ToArray()),
+            _code.StringBefore(", ", string.Join(", ", parameters.Select(p => p.ExecuteParameterName).ToArray())));
+    }
+    
+    public string FunctionMethod(EdmFunction edmFunction, string modelNamespace, bool includeMergeOption)
+    {
+        var parameters = _typeMapper.GetParameters(edmFunction);
+        var returnType = _typeMapper.GetReturnType(edmFunction);
+
+        var paramList = String.Join(", ", parameters.Select(p => p.FunctionParameterType + " " + p.FunctionParameterName).ToArray());
+        if (includeMergeOption)
+        {
+            paramList = _code.StringAfter(paramList, ", ") + "MergeOption mergeOption";
+        }
+
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "{0} {1} {2}({3})",
+            AccessibilityAndVirtual(Accessibility.ForMethod(edmFunction)),
+            returnType == null ? "int" : "ObjectResult<" + _typeMapper.GetTypeName(returnType, modelNamespace) + ">",
+            _code.Escape(edmFunction),
+            paramList);
+    }
+    
+    public string ExecuteFunction(EdmFunction edmFunction, string modelNamespace, bool includeMergeOption)
+    {
+        var parameters = _typeMapper.GetParameters(edmFunction);
+        var returnType = _typeMapper.GetReturnType(edmFunction);
+
+        var callParams = _code.StringBefore(", ", String.Join(", ", parameters.Select(p => p.ExecuteParameterName).ToArray()));
+        if (includeMergeOption)
+        {
+            callParams = ", mergeOption" + callParams;
+        }
+        
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction{0}(\"{1}\"{2});",
+            returnType == null ? "" : "<" + _typeMapper.GetTypeName(returnType, modelNamespace) + ">",
+            edmFunction.Name,
+            callParams);
+    }
+    
+    public string DbSet(EntitySet entitySet)
+    {
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "{0} DbSet<{1}> {2} {{ get; set; }}",
+            Accessibility.ForReadOnlyProperty(entitySet),
+            _typeMapper.GetTypeName(entitySet.ElementType),
+            _code.Escape(entitySet));
+    }
+
+    public string UsingDirectives(bool inHeader, bool includeCollections = true)
+    {
+        return inHeader == string.IsNullOrEmpty(_code.VsNamespaceSuggestion())
+            ? string.Format(
+                CultureInfo.InvariantCulture,
+                "{0}using System;{1}" +
+                "{2}",
+                inHeader ? Environment.NewLine : "",
+                includeCollections ? (Environment.NewLine + "using System.Collections.Generic;") : "",
+                inHeader ? "" : Environment.NewLine)
+            : "";
+    }
+}
+
+public class TypeMapper
+{
+    private const string ExternalTypeNameAttributeName = @"http://schemas.microsoft.com/ado/2006/04/codegeneration:ExternalTypeName";
+
+    private readonly System.Collections.IList _errors;
+    private readonly CodeGenerationTools _code;
+    private readonly MetadataTools _ef;
+
+    public TypeMapper(CodeGenerationTools code, MetadataTools ef, System.Collections.IList errors)
+    {
+        ArgumentNotNull(code, "code");
+        ArgumentNotNull(ef, "ef");
+        ArgumentNotNull(errors, "errors");
+
+        _code = code;
+        _ef = ef;
+        _errors = errors;
+    }
+
+    public string GetTypeName(TypeUsage typeUsage)
+    {
+        return typeUsage == null ? null : GetTypeName(typeUsage.EdmType, _ef.IsNullable(typeUsage), null);
+    }
+
+    public string GetTypeName(EdmType edmType)
+    {
+        return GetTypeName(edmType, null, null);
+    }
+
+    public string GetTypeName(TypeUsage typeUsage, string modelNamespace)
+    {
+        return typeUsage == null ? null : GetTypeName(typeUsage.EdmType, _ef.IsNullable(typeUsage), modelNamespace);
+    }
+
+    public string GetTypeName(EdmType edmType, string modelNamespace)
+    {
+        return GetTypeName(edmType, null, modelNamespace);
+    }
+
+    public string GetTypeName(EdmType edmType, bool? isNullable, string modelNamespace)
+    {
+        if (edmType == null)
+        {
+            return null;
+        }
+
+        var collectionType = edmType as CollectionType;
+        if (collectionType != null)
+        {
+            return String.Format(CultureInfo.InvariantCulture, "ICollection<{0}>", GetTypeName(collectionType.TypeUsage, modelNamespace));
+        }
+
+        var typeName = _code.Escape(edmType.MetadataProperties
+                                .Where(p => p.Name == ExternalTypeNameAttributeName)
+                                .Select(p => (string)p.Value)
+                                .FirstOrDefault())
+            ?? (modelNamespace != null && edmType.NamespaceName != modelNamespace ?
+                _code.CreateFullName(_code.EscapeNamespace(edmType.NamespaceName), _code.Escape(edmType)) :
+                _code.Escape(edmType));
+
+        if (edmType is StructuralType)
+        {
+            return typeName;
+        }
+
+        if (edmType is SimpleType)
+        {
+            var clrType = UnderlyingClrType(edmType);
+            if (!IsEnumType(edmType))
+            {
+                typeName = _code.Escape(clrType);
+            }
+
+            return clrType.IsValueType && isNullable == true ?
+                String.Format(CultureInfo.InvariantCulture, "Nullable<{0}>", typeName) :
+                typeName;
+        }
+
+        throw new ArgumentException("edmType");
+    }
+    
+    public Type UnderlyingClrType(EdmType edmType)
+    {
+        ArgumentNotNull(edmType, "edmType");
+
+        var primitiveType = edmType as PrimitiveType;
+        if (primitiveType != null)
+        {
+            return primitiveType.ClrEquivalentType;
+        }
+
+        if (IsEnumType(edmType))
+        {
+            return GetEnumUnderlyingType(edmType).ClrEquivalentType;
+        }
+
+        return typeof(object);
+    }
+    
+    public object GetEnumMemberValue(MetadataItem enumMember)
+    {
+        ArgumentNotNull(enumMember, "enumMember");
+        
+        var valueProperty = enumMember.GetType().GetProperty("Value");
+        return valueProperty == null ? null : valueProperty.GetValue(enumMember, null);
+    }
+    
+    public string GetEnumMemberName(MetadataItem enumMember)
+    {
+        ArgumentNotNull(enumMember, "enumMember");
+        
+        var nameProperty = enumMember.GetType().GetProperty("Name");
+        return nameProperty == null ? null : (string)nameProperty.GetValue(enumMember, null);
+    }
+
+    public System.Collections.IEnumerable GetEnumMembers(EdmType enumType)
+    {
+        ArgumentNotNull(enumType, "enumType");
+
+        var membersProperty = enumType.GetType().GetProperty("Members");
+        return membersProperty != null 
+            ? (System.Collections.IEnumerable)membersProperty.GetValue(enumType, null)
+            : Enumerable.Empty<MetadataItem>();
+    }
+    
+    public bool EnumIsFlags(EdmType enumType)
+    {
+        ArgumentNotNull(enumType, "enumType");
+        
+        var isFlagsProperty = enumType.GetType().GetProperty("IsFlags");
+        return isFlagsProperty != null && (bool)isFlagsProperty.GetValue(enumType, null);
+    }
+
+    public bool IsEnumType(GlobalItem edmType)
+    {
+        ArgumentNotNull(edmType, "edmType");
+
+        return edmType.GetType().Name == "EnumType";
+    }
+
+    public PrimitiveType GetEnumUnderlyingType(EdmType enumType)
+    {
+        ArgumentNotNull(enumType, "enumType");
+
+        return (PrimitiveType)enumType.GetType().GetProperty("UnderlyingType").GetValue(enumType, null);
+    }
+
+    public string CreateLiteral(object value)
+    {
+        if (value == null || value.GetType() != typeof(TimeSpan))
+        {
+            return _code.CreateLiteral(value);
+        }
+
+        return string.Format(CultureInfo.InvariantCulture, "new TimeSpan({0})", ((TimeSpan)value).Ticks);
+    }
+    
+    public bool VerifyCaseInsensitiveTypeUniqueness(IEnumerable<string> types, string sourceFile)
+    {
+        ArgumentNotNull(types, "types");
+        ArgumentNotNull(sourceFile, "sourceFile");
+        
+        var hash = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+        if (types.Any(item => !hash.Add(item)))
+        {
+            _errors.Add(
+                new CompilerError(sourceFile, -1, -1, "6023",
+                    String.Format(CultureInfo.CurrentCulture, GetResourceString("Template_CaseInsensitiveTypeConflict"))));
+            return false;
+        }
+        return true;
+    }
+    
+    public IEnumerable<SimpleType> GetEnumItemsToGenerate(IEnumerable<GlobalItem> itemCollection)
+    {
+        return GetItemsToGenerate<SimpleType>(itemCollection)
+            .Where(e => IsEnumType(e));
+    }
+    
+    public IEnumerable<T> GetItemsToGenerate<T>(IEnumerable<GlobalItem> itemCollection) where T: EdmType
+    {
+        return itemCollection
+            .OfType<T>()
+            .Where(i => !i.MetadataProperties.Any(p => p.Name == ExternalTypeNameAttributeName))
+            .OrderBy(i => i.Name);
+    }
+
+    public IEnumerable<string> GetAllGlobalItems(IEnumerable<GlobalItem> itemCollection)
+    {
+        return itemCollection
+            .Where(i => i is EntityType || i is ComplexType || i is EntityContainer || IsEnumType(i))
+            .Select(g => GetGlobalItemName(g));
+    }
+
+    public string GetGlobalItemName(GlobalItem item)
+    {
+        if (item is EdmType)
+        {
+            return ((EdmType)item).Name;
+        }
+        else
+        {
+            return ((EntityContainer)item).Name;
+        }
+    }
+
+    public IEnumerable<EdmProperty> GetSimpleProperties(EntityType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == type);
+    }
+    
+    public IEnumerable<EdmProperty> GetSimpleProperties(ComplexType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == type);
+    }
+    
+    public IEnumerable<EdmProperty> GetComplexProperties(EntityType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is ComplexType && p.DeclaringType == type);
+    }
+    
+    public IEnumerable<EdmProperty> GetComplexProperties(ComplexType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is ComplexType && p.DeclaringType == type);
+    }
+
+    public IEnumerable<EdmProperty> GetPropertiesWithDefaultValues(EntityType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == type && p.DefaultValue != null);
+    }
+    
+    public IEnumerable<EdmProperty> GetPropertiesWithDefaultValues(ComplexType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == type && p.DefaultValue != null);
+    }
+
+    public IEnumerable<NavigationProperty> GetNavigationProperties(EntityType type)
+    {
+        return type.NavigationProperties.Where(np => np.DeclaringType == type);
+    }
+    
+    public IEnumerable<NavigationProperty> GetCollectionNavigationProperties(EntityType type)
+    {
+        return type.NavigationProperties.Where(np => np.DeclaringType == type && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many);
+    }
+    
+    public FunctionParameter GetReturnParameter(EdmFunction edmFunction)
+    {
+        ArgumentNotNull(edmFunction, "edmFunction");
+
+        var returnParamsProperty = edmFunction.GetType().GetProperty("ReturnParameters");
+        return returnParamsProperty == null
+            ? edmFunction.ReturnParameter
+            : ((IEnumerable<FunctionParameter>)returnParamsProperty.GetValue(edmFunction, null)).FirstOrDefault();
+    }
+
+    public bool IsComposable(EdmFunction edmFunction)
+    {
+        ArgumentNotNull(edmFunction, "edmFunction");
+
+        var isComposableProperty = edmFunction.GetType().GetProperty("IsComposableAttribute");
+        return isComposableProperty != null && (bool)isComposableProperty.GetValue(edmFunction, null);
+    }
+
+    public IEnumerable<FunctionImportParameter> GetParameters(EdmFunction edmFunction)
+    {
+        return FunctionImportParameter.Create(edmFunction.Parameters, _code, _ef);
+    }
+
+    public TypeUsage GetReturnType(EdmFunction edmFunction)
+    {
+        var returnParam = GetReturnParameter(edmFunction);
+        return returnParam == null ? null : _ef.GetElementType(returnParam.TypeUsage);
+    }
+    
+    public bool GenerateMergeOptionFunction(EdmFunction edmFunction, bool includeMergeOption)
+    {
+        var returnType = GetReturnType(edmFunction);
+        return !includeMergeOption && returnType != null && returnType.EdmType.BuiltInTypeKind == BuiltInTypeKind.EntityType;
+    }
+}
+
+public class EdmMetadataLoader
+{
+    private readonly IDynamicHost _host;
+    private readonly System.Collections.IList _errors;
+
+    public EdmMetadataLoader(IDynamicHost host, System.Collections.IList errors)
+    {
+        ArgumentNotNull(host, "host");
+        ArgumentNotNull(errors, "errors");
+
+        _host = host;
+        _errors = errors;
+    }
+
+    public IEnumerable<GlobalItem> CreateEdmItemCollection(string sourcePath)
+    {
+        ArgumentNotNull(sourcePath, "sourcePath");
+
+        if (!ValidateInputPath(sourcePath))
+        {
+            return new EdmItemCollection();
+        }
+
+        var schemaElement = LoadRootElement(_host.ResolvePath(sourcePath));
+        if (schemaElement != null)
+        {
+            using (var reader = schemaElement.CreateReader())
+            {
+                IList<EdmSchemaError> errors;
+                var itemCollection = MetadataItemCollectionFactory.CreateEdmItemCollection(new[] { reader }, out errors);
+
+                ProcessErrors(errors, sourcePath);
+
+                return itemCollection;
+            }
+        }
+        return new EdmItemCollection();
+    }
+
+    public string GetModelNamespace(string sourcePath)
+    {
+        ArgumentNotNull(sourcePath, "sourcePath");
+
+        if (!ValidateInputPath(sourcePath))
+        {
+            return string.Empty;
+        }
+
+        var model = LoadRootElement(_host.ResolvePath(sourcePath));
+        if (model == null)
+        {
+            return string.Empty;
+        }
+
+        var attribute = model.Attribute("Namespace");
+        return attribute != null ? attribute.Value : "";
+    }
+
+    private bool ValidateInputPath(string sourcePath)
+    {
+        if (sourcePath == "$" + "edmxInputFile" + "$")
+        {
+            _errors.Add(
+                new CompilerError(_host.TemplateFile ?? sourcePath, 0, 0, string.Empty,
+                    GetResourceString("Template_ReplaceVsItemTemplateToken")));
+            return false;
+        }
+
+        return true;
+    }
+
+    public XElement LoadRootElement(string sourcePath)
+    {
+        ArgumentNotNull(sourcePath, "sourcePath");
+
+        var root = XElement.Load(sourcePath, LoadOptions.SetBaseUri | LoadOptions.SetLineInfo);
+        return root.Elements()
+            .Where(e => e.Name.LocalName == "Runtime")
+            .Elements()
+            .Where(e => e.Name.LocalName == "ConceptualModels")
+            .Elements()
+            .Where(e => e.Name.LocalName == "Schema")
+            .FirstOrDefault()
+                ?? root;
+    }
+
+    private void ProcessErrors(IEnumerable<EdmSchemaError> errors, string sourceFilePath)
+    {
+        foreach (var error in errors)
+        {
+            _errors.Add(
+                new CompilerError(
+                    error.SchemaLocation ?? sourceFilePath,
+                    error.Line,
+                    error.Column,
+                    error.ErrorCode.ToString(CultureInfo.InvariantCulture),
+                    error.Message)
+                {
+                    IsWarning = error.Severity == EdmSchemaErrorSeverity.Warning
+                });
+        }
+    }
+    
+    public bool IsLazyLoadingEnabled(EntityContainer container)
+    {
+        string lazyLoadingAttributeValue;
+        var lazyLoadingAttributeName = MetadataConstants.EDM_ANNOTATION_09_02 + ":LazyLoadingEnabled";
+        bool isLazyLoading;
+        return !MetadataTools.TryGetStringMetadataPropertySetting(container, lazyLoadingAttributeName, out lazyLoadingAttributeValue)
+            || !bool.TryParse(lazyLoadingAttributeValue, out isLazyLoading)
+            || isLazyLoading;
+    }
+}
+
+public static void ArgumentNotNull<T>(T arg, string name) where T : class
+{
+    if (arg == null)
+    {
+        throw new ArgumentNullException(name);
+    }
+}
+    
+private static readonly Lazy<System.Resources.ResourceManager> ResourceManager =
+    new Lazy<System.Resources.ResourceManager>(
+        () => new System.Resources.ResourceManager("System.Data.Entity.Design", typeof(MetadataItemCollectionFactory).Assembly), isThreadSafe: true);
+
+public static string GetResourceString(string resourceName)
+{
+    ArgumentNotNull(resourceName, "resourceName");
+
+    return ResourceManager.Value.GetString(resourceName, null);
+}
+#>

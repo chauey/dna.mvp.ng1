@@ -1,0 +1,80 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ output extension=".txt" #>
+<#@ include file="Utilities\Database.Utility.tt"#>
+
+<#@ assembly name="Newtonsoft.Json.dll" #>
+<#@ import namespace="Newtonsoft.Json.Serialization" #>
+<#@ import namespace="Newtonsoft.Json.Linq" #>
+<#@ import namespace="Newtonsoft.Json" #>
+
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+// Required columns
+List<KeyValuePair<string, string>> requiredColumns = new List<KeyValuePair<string, string>>();
+
+// Tables with extended properties
+Dictionary<string, Dictionary<string, JToken>> tableWithColumnExtProperties = new Dictionary<string, Dictionary<string, JToken>>();
+
+// #region Properties with data types
+Dictionary<string, Dictionary<string, string>> tableWithColumnTypes = new Dictionary<string, Dictionary<string, string>>();
+
+// Dictionary with <tableName, propertyName> with each datatype list
+List<KeyValuePair<string, string>> numericProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> datetimeProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> timeProperty = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> bitProperties = new List<KeyValuePair<string, string>>();
+
+// #endregion
+List<string> tableNames = new List<string>();
+List<string> createValidationMethods = new List<string>();
+List<string> applyValidationMethods = new List<string>();
+
+if (schemaNames.Count() > 0)
+{
+    foreach (string schemaName in schemaNames)
+    {
+        // Statement
+        tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+        
+// #region Begin File Content
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Breeze.ContextProvider;
+using Dna.PT.Entities;
+using Newtonsoft.Json.Linq;
+
+namespace Dna.PT.Repository
+{
+    public interface IMvpRepository
+    {
+        SaveResult SaveChanges(JObject saveBundle);
+
+        string GetMetadata();
+
+		IQueryable<User> GetProviders();
+
+		IQueryable<TypeOfType> GetParentTypeOfTypes();
+
+		<#foreach (string tableName in tableNames)
+		{
+            if (!tableName.StartsWith("webpages_") && !tableName.StartsWith("__"))
+            {
+				var EntityNamePlural = tableName;
+			var EntityName = GetStringInSingle(EntityNamePlural);#>
+
+		IQueryable<<#=EntityName#>> Get<#=EntityNamePlural#>();
+			<#}
+		}#>
+	}
+}
+
+<#
+    }
+}
+#>

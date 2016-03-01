@@ -1,0 +1,54 @@
+﻿<div class="portlet light bordered">
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <h3 class="page-title">Login</h3>
+                <h4 class="page-title-subtle">(Use a local account to log in)</h4>
+                <form class="ng-pristine ng-valid" role="form">
+                    <div class="form-group">
+                        <label class="control-label">Username</label>
+                        <input data-ng-model="vm.loginData.userName"
+                               placeholder="User name" class="form-control" data-z-validate />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Password</label>
+                        <input data-ng-model="vm.loginData.password" type="password"
+                               placeholder="Password" class="form-control" data-z-validate />
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" data-ng-model="vm.loginData.useRefreshTokens" />
+                        <strong>Use Refresh Tokens</strong>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-3"></div>
+                        <div class="col-lg-9">
+                            <button data-ng-click="vm.login(vm.loginData)" class="infoButton">Log in</button>
+                            <button type="reset" class="defaultButton">Reset</button>
+                        </div>
+                    </div>
+                </form>
+                <div>
+                    <a href="#/register">Register</a> if you don't have a local account.
+                </div>
+                <div class="row">
+                    <a href="#/forgotPassword">Forgot Password</a> if you don't remember your password.
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <!-- Stylesheet: http://lipis.github.io/bootstrap-social/ -->
+                <h3 class="page-title">Social Login</h3>
+                <h4 class="page-title-subtle">(Use social accounts to log in)</h4>
+                <form class="ng-pristine ng-valid" role="form">
+                    <br />
+                    <div class="form-group" data-ng-repeat="provider in vm.externalProviders">
+                        <div class="col-lg-9">
+                            <button class="btn btn-block btn-lg btn-social btn-{{provider | lowercase}}" data-ng-click="vm.authExternalProvider(provider)">
+                                <i class="fa fa-{{provider | lowercase}}"></i>Sign in with {{provider}}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

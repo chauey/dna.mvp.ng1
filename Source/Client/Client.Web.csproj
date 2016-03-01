@@ -1,0 +1,576 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D163CDBB-3889-42F2-B753-7A8F5402CF06}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Dna.AngularProjectBase.Web</RootNamespace>
+    <AssemblyName>Dna.AngularProjectBase.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+    <StyleCopTreatErrorsAsWarnings>True</StyleCopTreatErrorsAsWarnings>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app\app.module.min.js">
+      <DependentUpon>app.module.js</DependentUpon>
+    </Content>
+    <Content Include="app\blocks\blocks.module.js" />
+    <Content Include="app\blocks\blocks.module.min.js">
+      <DependentUpon>blocks.module.js</DependentUpon>
+    </Content>
+    <Content Include="app\blocks\exception\config.exceptionHandler.min.js">
+      <DependentUpon>config.exceptionHandler.js</DependentUpon>
+    </Content>
+    <Content Include="app\blocks\route\config.route.min.js">
+      <DependentUpon>config.route.js</DependentUpon>
+    </Content>
+    <Content Include="app\blocks\route\routeMediator.min.js">
+      <DependentUpon>routeMediator.js</DependentUpon>
+    </Content>
+    <Content Include="app\blocks\route\urlHelper.min.js">
+      <DependentUpon>urlHelper.js</DependentUpon>
+    </Content>
+    <Content Include="app\core\common\bootstrap.dialog.min.js">
+      <DependentUpon>bootstrap.dialog.js</DependentUpon>
+    </Content>
+    <Content Include="app\core\common\common.min.js">
+      <DependentUpon>common.js</DependentUpon>
+    </Content>
+    <Content Include="app\core\common\logger.min.js">
+      <DependentUpon>logger.js</DependentUpon>
+    </Content>
+    <Content Include="app\core\common\spinner.min.js">
+      <DependentUpon>spinner.js</DependentUpon>
+    </Content>
+    <Content Include="app\core\config.min.js">
+      <DependentUpon>config.js</DependentUpon>
+    </Content>
+    <Content Include="app\core\core.module.js" />
+    <Content Include="app\core\core.module.min.js">
+      <DependentUpon>core.module.js</DependentUpon>
+    </Content>
+    <Content Include="app\directives.min.js">
+      <DependentUpon>directives.js</DependentUpon>
+    </Content>
+    <Content Include="app\features\accessControlListItem\accessControlListItemItem.html" />
+    <Content Include="app\features\accessControlListItem\accessControlListItemItemController.js" />
+    <Content Include="app\features\accessControlListItem\accessControlListItemList.html" />
+    <Content Include="app\features\accessControlListItem\accessControlListItemListController.js" />
+    <Content Include="app\features\admin\admin.html" />
+    <Content Include="app\features\admin\adminController.js" />
+    <Content Include="app\features\allDataType\allDataTypeItem.html" />
+    <Content Include="app\features\allDataType\allDataTypeItemController.js" />
+    <Content Include="app\features\allDataType\allDataTypeList.html" />
+    <Content Include="app\features\allDataType\allDataTypeListController.js" />
+    <Content Include="app\app.module.js" />
+    <Content Include="app\features\aspNetRole\aspNetRoleItem.html" />
+    <Content Include="app\features\aspNetRole\aspNetRoleItemController.js" />
+    <Content Include="app\features\aspNetRole\aspNetRoleList.html" />
+    <Content Include="app\features\aspNetRole\aspNetRoleListController.js" />
+    <Content Include="app\features\aspNetUserRole\aspNetUserRoleItem.html" />
+    <Content Include="app\features\aspNetUserRole\aspNetUserRoleItemController.js" />
+    <Content Include="app\features\aspNetUserRole\aspNetUserRoleList.html" />
+    <Content Include="app\features\aspNetUserRole\aspNetUserRoleListController.js" />
+    <Content Include="app\features\aspNetUser\aspNetUserItem.html" />
+    <Content Include="app\features\aspNetUser\aspNetUserItemController.js" />
+    <Content Include="app\features\aspNetUser\aspNetUserList.html" />
+    <Content Include="app\features\aspNetUser\aspNetUserListController.js" />
+    <Content Include="app\features\customer\customerItem.html" />
+    <Content Include="app\features\customer\customerItemController.js" />
+    <Content Include="app\features\customer\customerList.html" />
+    <Content Include="app\features\customer\customerListController.js" />
+    <Content Include="app\features\dataTablesMetronic\advanceDataTables.html" />
+    <Content Include="app\features\dataTablesMetronic\advanceDataTablesController.js" />
+    <Content Include="app\features\features.module.min.js">
+      <DependentUpon>features.module.js</DependentUpon>
+    </Content>
+    <Content Include="app\features\membership\forgotPassword.html" />
+    <Content Include="app\features\membership\forgotPasswordController.js" />
+    <Content Include="app\features\membership\resetPassword.html" />
+    <Content Include="app\features\membership\resetPasswordController.js" />
+    <Content Include="app\features\taskAndTodoMetronic\taskAndTodo.html" />
+    <Content Include="app\features\taskAndTodoMetronic\taskAndTodoController.js" />
+    <Content Include="app\features\userProfileMetronic\account.html" />
+    <Content Include="app\features\userProfileMetronic\help.html" />
+    <Content Include="app\features\userProfileMetronic\dashboard.html" />
+    <Content Include="app\features\userProfileMetronic\main.html" />
+    <Content Include="app\features\userProfileMetronic\userProfileController.js" />
+    <Content Include="app\features\dateTimePickerMetronic\dateTimePickers.html" />
+    <Content Include="app\features\dateTimePickerMetronic\dateTimePickersController.js" />
+    <Content Include="app\features\customDropdownMetronic\customDropdown.html" />
+    <Content Include="app\features\customDropdownMetronic\customDropdownController.js" />
+    <Content Include="app\features\treeViewMetronic\treeView.html" />
+    <Content Include="app\features\treeViewMetronic\treeViewController.js" />
+    <Content Include="app\features\dataTablesMetronic\ajaxDataTables.html" />
+    <Content Include="app\features\dataTablesMetronic\ajaxDataTablesController.js" />
+    <Content Include="app\features\formToolsMetronic\formTools.html" />
+    <Content Include="app\features\formToolsMetronic\formToolsController.js" />
+    <Content Include="app\features\fileUploadMetronic\fileUpload.html" />
+    <Content Include="app\features\fileUploadMetronic\fileUploadController.js" />
+    <Content Include="app\features\uiSelectMetronic\uiSelect.html" />
+    <Content Include="app\features\uiSelectMetronic\uiSelectController.js" />
+    <Content Include="app\features\uiBootstrapMetronic\uiBootstrap.html" />
+    <Content Include="app\features\uiBootstrapMetronic\uiBootstrapController.js" />
+    <Content Include="app\features\dashboardMetronic\dashboardMetronic.html" />
+    <Content Include="app\features\dashboardMetronic\dashboardMetronicController.js" />
+    <Content Include="app\features\domainObject\domainObjectItem.html" />
+    <Content Include="app\features\domainObject\domainObjectItemController.js" />
+    <Content Include="app\features\domainObject\domainObjectList.html" />
+    <Content Include="app\features\domainObject\domainObjectListController.js" />
+    <Content Include="app\features\features.module.js" />
+    <Content Include="app\features\payment\addCard.html" />
+    <Content Include="app\features\payment\addCardController.js" />
+    <Content Include="app\features\payment\managePayment.html" />
+    <Content Include="app\features\payment\managePaymentController.js" />
+    <Content Include="app\features\payment\subscription.html" />
+    <Content Include="app\features\payment\subscriptionController.js" />
+    <Content Include="app\features\user\userAspNetRolesAssignedListService.js" />
+    <Content Include="app\features\user\userAspNetRolesListService.js" />
+    <Content Include="app\ngMessages.html" />
+    <Content Include="app\layout\layout.module.min.js">
+      <DependentUpon>layout.module.js</DependentUpon>
+    </Content>
+    <Content Include="app\layout\shell.html" />
+    <Content Include="app\layout\shell.js" />
+    <Content Include="app\layout\sidebar.html" />
+    <Content Include="app\layout\sidebar.js" />
+    <Content Include="app\layout\topnav.html" />
+    <Content Include="app\layout\widgetheader.html" />
+    <Content Include="app\services\data\accessControlList\aclService.js" />
+    <Content Include="app\services\data\data.module.min.js">
+      <DependentUpon>data.module.js</DependentUpon>
+    </Content>
+    <Content Include="app\services\data\dataService.js" />
+    <Content Include="app\services\data\repositories\repository.domainObject.js" />
+    <Content Include="app\services\data\validations\allDataType.validation.js" />
+    <Content Include="app\services\membership\membership.module.min.js">
+      <DependentUpon>membership.module.js</DependentUpon>
+    </Content>
+    <Content Include="app\services\stripe\stripe.module.js" />
+    <Content Include="app\services\stripe\stripe.module.min.js">
+      <DependentUpon>stripe.module.js</DependentUpon>
+    </Content>
+    <Content Include="app\services\stripe\stripeService.js" />
+    <Content Include="app\directives.js" />
+    <Content Include="app\layout\footer.html" />
+    <Content Include="app\layout\quicksidebar.html" />
+    <Content Include="app\layout\quicksidebar.js" />
+    <Content Include="app\layout\theme-panel.html" />
+    <Content Include="app\widgets\widgets.module.min.js">
+      <DependentUpon>widgets.module.js</DependentUpon>
+    </Content>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\breeze.directives.css" />
+    <Content Include="Content\Bundles\metronicAdminPages.css">
+      <DependentUpon>metronicAdminPages.css.bundle</DependentUpon>
+    </Content>
+    <Content Include="Content\Bundles\metronicAdminPages.min.css">
+      <DependentUpon>metronicAdminPages.css</DependentUpon>
+    </Content>
+    <Content Include="Content\Bundles\metronicGlobal.css">
+      <DependentUpon>metronicGlobal.css.bundle</DependentUpon>
+    </Content>
+    <Content Include="Content\Bundles\metronicGlobal.min.css">
+      <DependentUpon>metronicGlobal.css</DependentUpon>
+    </Content>
+    <Content Include="Content\Bundles\themeStyles.css">
+      <DependentUpon>themeStyles.css.bundle</DependentUpon>
+    </Content>
+    <Content Include="Content\Bundles\themeStyles.min.css">
+      <DependentUpon>themeStyles.css</DependentUpon>
+    </Content>
+    <Content Include="Content\customtheme.css" />
+    <Content Include="Content\ie10mobile.css" />
+    <Content Include="Content\images\AngularJS-small.png" />
+    <Content Include="Content\images\breezelogo.png" />
+    <Content Include="Content\images\icon.png" />
+    <Content Include="Content\styles.css" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.min.css" />
+    <Content Include="index.html" />
+    <Content Include="Scripts\angular-animate.js" />
+    <Content Include="Scripts\angular-animate.min.js" />
+    <Content Include="Scripts\angular-messages.min.js" />
+    <Content Include="Scripts\angular-mocks.js" />
+    <Content Include="Scripts\angular-route.min.js" />
+    <Content Include="Scripts\angular-sanitize.js" />
+    <Content Include="Scripts\angular-sanitize.min.js" />
+    <Content Include="Scripts\angular.js" />
+    <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\breeze.angular.js" />
+    <Content Include="Scripts\breeze.debug.js" />
+    <Content Include="Scripts\breeze.directives.js" />
+    <Content Include="Scripts\breeze.min.js" />
+    <Content Include="Scripts\breeze.saveErrorExtensions.js" />
+    <Content Include="Scripts\breeze.to%24q.shim.js" />
+    <Content Include="Content\css\dpt-styles.css" />
+    <Content Include="Scripts\angular-payments.js" />
+    <Content Include="Scripts\angular-payments.min.js" />
+    <Content Include="app\features\payment\payment.html" />
+    <Content Include="app\features\payment\paymentController.js" />
+    <Content Include="app\features\permission\permissionItem.html" />
+    <Content Include="app\features\permission\permissionItemController.js" />
+    <Content Include="app\features\permission\permissionList.html" />
+    <Content Include="app\features\permission\permissionListController.js" />
+    <Content Include="app\features\user\userItem.html" />
+    <Content Include="app\features\user\userItemController.js" />
+    <Content Include="app\features\user\userList.html" />
+    <Content Include="app\features\user\userListController.js" />
+    <Content Include="app\layout\layout.module.js" />
+    <Content Include="app\services\data\data.module.js" />
+    <Content Include="app\services\data\repositories\repository.accessControlListItem.js" />
+    <Content Include="app\services\data\repositories\repository.aspNetRole.js" />
+    <Content Include="app\services\data\repositories\repository.aspNetUser.js" />
+    <Content Include="app\services\data\repositories\repository.aspNetUserRole.js" />
+    <Content Include="app\services\data\repositories\repository.auditLog.js" />
+    <Content Include="app\services\data\repositories\repository.domainObject.js" />
+    <Content Include="app\services\data\repositories\repository.eLMAH_Error.js" />
+    <Content Include="app\services\data\repositories\repository.permission.js" />
+    <Content Include="app\services\data\repositories\repository.user.js" />
+    <Content Include="app\services\data\repositories\repository.validation.js" />
+    <Content Include="app\services\data\validations\typeOfType.validation.js" />
+    <Content Include="app\services\data\validations\validation.validation.js" />
+    <Content Include="app\services\membership\accountService.js" />
+    <Content Include="app\services\membership\authInterceptorService.js" />
+    <Content Include="app\services\membership\authService.js" />
+    <Content Include="app\services\data\datacontext.js" />
+    <Content Include="app\blocks\route\urlHelper.js" />
+    <Content Include="app\services\membership\membership.module.js" />
+    <Content Include="app\widgets\dnaImgPerson.js" />
+    <Content Include="app\widgets\dnaScrollToTop.js" />
+    <Content Include="app\widgets\dnaSidebar.js" />
+    <Content Include="app\widgets\dnaSpinner.js" />
+    <Content Include="app\widgets\dnaWidgetClose.js" />
+    <Content Include="app\widgets\dnaSimpleCaptcha.js" />
+    <Content Include="app\widgets\dnaWidgetHeader.js" />
+    <Content Include="app\widgets\dnaWidgetMinimize.js" />
+    <Content Include="app\widgets\dnaWip.js" />
+    <Content Include="app\services\data\entityManagerFactory.js" />
+    <Content Include="app\services\data\model.js" />
+    <Content Include="app\services\data\model.validation.js" />
+    <Content Include="app\services\data\repositories\repositories.js" />
+    <Content Include="app\services\data\repositories\repository.abstract.js" />
+    <Content Include="app\services\data\repositories\repository.admin.js" />
+    <Content Include="app\services\data\repositories\repository.allDataType.js" />
+    <Content Include="app\services\data\repositories\repository.attachment.js" />
+    <Content Include="app\services\data\repositories\repository.lookup.js" />
+    <Content Include="app\services\data\repositories\repository.typeOfType.js" />
+    <Content Include="app\blocks\route\routeMediator.js" />
+    <Content Include="app\features\typeOfType\typeOfTypeItem.html" />
+    <Content Include="app\features\typeOfType\typeOfTypeItemController.js" />
+    <Content Include="app\features\typeOfType\typeOfTypeList.html" />
+    <Content Include="app\features\typeOfType\typeOfTypeListController.js" />
+    <Content Include="app\features\validation\validationItem.html" />
+    <Content Include="app\features\validation\validationItemController.js" />
+    <Content Include="app\features\validation\validationList.html" />
+    <Content Include="app\features\validation\validationListController.js" />
+    <Content Include="app\widgets\widgets.module.js" />
+    <Content Include="Content\gallaryStyle.css" />
+    <Content Include="app\features\styling\styling.html" />
+    <Content Include="app\features\styling\stylingController.js" />
+    <Content Include="app\core\common\bootstrap.dialog.js" />
+    <Content Include="app\core\common\common.js" />
+    <Content Include="app\core\common\logger.js" />
+    <Content Include="app\core\common\spinner.js" />
+    <Content Include="app\blocks\exception\config.exceptionHandler.js" />
+    <Content Include="app\core\config.js" />
+    <Content Include="app\blocks\route\config.route.js" />
+    <Content Include="app\features\dashboard\dashboard.html" />
+    <Content Include="app\features\dashboard\dashboardController.js" />
+    <Content Include="app\layout\topnav.js" />
+    <Content Include="app\features\membership\associate.html" />
+    <Content Include="app\features\membership\associateController.js" />
+    <Content Include="app\features\membership\authComplete.html" />
+    <Content Include="app\features\membership\authComplete.js" />
+    <Content Include="app\features\membership\manage.html" />
+    <Content Include="app\features\membership\manageController.js" />
+    <Content Include="app\features\membership\registerController.js" />
+    <Content Include="app\features\membership\login.html" />
+    <Content Include="app\features\membership\loginController.js" />
+    <Content Include="app\features\membership\register.html" />
+    <Content Include="app\features\fileUpload\fileUpload.html" />
+    <Content Include="app\features\fileUpload\fileUploadController.js" />
+    <Content Include="app\features\ui\images\angularkendoui.png" />
+    <Content Include="app\features\ui\images\highcharts.png" />
+    <Content Include="app\features\ui\images\wijmo5.png" />
+    <Content Include="app\features\ui\ui.html" />
+    <Content Include="app\features\ui\uiController.js" />
+    <Content Include="app\features\wip\wip.html" />
+    <Content Include="app\features\wip\wipController.js" />
+    <Content Include="app\features\wip\wipwidget.html" />
+    <Content Include="Content\bootstrap-social.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\images\angularjs.png" />
+    <Content Include="Content\images\cssdna.png" />
+    <Content Include="Content\images\next.png" />
+    <Content Include="Content\images\prev.png" />
+    <Content Include="Content\images\previewNotAvailable.png" />
+    <Content Include="Content\kendo.common.min.css" />
+    <Content Include="Content\kendo.silver.min.css" />
+    <Content Include="Content\less\bootstrap\bootstrap.css">
+      <DependentUpon>bootstrap.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\dpt-styles.css">
+      <DependentUpon>dpt-styles.less</DependentUpon>
+    </Content>
+    <Content Include="Content\silver\editor.png" />
+    <Content Include="Content\silver\imagebrowser.png" />
+    <Content Include="Content\silver\indeterminate.gif" />
+    <Content Include="Content\silver\loading-image.gif" />
+    <Content Include="Content\silver\loading.gif" />
+    <Content Include="Content\silver\loading_2x.gif" />
+    <Content Include="Content\silver\slider-h.gif" />
+    <Content Include="Content\silver\slider-v.gif" />
+    <Content Include="Content\silver\sprite.png" />
+    <Content Include="Content\silver\sprite_2x.png" />
+    <Content Include="Content\wijmo.min.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\angular-kendo.js" />
+    <Content Include="Scripts\angular-local-storage.min.js" />
+    <Content Include="Scripts\angular-messages.js" />
+    <Content Include="Scripts\angular-ui-router.js" />
+    <Content Include="Scripts\angular.breeze.storagewip.js" />
+    <Content Include="Content\less\bootstrap\.csscomb.json" />
+    <Content Include="Content\less\bootstrap\.csslintrc" />
+    <Content Include="Content\less\bootstrap\alerts.less" />
+    <Content Include="Content\less\bootstrap\badges.less" />
+    <Content Include="Content\less\bootstrap\bootstrap.less" />
+    <Content Include="Content\less\bootstrap\breadcrumbs.less" />
+    <Content Include="Content\less\bootstrap\button-groups.less" />
+    <Content Include="Content\less\bootstrap\buttons.less" />
+    <Content Include="Content\less\bootstrap\carousel.less" />
+    <Content Include="Content\less\bootstrap\close.less" />
+    <Content Include="Content\less\bootstrap\code.less" />
+    <Content Include="Content\less\bootstrap\component-animations.less" />
+    <Content Include="Content\less\bootstrap\dropdowns.less" />
+    <Content Include="Content\less\bootstrap\forms.less" />
+    <Content Include="Content\less\bootstrap\glyphicons.less" />
+    <Content Include="Content\less\bootstrap\grid.less" />
+    <Content Include="Content\less\bootstrap\input-groups.less" />
+    <Content Include="Content\less\bootstrap\jumbotron.less" />
+    <Content Include="Content\less\bootstrap\labels.less" />
+    <Content Include="Content\less\bootstrap\list-group.less" />
+    <Content Include="Content\less\bootstrap\media.less" />
+    <Content Include="Content\less\bootstrap\mixins.less" />
+    <Content Include="Content\less\bootstrap\mixins\alerts.less" />
+    <Content Include="Content\less\bootstrap\mixins\background-variant.less" />
+    <Content Include="Content\less\bootstrap\mixins\border-radius.less" />
+    <Content Include="Content\less\bootstrap\mixins\buttons.less" />
+    <Content Include="Content\less\bootstrap\mixins\center-block.less" />
+    <Content Include="Content\less\bootstrap\mixins\clearfix.less" />
+    <Content Include="Content\less\bootstrap\mixins\forms.less" />
+    <Content Include="Content\less\bootstrap\mixins\gradients.less" />
+    <Content Include="Content\less\bootstrap\mixins\grid-framework.less" />
+    <Content Include="Content\less\bootstrap\mixins\grid.less" />
+    <Content Include="Content\less\bootstrap\mixins\hide-text.less" />
+    <Content Include="Content\less\bootstrap\mixins\image.less" />
+    <Content Include="Content\less\bootstrap\mixins\labels.less" />
+    <Content Include="Content\less\bootstrap\mixins\list-group.less" />
+    <Content Include="Content\less\bootstrap\mixins\nav-divider.less" />
+    <Content Include="Content\less\bootstrap\mixins\nav-vertical-align.less" />
+    <Content Include="Content\less\bootstrap\mixins\opacity.less" />
+    <Content Include="Content\less\bootstrap\mixins\pagination.less" />
+    <Content Include="Content\less\bootstrap\mixins\panels.less" />
+    <Content Include="Content\less\bootstrap\mixins\progress-bar.less" />
+    <Content Include="Content\less\bootstrap\mixins\reset-filter.less" />
+    <Content Include="Content\less\bootstrap\mixins\resize.less" />
+    <Content Include="Content\less\bootstrap\mixins\responsive-visibility.less" />
+    <Content Include="Content\less\bootstrap\mixins\size.less" />
+    <Content Include="Content\less\bootstrap\mixins\tab-focus.less" />
+    <Content Include="Content\less\bootstrap\mixins\table-row.less" />
+    <Content Include="Content\less\bootstrap\mixins\text-emphasis.less" />
+    <Content Include="Content\less\bootstrap\mixins\text-overflow.less" />
+    <Content Include="Content\less\bootstrap\mixins\vendor-prefixes.less" />
+    <Content Include="Content\less\bootstrap\modals.less" />
+    <Content Include="Content\less\bootstrap\navbar.less" />
+    <Content Include="Content\less\bootstrap\navs.less" />
+    <Content Include="Content\less\bootstrap\normalize.less" />
+    <Content Include="Content\less\bootstrap\pager.less" />
+    <Content Include="Content\less\bootstrap\pagination.less" />
+    <Content Include="Content\less\bootstrap\panels.less" />
+    <Content Include="Content\less\bootstrap\popovers.less" />
+    <Content Include="Content\less\bootstrap\print.less" />
+    <Content Include="Content\less\bootstrap\progress-bars.less" />
+    <Content Include="Content\less\bootstrap\responsive-embed.less" />
+    <Content Include="Content\less\bootstrap\responsive-utilities.less" />
+    <Content Include="Content\less\bootstrap\scaffolding.less" />
+    <Content Include="Content\less\bootstrap\tables.less" />
+    <Content Include="Content\less\bootstrap\theme.less" />
+    <Content Include="Content\less\bootstrap\thumbnails.less" />
+    <Content Include="Content\less\bootstrap\tooltip.less" />
+    <Content Include="Content\less\bootstrap\type.less" />
+    <Content Include="Content\less\bootstrap\utilities.less" />
+    <Content Include="Content\less\bootstrap\variables.less" />
+    <Content Include="Content\less\bootstrap\wells.less" />
+    <Content Include="Content\less\dpt-styles.less" />
+    <Content Include="Content\less\bootstrap\bootstrap.css.map">
+      <DependentUpon>bootstrap.css</DependentUpon>
+    </Content>
+    <Content Include="Content\less\dpt-styles.css.map">
+      <DependentUpon>dpt-styles.css</DependentUpon>
+    </Content>
+    <Content Include="Content\Bundles\metronicAdminPages.css.bundle" />
+    <Content Include="Content\Bundles\themeStyles.css.bundle" />
+    <Content Include="Content\css\dpt-styles.css.map">
+      <DependentUpon>dpt-styles.css</DependentUpon>
+    </Content>
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\toastr.less" />
+    <Content Include="Content\toastr.scss" />
+    <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\DnaLeanStartUpMvp - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\DnaLeanStartUpMvp - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\DnaSpaWebHybridMobileDemo - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\DnaSpaWebHybridMobileDemo - Web Deploy.pubxml" />
+    <Content Include="Scripts\datajs-1.1.3.min.js" />
+    <Content Include="Scripts\es5-sham.map" />
+    <Content Include="Scripts\es5-shim.map" />
+    <None Include="Properties\PublishProfiles\TestDeployment.pubxml" />
+    <Content Include="Content\Bundles\metronicGlobal.css.bundle" />
+    <Content Include="Scripts\console-sham.js" />
+    <Content Include="Scripts\cycle.js" />
+    <Content Include="Scripts\datajs-1.1.3.js" />
+    <Content Include="Scripts\es5-sham.min.js" />
+    <Content Include="Scripts\es5-shim.min.js" />
+    <Content Include="Scripts\highcharts.js" />
+    <Content Include="Scripts\angular-animate.min.js.map" />
+    <Content Include="Scripts\angular-route.min.js.map" />
+    <Content Include="Scripts\angular-sanitize.min.js.map" />
+    <Content Include="Scripts\angular.min.js.map" />
+    <Content Include="Scripts\jquery-2.1.1.min.map" />
+    <Content Include="Scripts\angular-messages.min.js.map" />
+    <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <None Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.1.js" />
+    <Content Include="Scripts\jquery-2.1.1.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.7.2.js" />
+    <Content Include="Scripts\moment-with-langs.js" />
+    <Content Include="Scripts\moment-with-langs.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\ng-breadcrumbs.js" />
+    <Content Include="Scripts\kendo.all.min.js" />
+    <Content Include="Scripts\less.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\nervgh-angular-file-upload.js" />
+    <Content Include="Scripts\highcharts-ng.js" />
+    <Content Include="Scripts\q.js" />
+    <Content Include="Scripts\q.min.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\spin.js" />
+    <Content Include="Scripts\spin.min.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\toastr.min.js" />
+    <Content Include="Scripts\ui-bootstrap-tpls-0.12.0.min.js" />
+    <Content Include="Scripts\wijmo.angular.min.js" />
+    <Content Include="Scripts\wijmo.chart.min.js" />
+    <Content Include="Scripts\wijmo.grid.min.js" />
+    <Content Include="Scripts\wijmo.input.min.js" />
+    <Content Include="Scripts\wijmo.min.js" />
+    <Content Include="Scripts\xeditable.min.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Scripts\toastr.min.js.map" />
+    <Content Include="web.config" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!--Import Project="..\StyleCop\StyleCop.targets" /-->
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:2371/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

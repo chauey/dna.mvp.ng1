@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bundle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://vswebessentials.com/schemas/v1/bundle.xsd">
+  <settings>
+    <!--Determines if the bundle file should be automatically optimized after creation/update.-->
+    <minify>true</minify>
+    <!--Determine whether to generate/re-generate this bundle on building the solution.-->
+    <runOnBuild>false</runOnBuild>
+    <!--Use absolute path in the generated CSS files. By default, the URLs are relative to generated bundled CSS file.-->
+    <adjustRelativePaths>true</adjustRelativePaths>
+    <!--Specifies a custom subfolder to save files to. By default, compiled output will be placed in the same folder and nested under the original file.-->
+    <outputDirectory />
+  </settings>
+  <!--The order of the <file> elements determines the order of the files in the bundle.-->
+  <files>
+    <file>/assets/global/plugins/morris/morris.css</file>
+    <file>/assets/global/plugins/angularjs/plugins/ui-select/select.min.css</file>
+    <file>/assets/global/plugins/jquery-tags-input/jquery.tagsinput.css</file>
+    <file>/assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css</file>
+    <file>/assets/global/plugins/typeahead/typeahead.css</file>
+    <file>/assets/global/plugins/clockface/css/clockface.css</file>
+    <file>/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css</file>
+    <file>/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.css</file>
+    <file>/assets/global/plugins/bootstrap-colorpicker/css/colorpicker.css</file>
+    <file>/assets/global/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css</file>
+    <file>/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css</file>
+    <file>/assets/global/plugins/bootstrap-select/bootstrap-select.css</file>
+    <file>/assets/global/plugins/select2/select2.css</file>
+    <file>/assets/global/plugins/jquery-multi-select/css/multi-select.css</file>
+    <file>/assets/global/plugins/jstree/dist/themes/default/style.css</file>
+    <file>/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css</file>
+    <file>/assets/global/plugins/datatables/extensions/Scroller/css/dataTables.scroller.css</file>
+    <file>/assets/global/plugins/datatables/extensions/ColReorder/css/dataTables.colReorder.css</file>
+    <file>/assets/global/plugins/bootstrap-datepicker/css/datepicker.css</file>
+    <file>/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css</file>
+  </files>
+</bundle>

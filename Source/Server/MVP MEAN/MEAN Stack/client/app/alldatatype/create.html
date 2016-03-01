@@ -1,0 +1,266 @@
+<!-- client/app/alldatatype/alldatatype.html -->
+
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<header class="hero-unit" id="banner">
+    <div class="container">
+        <h1>All Data Types</h1>
+    </div>
+</header>
+
+<div class="container">
+    <form class="thing-form" ng-submit="createDT()" name="adtForm">
+        <p class="input-group">
+            <!--bigint - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>Big Int</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="text" class="form-control" ng-model="adtBigInt" />
+                </div>
+            </div>
+            <!--bit - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>Bit</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="checkbox" class="form-control" ng-model="adtBit" />
+                </div>
+            </div>
+            <!--char - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>Char</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="text" class="form-control" ng-model="adtChar" />
+                </div>
+            </div>
+            <!--date - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>Date</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="date" class="form-control" ng-model="adtDate" />
+                </div>
+            </div>
+            <!--decimal - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>Decimal</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="text" class="form-control" ng-model="adtDecimal" />
+                </div>
+            </div>
+            <!--float - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>Float</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="text" class="form-control" ng-model="adtFloat" />
+                </div>
+            </div>
+            <!--int - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>Int</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="text" class="form-control" ng-model="adtInt" />
+                </div>
+            </div>
+            <!--nchar - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>NChar</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="text" class="form-control" ng-model="adtNchar" />
+                </div>
+            </div>
+            <!--numeric - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>Numeric</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="text" class="form-control" ng-model="adtNumeric" />
+                </div>
+            </div>
+            <!--nvarchar - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>NVarChar</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="text" class="form-control" ng-model="adtNvarchar" />
+                </div>
+            </div>
+            <!--real - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>Real</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="text" class="form-control" ng-model="adtReal" />
+                </div>
+            </div>
+            <!--varchar - input control-->
+            <div class="row">
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <label>VarChar</label>
+                </div>
+                <div class="nav nav-tabs nav-stacked col-md-6">
+                    <input type="text" class="form-control" ng-model="adtVarchar" />
+                </div>
+            </div>
+            <span class="input-group-btn">
+                <input class="btn btn-primary" type="submit" ng-disabled="adtForm.$invalid" value="Add new data type">
+            </span>
+        </p>
+    </form>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">All data types:</h1>
+            <ul class="nav nav-tabs nav-stacked col-md-6 col-lg-6" ng-repeat="dt in alldatatypes">
+                <div class="panel">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.bigint}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="text" ng-show="dt.editing" ng-model="dt.bigint" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.bit}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="checkbox" ng-show="dt.editing" ng-model="dt.bit" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.char}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="text" ng-show="dt.editing" ng-model="dt.char" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.date}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="date" ng-show="dt.editing" ng-model="dt.date" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.decimal}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="text" ng-show="dt.editing" ng-model="dt.decimal" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.float}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="text" ng-show="dt.editing" ng-model="dt.float" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.int}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="text" ng-show="dt.editing" ng-model="dt.int" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.nchar}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="text" ng-show="dt.editing" ng-model="dt.nchar" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.numeric}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="text" ng-show="dt.editing" ng-model="dt.numeric" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.nvarchar}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="text" ng-show="dt.editing" ng-model="dt.nvarchar" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.real}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="text" ng-show="dt.editing" ng-model="dt.real" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a><span ng-dblclick="editDT(dt)">{{dt.varchar}}</span></a>
+                        </div>
+                        <div class="col-md-6">
+                            <form ng-submit="doneEditing(dt)">
+                                <strong><em><input type="text" ng-show="dt.editing" ng-model="dt.varchar" ng-blur="doneEditing(dt)" autofocus /></em></strong>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <span class="badge" style="float: right"><button type="button" class="close" ng-click="removeDT(dt)">&times;</button></span>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>
+                Yeoman Angular Fullstack
+            </p>
+        </div>
+    </footer>
+</div>

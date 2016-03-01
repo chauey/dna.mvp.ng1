@@ -1,0 +1,928 @@
+<!-- 1. Buttons -->
+<div>
+
+    <!-- 1.1. Back button -->
+    <button id="userBackButton" class="infoButton"
+            data-ng-click="vm.goBack()">
+        <i class="fa fa-arrow-left"></i>Back
+    </button>
+
+    <!-- 1.2. Cancel button -->
+    <button id="userCancelButton" class="infoButton"
+            data-ng-click="vm.cancel()"
+            data-ng-disabled="!vm.canSave">
+        <i class="fa fa-undo"></i>Cancel
+    </button>
+
+    <!-- 1.3. Save button -->
+    <button id="userSaveButton" class="infoButton"
+            data-ng-click="vm.save()"
+            data-ng-disabled="!vm.canSave">
+        <i class="fa fa-save"></i>Save
+    </button>
+
+    <!-- 1.4. Delete button -->
+    <button id="userDeleteButton" class="dangerButton"
+            data-ng-click="vm.deleteUser()">
+        <i class="fa fa-trash-o"></i>Delete
+    </button>
+
+    <!-- 1.5. Has changes * -->
+    <span data-ng-show="vm.hasChanges"
+          class="dissolve-animation ng-hide">
+        <i class="fa fa-asterisk fa-asterisk-large"></i>
+    </span>
+</div>
+
+<!-- 2. Content/main area -->
+<div class="widget wlightblue">
+
+    <!-- 2.1. Panel header -->
+    <div data-dna-widget-header title="Edit {{vm.user.name || 'New User'}}"></div>
+
+    <!-- 2.2. Panel form -->
+    <div class="widget-content user">
+
+        <!-- 2.2.1. Main form contains many form groups -->
+        <form class="form-horizontal" role="form">
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="FirstName"
+                       class="col-sm-1 control-label">FirstName</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="FirstNameTextBox"
+                           placeholder="FirstName"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.firstName" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="MiddleName"
+                       class="col-sm-1 control-label">MiddleName</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="MiddleNameTextBox"
+                           placeholder="MiddleName"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.middleName" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="LastName"
+                       class="col-sm-1 control-label">LastName</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="LastNameTextBox"
+                           placeholder="LastName"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.lastName" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Company"
+                       class="col-sm-1 control-label">Company</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="CompanyTextBox"
+                           placeholder="Company"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.company" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Department"
+                       class="col-sm-1 control-label">Department</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="DepartmentTextBox"
+                           placeholder="Department"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.department" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="JobTitle"
+                       class="col-sm-1 control-label">JobTitle</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="JobTitleTextBox"
+                           placeholder="JobTitle"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.jobTitle" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="WorkNumber"
+                       class="col-sm-1 control-label">WorkNumber</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="WorkNumberTextBox"
+                           placeholder="WorkNumber"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.workNumber" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="WorkFaxNumber"
+                       class="col-sm-1 control-label">WorkFaxNumber</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="WorkFaxNumberTextBox"
+                           placeholder="WorkFaxNumber"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.workFaxNumber" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="WorkAddress"
+                       class="col-sm-1 control-label">WorkAddress</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="WorkAddressTextBox"
+                           placeholder="WorkAddress"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.workAddress" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="IM"
+                       class="col-sm-1 control-label">IM</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="IMTextBox"
+                           placeholder="IM"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.iM" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Email"
+                       class="col-sm-1 control-label">Email</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="EmailTextBox"
+                           placeholder="Email"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.email" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="MobileNumber"
+                       class="col-sm-1 control-label">MobileNumber</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="MobileNumberTextBox"
+                           placeholder="MobileNumber"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.mobileNumber" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="WebPage"
+                       class="col-sm-1 control-label">WebPage</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="WebPageTextBox"
+                           placeholder="WebPage"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.webPage" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="OfficeLocation"
+                       class="col-sm-1 control-label">OfficeLocation</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="OfficeLocationTextBox"
+                           placeholder="OfficeLocation"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.officeLocation" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="HomeNumber"
+                       class="col-sm-1 control-label">HomeNumber</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="HomeNumberTextBox"
+                           placeholder="HomeNumber"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.homeNumber" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="HomeAddress"
+                       class="col-sm-1 control-label">HomeAddress</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="HomeAddressTextBox"
+                           placeholder="HomeAddress"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.homeAddress" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="OtherAddress"
+                       class="col-sm-1 control-label">OtherAddress</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="OtherAddressTextBox"
+                           placeholder="OtherAddress"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.otherAddress" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="PagerNumber"
+                       class="col-sm-1 control-label">PagerNumber</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="PagerNumberTextBox"
+                           placeholder="PagerNumber"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.pagerNumber" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="CarNumber"
+                       class="col-sm-1 control-label">CarNumber</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="CarNumberTextBox"
+                           placeholder="CarNumber"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.carNumber" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="HomeFax"
+                       class="col-sm-1 control-label">HomeFax</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="HomeFaxTextBox"
+                           placeholder="HomeFax"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.homeFax" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="CompanyNumber"
+                       class="col-sm-1 control-label">CompanyNumber</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="CompanyNumberTextBox"
+                           placeholder="CompanyNumber"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.companyNumber" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Work2Number"
+                       class="col-sm-1 control-label">Work2Number</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="Work2NumberTextBox"
+                           placeholder="Work2Number"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.work2Number" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Home2Number"
+                       class="col-sm-1 control-label">Home2Number</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="Home2NumberTextBox"
+                           placeholder="Home2Number"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.home2Number" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="RadioNumber"
+                       class="col-sm-1 control-label">RadioNumber</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="RadioNumberTextBox"
+                           placeholder="RadioNumber"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.radioNumber" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="IM2"
+                       class="col-sm-1 control-label">IM2</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="IM2TextBox"
+                           placeholder="IM2"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.iM2" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="IM3"
+                       class="col-sm-1 control-label">IM3</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="IM3TextBox"
+                           placeholder="IM3"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.iM3" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Email2"
+                       class="col-sm-1 control-label">Email2</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="Email2TextBox"
+                           placeholder="Email2"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.email2" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Email3"
+                       class="col-sm-1 control-label">Email3</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="Email3TextBox"
+                           placeholder="Email3"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.email3" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Assistant"
+                       class="col-sm-1 control-label">Assistant</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="AssistantTextBox"
+                           placeholder="Assistant"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.assistant" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="AssistantNumber"
+                       class="col-sm-1 control-label">AssistantNumber</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="AssistantNumberTextBox"
+                           placeholder="AssistantNumber"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.assistantNumber" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Manager"
+                       class="col-sm-1 control-label">Manager</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="ManagerTextBox"
+                           placeholder="Manager"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.manager" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Account"
+                       class="col-sm-1 control-label">Account</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="AccountTextBox"
+                           placeholder="Account"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.account" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+
+                <div class="dpt-datepicker">
+                    <p class="dpt-input-group">
+                        <input id="BirthdayDatePicker"
+                               type="text"
+                               class="form-control"
+                               datepicker-popup="{{vm.datePickerConfig.format}}"
+                               data-ng-model="vm.user.birthday"
+                               is-open="vm.datePickerConfig.opened"
+                               max-date="'2015-06-22'"
+                               datepicker-options="vm.datePickerConfig.dateOptions"
+                               date-disabled="vm.datePickerConfig.disabled(date, mode)"
+                               ng-required="true"
+                               close-text="Close" />
+                        <span class="dpt-input-group-btn">
+                            <button id="userBirthdayDatePickerButton" type="button"
+                                    class="dpt-btn dna_btn-default"
+                                    data-ng-click="vm.datePickerConfig.open($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Anniversary"
+                       class="col-sm-1 control-label">Anniversary</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="AnniversaryTextBox"
+                           placeholder="Anniversary"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.anniversary" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Spouse"
+                       class="col-sm-1 control-label">Spouse</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="SpouseTextBox"
+                           placeholder="Spouse"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.spouse" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Children"
+                       class="col-sm-1 control-label">Children</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="ChildrenTextBox"
+                           placeholder="Children"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.children" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="PhotoUrl"
+                       class="col-sm-1 control-label">PhotoUrl</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="PhotoUrlTextBox"
+                           placeholder="PhotoUrl"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.photoUrl" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="PledgeAmount"
+                       class="col-sm-1 control-label">PledgeAmount</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="PledgeAmountTextBox"
+                           placeholder="PledgeAmount"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.pledgeAmount" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="NewsLetterEmail"
+                       class="col-sm-1 control-label">NewsLetterEmail</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="NewsLetterEmailTextBox"
+                           placeholder="NewsLetterEmail"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.newsLetterEmail" />
+                </div>
+
+            </div>
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="OtherInfo"
+                       class="col-sm-1 control-label">OtherInfo</label>
+
+                <!-- 2.2.2.1. Form input -->
+                <div class="col-sm-7">
+                    <input id="OtherInfoTextBox"
+                           placeholder="OtherInfo"
+                           class="form-control"
+                           data-z-validate
+                           data-ng-model="vm.user.otherInfo" />
+                </div>
+
+            </div>
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group">
+
+                <!-- 2.2.2.1. Form label -->
+                <label for="Customer" class="col-sm-1 control-label">Customer</label>
+                <div class="col-sm-7">
+
+                    <!-- 2.2.2.1. Form input -->
+                    <select id="Customer" data-ng-options="t.customerId as t.name for t in vm.customers"
+                            data-ng-model="vm.selectedCustomer" class="form-control" data-z-validate></select>
+                </div>
+            </div>
+
+
+            <!-- 2.2.2. One form group foreach property -->
+            <div class="form-group" data-ng-show="!vm.isCreating">
+
+                <!-- 2.2.2.1. Form label -->
+                <div class="col-md-5">
+                    <label for="AspNetRoles" class="col-sm-1 control-label">Unassigned AspNetRoles:</label>
+                    <!-- 2. Content/main area -->
+                    <div class="widget wlightblue col-md-12">
+
+                        <!--<div data-dna-widget-header title={{vm.userAspNetRolesListService.title}}
+                 subtitle="{{vm.userAspNetRolesListService.aspNetRoleFilteredCountServer}} / {{vm.userAspNetRolesListService.aspNetRoleCountServer}}"
+                 right-text="Page {{vm.userAspNetRolesListService.paging.currentPage}} of {{vm.userAspNetRolesListService.paging.totalPage" allow-collapse="true"></div>-->
+                        <div class="widget-content">
+                            <select style="min-width: 200px" size="10" ng-model="vm.userAspNetRolesListService.selectedRole" ng-options="r.name for r in vm.userAspNetRolesListService.aspNetRoles"></select>
+                            <!--<div class="table-responsive">
+                    <table class="table table-hover table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                <th data-ng-repeat="thead in vm.userAspNetRolesListService.theads">
+                                    <a data-ng-click="vm.userAspNetRolesListService.setSortServer(thead)" href="">{{thead}}</a>
+                                    <span>
+                                        <span data-ng-if="vm.userAspNetRolesListService.sortingServer.orderBy ==
+                                          (thead.charAt(0).toLowerCase() + thead.slice(1)).replace(' ','')">
+                                            <i class="fa fa-caret-down" style="color: #00C0F7;"
+                                               data-ng-show="vm.userAspNetRolesListService.sortingServer.orderDesc == ''"></i>
+                                            <i class="fa fa-caret-up" style="color: #00C0F7;"
+                                               data-ng-show="vm.userAspNetRolesListService.sortingServer.orderDesc == 'desc'"></i>
+                                        </span>
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="aspNetRole in vm.userAspNetRolesListService.aspNetRoles" data-ng-model="vm.userAspNetRolesListService.selectedRole">
+                                <td>{{aspNetRole.name}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>-->
+                        </div>
+
+                        <!-- 2.3. Panel pagination -->
+                        <div class="widget-foot">
+                            <div class="clearfix"></div>
+                            <pagination class="pagination-sm"
+                                        total-items="vm.userAspNetRolesListService.aspNetRoleFilteredCountServer"
+                                        items-per-page="vm.userAspNetRolesListService.paging.pageSize"
+                                        max-size="vm.userAspNetRolesListService.paging.maxPagesToShow"
+                                        data-ng-model="vm.userAspNetRolesListService.paging.currentPageServer"
+                                        data-ng-change="vm.userAspNetRolesListService.pageChangedServer()"
+                                        boundary-links="true"
+                                        previous-text="Prev"
+                                        next-text="Next"
+                                        first-text="First"
+                                        last-text="Last"></pagination>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <button class="infoButton"
+                            data-ng-click="vm.assignRole()">
+                        <i class="fa fa-long-arrow-right"></i>Assign
+                    </button>
+
+                    <button class="infoButton"
+                            data-ng-click="vm.unassignRole()">
+                        <i class="fa fa-long-arrow-left"></i>Unassign
+                    </button>
+                </div>
+                
+                <div class="col-md-5">
+                    <label class="col-sm-1 control-label">Assigned AspNetRoles:</label>
+
+                    <!-- 2. Content/main area -->
+                    <div class="widget wlightblue col-md-12">
+
+                        <!--<div data-dna-widget-header title={{vm.userAspNetRolesAssignedListService.title}}
+                 subtitle="{{vm.userAspNetRolesAssignedListService.aspNetRoleFilteredCountServer}} / {{vm.userAspNetRolesAssignedListService.aspNetRoleCountServer}}"
+                 right-text="Page {{vm.userAspNetRolesAssignedListService.paging.currentPage}} of {{vm.userAspNetRolesAssignedListService.paging.totalPage" allow-collapse="true"></div>-->
+
+                        <div class="widget-content">
+                            <select style="min-width: 200px" size="10" ng-model="vm.userAspNetRolesAssignedListService.selectedRole" ng-options="r.name for r in vm.userAspNetRolesAssignedListService.aspNetRoles"></select>
+
+                            <!--<div class="table-responsive">
+                        <table class="table table-hover table-condensed table-striped">
+                            <thead>
+                                <tr>
+                                    <th data-ng-repeat="thead in vm.userAspNetRolesAssignedListService.theads">
+                                        <a data-ng-click="vm.userAspNetRolesAssignedListService.setSortServer(thead)" href="">{{thead}}</a>
+                                        <span>
+                                            <span data-ng-if="vm.userAspNetRolesAssignedListService.sortingServer.orderBy ==
+                                          (thead.charAt(0).toLowerCase() + thead.slice(1)).replace(' ','')">
+                                                <i class="fa fa-caret-down" style="color: #00C0F7;"
+                                                   data-ng-show="vm.userAspNetRolesAssignedListService.sortingServer.orderDesc == ''"></i>
+                                                <i class="fa fa-caret-up" style="color: #00C0F7;"
+                                                   data-ng-show="vm.userAspNetRolesAssignedListService.sortingServer.orderDesc == 'desc'"></i>
+                                            </span>
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="aspNetRole in vm.userAspNetRolesAssignedListService.aspNetRoles" data-ng-model="vm.userAspNetRolesAssignedListService.selectedRole">
+                                    <td>{{aspNetRole.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>-->
+                        </div>
+
+                        <div class="widget-foot">
+                            <div class="clearfix"></div>
+                            <pagination class="pagination-sm"
+                                        total-items="vm.userAspNetRolesListService.aspNetRoleFilteredCountServer"
+                                        items-per-page="vm.userAspNetRolesListService.paging.pageSize"
+                                        max-size="vm.userAspNetRolesListService.paging.maxPagesToShow"
+                                        data-ng-model="vm.userAspNetRolesListService.paging.currentPageServer"
+                                        data-ng-change="vm.userAspNetRolesListService.pageChangedServer()"
+                                        boundary-links="true"
+                                        previous-text="Prev"
+                                        next-text="Next"
+                                        first-text="First"
+                                        last-text="Last"></pagination>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+

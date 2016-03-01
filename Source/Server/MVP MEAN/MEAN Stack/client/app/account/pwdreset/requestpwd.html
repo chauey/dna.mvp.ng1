@@ -1,0 +1,54 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container" ng-show="resetStateIs('mailsent')">
+  <div class="alert alert-info">
+    <h2>Almost there</h2>
+      <p>A mail with a rest token and some instructions was sent to
+        <b>{{reset.email}}</b>.</p>
+      <p>Check your inbox.</p>
+  </div>
+</div>
+<div class="container" ng-show="resetStateIs('mailform')">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>Password forgotten?</h1>
+      <p>Submit your email address</p>
+    </div>
+    <div class="col-sm-12">
+      <form class="form" name="resetform" ng-submit="sendPwdResetMail(resetform)" novalidate>
+        <div class="form-group" ng-class="{'has-error': resetform.email.$invalid}">
+          <label>Email address</label>
+          <input type="email" name="email" class="form-control" ng-model="reset.email" required mongoose-error/>
+        </div>
+        <div class="form-group has-error">
+          <p class="help-block" ng-show="resetform.email.$error.email && submitted">Doesn't look like a valid email.</p>
+          <p class="help-block" ng-show="resetform.email.$error.required && submitted">Please enter your email.</p>
+          <p class="help-block">{{ errors.other }}</p>
+        </div>
+        <div class="help-block" ng-show="resetform.email.$error.unknownMailAddress">
+          <p>The email address you entered is not known.</p>
+          <p>Check the address and send it again.</p>
+        </div>
+        <!-- <div class="form-group" ng-class="{ 'has-success': form.password.$valid && submitted, 'has-error': form.password.$invalid
+        && submitted }">
+          <label>New password</label>
+
+          <input type="password" name="password" class="form-control" ng-model="reset.newPassword"
+                 ng-minlength="3"
+                 required
+                 mongoose-error/>
+          <p class="help-block"
+             ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
+            Password must be at least 3 characters.
+          </p>
+          <p class="help-block" ng-show="form.password.$error.mongoose">
+            {{ errors.password }}
+          </p>
+        </div>-->
+        <div class="col-sm-6">
+          <button class="btn btn-inverse btn-lg btn-primary" ng-disabled="pwdResetMailSend" type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <hr>
+</div>

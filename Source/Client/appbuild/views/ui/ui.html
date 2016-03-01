@@ -1,0 +1,120 @@
+<section class="mainbar" ng-controller="uiController as vm"><section class="matter"><div class="container"><div class="row"><div class="widget wlightblue" id="highcharts"><div data-cc-widget-header title="HighCharts" subtitle="Interactive JavaScript charts" allow-collapse="true"></div><div class="widget-content text-info col-md-12" style="display: none"><div class="pull-right"><img src="/app/ui/images/highcharts.png" alt></div><h2>Configuration</h2><div class="form-group">Title <input ng-model="vm.chartConfig.title.text"> Subtitle <input ng-model="vm.chartConfig.subtitle.text"> Stack<select ng-model="vm.chartConfig.options.plotOptions.series.stacking" ng-options="t.id as t.title for t in vm.chartStack"></select><br>Width <input ng-model="vm.chartConfig.size.width"> Height <input ng-model="vm.chartConfig.size.height">Credits <input type="checkbox" ng-model="vm.chartConfig.options.plotOptions.series.dataLabels.enabled"> Data Labels</div><h2>Series</h2><div class="form-group"><div ng-repeat="ser in vm.chartSeries">Title <input ng-model="ser.name"> Type<select ng-model="ser.type" ng-options="t.id as t.title for t in vm.chartTypes"></select>Color <input ng-model="ser.color" type="color"> <span ng-if="ser.type == 'line' || ser.type == 'spline' || ser.type == 'area' || ser.type == 'areaspline'">Line Width <input ng-model="ser.lineWidth"></span> <button class="infoButton" ng-click="vm.removeSeries($index)">Remove</button></div></div><div class="form-group"><button class="infoButton" ng-click="vm.addSeries()">Add Random Series</button> <button class="infoButton" ng-click="vm.addPoints()">Add Points to Random Series</button></div><div class="form-group"><highchart config="vm.chartConfig"></highchart></div></div><div class="widget-foot"><div class="clearfix"></div></div></div><div class="widget wlightblue" id="wijmo"><div data-cc-widget-header title="Wijmo 5 FlexGrid" subtitle="Beta version" allow-collapse="true"></div><div class="widget-content text-info col-md-12" style="display: none"><div class="col-md-5"><wj-flex-grid items-source="vm.cvData" selection-mode="{{vm.selectionMode}}" is-read-only="{{vm.isReadOnly}}" class="{{vm.theme}}"><wj-flex-grid-column header="ID" binding="id"></wj-flex-grid-column><wj-flex-grid-column header="Country" binding="country"></wj-flex-grid-column><wj-flex-grid-column header="Date" binding="date"></wj-flex-grid-column><wj-flex-grid-column header="Revenue" binding="amount" format="n0" ng-style="{color: vm.getAmountColor($item.amount)}"></wj-flex-grid-column><wj-flex-grid-column header="Active" binding="active"></wj-flex-grid-column></wj-flex-grid><img src="/app/ui/images/wijmo5.png" style="padding-top: 5px"></div><div class="col-md-7"><div class="form-group"><div class="col-lg-2"><input type="checkbox" ng-model="vm.isReadOnly"> Read Only</div><div class="col-lg-3"><input type="checkbox" ng-model="vm.useTheme"> Use Custom Theme</div><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span> <input type="text" ng-model="vm.filter" placeholder="Filter country"></div></div><div class="form-group"><div class="col-lg-6"><h3>Selection Mode</h3><wj-menu value="vm.selectionMode" header="Selection Mode"><wj-menu-item value="'None'">None</wj-menu-item><wj-menu-item value="'Cell'">Cell</wj-menu-item><wj-menu-item value="'CellRange'">CellRange</wj-menu-item><wj-menu-item value="'Row'">Row</wj-menu-item><wj-menu-item value="'RowRange'">RowRange</wj-menu-item><wj-menu-item value="'ListBox'">ListBox</wj-menu-item></wj-menu></div><h3>Grouping</h3><wj-menu value="vm.groupBy" header="Group by"><wj-menu-item value="''">(no grouping)</wj-menu-item><wj-menu-item value="'country'">Country</wj-menu-item><wj-menu-item value="'amount'">Revenue</wj-menu-item><wj-menu-item value="'date'">Date</wj-menu-item><wj-menu-item value="'country,date'">Country and Date</wj-menu-item><wj-menu-item value="'country,amount'">Country and Revenue</wj-menu-item><wj-menu-item value="'country,date,amount'">Country, Date, and Revenue</wj-menu-item></wj-menu></div><div class="form-group"><div class="col-lg-6"><h3>Pagination</h3><wj-collection-view-pager cv="vm.cvData"></wj-collection-view-pager></div><h3>Row Navigation</h3><wj-collection-view-navigator cv="vm.cvData"></wj-collection-view-navigator></div><div class="form-group"><h3>Conditional Styling</h3><ul><li>< 2500 - Black</li><li>< 5000 - <span style="color: green;">Green</span></li><li>> 5000 - <span style="color: blue;">Blue</span></li></ul></div><div class="form-group"><h3>Trees and Hierarchical Data</h3><wj-flex-grid class="{{vm.theme}}" items-source="vm.treeData" child-items-path="items"><wj-flex-grid-column header="Artist/Album/Song Name" binding="name" width="*"></wj-flex-grid-column><wj-flex-grid-column header="Length" binding="length" width="80" align="center"></wj-flex-grid-column></wj-flex-grid></div></div></div><div class="widget-foot"><div class="clearfix"></div></div></div><div class="widget wlightblue" id="kendo"><div data-cc-widget-header title="Telerik - KendoUI" subtitle="jQuery and HTML5 widgets" allow-collapse="true"></div><div class="widget-content text-info col-md-12" style="display: none"><div class="row"><div class="pull-right"><img src="/app/ui/images/angularkendoui.png" alt></div><div class="form-group"><div class="col-md-3"><h2>DropDownList</h2><legend>Static data</legend>Country in Europe:<select kendo-drop-down-list><option ng-repeat="country in vm.countryNames">{{country}}</option></select><legend>Remote data</legend>Product:<select kendo-drop-down-list k-data-text-field="'ProductName'" k-data-value-field="'ProductID'" k-data-source="vm.productsDataSource"></select><legend>Custom item template</legend><select id="customers" kendo-drop-down-list style="width: 400px" k-options="vm.customOptions"></select></div><div class="col-md-3"><h2>ComboBox</h2><legend>Static data</legend>Country in Europe:<select kendo-combo-box><option ng-repeat="country in vm.countryNames">{{country}}</option></select><legend>Remote data</legend>Product:<select kendo-combo-box k-placeholder="'Select product'" k-data-text-field="'ProductName'" k-data-value-field="'ProductID'" k-filter="contains" k-auto-bind="false" k-min-length="3" k-data-source="vm.productsDataSource"></select></div><div class="col-md-3"><h2>Sortble</h2>Drag a row to reorder list<ol class="playlist" kendo-sortable><li>Papercut <span>3:04</span></li><li>One Step Closer <span>2:35</span></li><li>With You <span>3:23</span></li><li>Points of Authority <span>3:20</span></li><li>Crawling <span>3:29</span></li><li>Runaway <span>3:03</span></li><li>By Myself <span>3:09</span></li><li>In the End <span>3:36</span></li><li>A Place for My Head <span>3:04</span></li><li>Forgotten <span>3:14</span></li><li>Cure for the Itch <span>2:37</span></li><li>Pushing Me Away <span>3:11</span></li></ol></div></div></div><div class="row"><div class="form-group"><div class="col-md-9"><h2>Editor</h2><textarea kendo-editor ng-model="vm.html"></textarea></div><div class="col-md-3"><h2>DateTimePicker</h2>Select date and time: <input kendo-date-time-picker ng-model="str" k-ng-model="obj"><pre>String: {{ str }} 
+Object: {{ obj }}</pre></div></div></div><div class="row"><div class="form-group"><div class="col-md-4"><h2>MaskedTextBox</h2><ul><li>Phone number: <input kendo-masked-text-box ng-model="phone" k-mask="'(999) 000-0000'">{{vm.phone}}</li><li>Credit Card number: <input kendo-masked-text-box ng-model="cc" k-mask="'0000 0000 0000 0000'">{{vm.cc}}</li><li>Social security number: <input kendo-masked-text-box ng-model="ssn" k-mask="'000-00-0000'">{{vm.ssn}}</li><li>UK postcode: <input kendo-masked-text-box ng-model="post" k-mask="'L0L 0LL'">{{vm.post}}</li></ul></div><div class="col-md-3"><h2>Menu</h2><select kendo-drop-down-list k-ng-model="vm.menuOrientation"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option></select><p></p><ul kendo-menu style="display: inline-block" k-orientation="vm.menuOrientation" k-rebind="vm.menuOrientation" k-on-select="vm.onSelect(kendoEvent)"><li>Men's<ul><li>Footwear<ul><li>Leisure Trainers</li><li>Running Shoes</li><li>Outdoor Footwear</li><li>Sandals/Flip Flops</li><li>Footwear Accessories</li></ul></li><li>Leisure Clothing<ul><li>T-Shirts</li><li>Hoodies &amp; Sweatshirts</li><li>Jackets</li><li>Pants</li><li>Shorts</li></ul></li><li>Sports Clothing<ul><li>Football</li><li>Basketball</li><li>Golf</li><li>Tennis</li><li>Swimwear</li></ul></li><li>Accessories</li></ul></li><li>Women's<ul><li>Footwear<ul><li>Leisure Trainers</li><li>Running Shoes</li><li>Outdoor Footwear</li><li>Sandals/Flip Flops</li><li>Footwear Accessories</li></ul></li><li>Leisure Clothing<ul><li>T-Shirts</li><li>Jackets</li></ul></li><li>Sports Clothing<ul><li>Basketball</li><li>Golf</li><li>Tennis</li><li>Swimwear</li></ul></li><li>Accessories</li></ul></li></ul></div><div class="col-md-5"><h2>MultiSelect</h2><select kendo-multi-select k-options="vm.selectOptions" k-ng-model="vm.selectedIds"></select><p ng-show="vm.selectedIds.length">Selected: {{vm.selectedIds}}</p></div></div></div><div class="row"><div class="col-md-3"><h2>NumericTextBox</h2><div style="width: 300px; text-align: center"><input kendo-numeric-text-box k-min="0" k-max="100" k-ng-model="vm.ntValue"> Value: {{vm.ntValue}}<div kendo-slider k-min="0" k-max="100" k-ng-model="vm.ntValue"></div></div></div><div class="col-md-3"><h2>ProgressBar</h2><div>{{vm.status}}</div><div kendo-progress-bar="vm.progressBar" k-min="0" k-max="100" ng-model="vm.progress"></div></div><div class="col-md-3"><h2>AutoComplete</h2>Countries in Europe: <input kendo-auto-complete ng-model="vm.country" k-data-source="vm.countryNames"><br>Your selection: {{vm.country}}</div></div><div class="row"><div class="col-md-6"><h2>Spliter</h2>Orientation:<select kendo-drop-down-list k-ng-model="vm.orientation"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option></select><div kendo-splitter k-panes="[ null, null]" k-orientation="vm.orientation" k-rebind="vm.orientation"><div><p><h1>Content on the left.</h1></p><p>Lorem ipsum dolor sit amet, sea diam stet putent ad, putent consequat scripserit vix at. Id falli graecis gloriatur duo. Ex vim errem hendrerit. Noster doctus facilisi ei nec. Ridens dolorum contentiones ius ei. Cu has congue dolores. Mea cu assum scripserit, vel quis concludaturque ex. Est ubique epicuri definitionem id, laudem cetero copiosae ex eos. Luptatum hendrerit cu usu, in albucius prodesset sententiae duo, eos albucius expetendis at. Et aeterno perpetua molestiae vix.</p></div><div><p><h1>Content on the right.</h1></p><p>Nisl dictas mediocritatem cu has. Eos modus dolore ullamcorper no, iisque aliquid aliquando eu sed. Quo nisl scaevola accusamus eu, commodo perfecto scribentur no pro, per constituam referrentur cu. Dicit audire singulis cu sea, tempor fabellas omittantur eu cum, ei eam veniam soleat consequuntur. Quis mazim eum eu, meliore torquatos an ius. Imperdiet percipitur ei eum. Mea ei quas solet adipisci, te qui magna ridens recusabo, eu nec vide falli nostrum. Te ius altera dissentiunt. Suscipit partiendo ea per, vel case evertitur et. Error mundi pri ad, ei nobis tollit referrentur vel. Id wisi illum augue eam, evertitur adolescens eam eu.</p></div></div></div><div class="col-md-6"><h2>TabStrip</h2><div kendo-tab-strip k-content-urls="[ null, null, null ]"><ul><li class="k-state-active">First tab</li><li>Second tab</li></ul><div style="padding: 1em">This is the first tab</div><div style="padding: 1em">This is the second tab</div><div></div></div></div></div></div><div class="widget-foot"><div class="clearfix"></div></div></div></div></div></section></section><style>
+    /* create a 'custom-flex-grid' theme for the FlexGrid */
+    .custom-flex-grid .wj-header.wj-cell {
+        background-color: #000;
+        color: #fff;
+        font-weight: bold;
+        border-right: solid 1px #404040;
+        border-bottom: solid 1px #404040;
+    }
+
+    .custom-flex-grid .wj-cell {
+        border: none;
+        background-color: #fff;
+    }
+
+    .custom-flex-grid .wj-alt:not(.wj-state-selected):not(.wj-state-multi-selected) {
+        background-color: #fff;
+    }
+
+    .custom-flex-grid .wj-state-selected {
+        background: #000;
+        color: #fff;
+    }
+
+    .custom-flex-grid .wj-state-multi-selected {
+        background: #222222;
+        color: #fff;
+    }
+</style><style>
+    .dropdown-header {
+        font-size: 1.2em;
+    }
+
+    .dropdown-header > span {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        text-align: left;
+        display: inline-block;
+        border-style: solid;
+        border-width: 0 0 1px 1px;
+        padding: .3em .6em;
+        width: 79%;
+    }
+
+    .dropdown-header > span:first-child {
+        width: 82px;
+        border-left-width: 0;
+    }
+
+    .demo-section {
+        width: 400px;
+        padding: 30px;
+    }
+
+    .demo-section h2 {
+        text-transform: uppercase;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+    .selected-value {
+        float: left;
+        width: 20px;
+        margin: 0 4px;
+    }
+
+    #customers-list .k-item > span {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        display: inline-block;
+        border-style: solid;
+        border-width: 0 0 1px 1px;
+        vertical-align: top;
+        min-height: 95px;
+        width: 79%;
+        padding: .6em 0 0 .6em;
+    }
+
+    #customers-list .k-item > span:first-child {
+        width: 77px;
+        border-left-width: 0;
+        padding: .6em 0 0 0;
+    }
+
+    #customers-list img {
+        -moz-box-shadow: 0 0 2px rgba(0,0,0,.4);
+        -webkit-box-shadow: 0 0 2px rgba(0,0,0,.4);
+        box-shadow: 0 0 2px rgba(0,0,0,.4);
+        width: 70px;
+        height: 70px;
+    }
+
+    #customers-list h3 {
+        font-size: 1.6em;
+        margin: 0;
+        padding: 0;
+    }
+
+    #customers-list p {
+        margin: 0;
+        padding: 0;
+    }
+</style><style>
+    .playlist {
+        width: 15em;
+    }
+
+        .playlist li {
+            cursor: pointer;
+            position: relative;
+        }
+
+            .playlist li span {
+                position: absolute;
+                right: 5px;
+            }
+</style>

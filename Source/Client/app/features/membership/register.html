@@ -1,0 +1,49 @@
+﻿
+<div class="portlet light bordered">
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <h3 class="page-title">Register</h3>
+                <h4 class="page-title-subtle">(Create a new local account)</h4>
+                <form class="ng-pristine ng-valid" role="form">
+                    <div class="form-group">
+                        <label class="control-label">Username</label>
+                        <input data-ng-model="vm.registration.userName" required autofocus
+                               placeholder="Username" class="form-control" data-z-validate />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Email</label>
+                        <input data-ng-model="vm.registration.email" required
+                               placeholder="Email" class="form-control" data-z-validate />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Password</label>
+                        <input data-ng-model="vm.registration.password" type="password" required
+                               placeholder="Password" class="form-control" data-z-validate />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Confirm Password</label>
+                        <input data-ng-model="vm.registration.confirmPassword" type="password"
+                               placeholder="Confirm Password" class="form-control" data-z-validate />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Security Question</label>
+                        <dna-simple-captcha valid="vm.captchaValid"></dna-simple-captcha>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-9">
+                            <button data-ng-click="vm.register(vm.registration)" class="infoButton">
+                                Register
+                            </button>
+                            <button type="reset" class="defaultButton">Reset</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <a href="#/login">Log in</a> if you already have <b>local or social accounts</b>.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

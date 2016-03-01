@@ -1,0 +1,719 @@
+<!-- 1. Buttons -->
+            <div>
+
+                <!-- 1.1. Back button -->
+                <button id="allDataTypeBackButton" class="infoButton"
+                        data-ng-click="vm.goBack()">
+                    <i class="fa fa-arrow-left"></i>Back
+                </button>
+
+                <!-- 1.2. Cancel button -->
+                <button id="allDataTypeCancelButton" class="infoButton"
+                        data-ng-click="vm.cancel()"
+                        data-ng-disabled="!vm.canSave">
+                    <i class="fa fa-undo"></i>Cancel
+                </button>
+
+                <!-- 1.3. Save button -->
+                <button id="allDataTypeSaveButton" class="infoButton"
+                        data-ng-click="vm.save()"
+                        data-ng-disabled="!vm.canSave">
+                    <i class="fa fa-save"></i>Save
+                </button>
+
+                <!-- 1.4. Delete button -->
+                <button id="allDataTypeDeleteButton" class="dangerButton" 
+                        data-ng-click="vm.deleteAllDataType()">
+                    <i class="fa fa-trash-o"></i>Delete
+                </button>
+
+                <!-- 1.5. Has changes * -->
+                <span data-ng-show="vm.hasChanges"
+                      class="dissolve-animation ng-hide">
+                    <i class="fa fa-asterisk fa-asterisk-large"></i>
+                </span>
+            </div>
+
+			<!-- 2. Content/main area -->
+            <div class="widget wlightblue">
+                
+				<!-- 2.1. Panel header -->
+				<div data-dna-widget-header title="Edit {{vm.allDataType.name || 'New AllDataType'}}"></div>
+                
+				<!-- 2.2. Panel form -->
+				<div class="widget-content user">
+
+					<!-- 2.2.1. Main form contains many form groups -->
+                    <form class="form-horizontal" role="form">
+                        
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="BigInt"
+                                   class="col-sm-1 control-label">BigInt</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="BigIntTextBox"
+                                       placeholder="BigInt"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.bigInt" type="number"/>
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Binary"
+                                   class="col-sm-1 control-label">Binary</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="BinaryTextBox"
+                                       placeholder="Binary"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.binary" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                         
+                                <!-- 2.2.2.1. Form label -->
+							<label class="col-sm-1 control-label">Bit</label>
+
+                            <div class="col-sm-1">
+                                <input id="bitCheckBox" type="checkbox"
+                                       class="form-control"
+                                       data-ng-model="vm.allDataType.bit" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Char"
+                                   class="col-sm-1 control-label">Char</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="CharTextBox"
+                                       placeholder="Char"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.char" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                        		
+						    <div class="dpt-datepicker">
+                                <p class="dpt-input-group">
+                                    <input id="DateDatePicker"
+                                           type="text"
+                                           class="form-control"
+                                           datepicker-popup="{{vm.datePickerConfig.format}}"
+                                           data-ng-model="vm.allDataType.date"
+                                           is-open="vm.datePickerConfig.opened"
+                                           max-date="'2015-06-22'"
+                                           datepicker-options="vm.datePickerConfig.dateOptions"
+                                           date-disabled="vm.datePickerConfig.disabled(date, mode)"
+                                           ng-required="true"
+                                           close-text="Close" />
+                                    <span class="dpt-input-group-btn">
+                                        <button id="allDataTypeDateDatePickerButton" type="button"
+                                                class="dpt-btn dna_btn-default"
+                                                data-ng-click="vm.datePickerConfig.open($event)">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </p>
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                        		
+						    <div class="dpt-datepicker">
+                                <p class="dpt-input-group">
+                                    <input id="DateTimeDatePicker"
+                                           type="text"
+                                           class="form-control"
+                                           datepicker-popup="{{vm.datePickerConfig.format}}"
+                                           data-ng-model="vm.allDataType.dateTime"
+                                           is-open="vm.datePickerConfig.opened"
+                                           max-date="'2015-06-22'"
+                                           datepicker-options="vm.datePickerConfig.dateOptions"
+                                           date-disabled="vm.datePickerConfig.disabled(date, mode)"
+                                           ng-required="true"
+                                           close-text="Close" />
+                                    <span class="dpt-input-group-btn">
+                                        <button id="allDataTypeDateTimeDatePickerButton" type="button"
+                                                class="dpt-btn dna_btn-default"
+                                                data-ng-click="vm.datePickerConfig.open($event)">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </p>
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="DateTime2"
+                                   class="col-sm-1 control-label">DateTime2</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="DateTime2TextBox"
+                                       placeholder="DateTime2"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.dateTime2" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="DateTimeOffset"
+                                   class="col-sm-1 control-label">DateTimeOffset</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="DateTimeOffsetTextBox"
+                                       placeholder="DateTimeOffset"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.dateTimeOffset" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Decimal"
+                                   class="col-sm-1 control-label">Decimal</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="DecimalTextBox"
+                                       placeholder="Decimal"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.decimal" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Float"
+                                   class="col-sm-1 control-label">Float</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="FloatTextBox"
+                                       placeholder="Float"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.float" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Geography"
+                                   class="col-sm-1 control-label">Geography</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="GeographyTextBox"
+                                       placeholder="Geography"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.geography" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Geometry"
+                                   class="col-sm-1 control-label">Geometry</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="GeometryTextBox"
+                                       placeholder="Geometry"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.geometry" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Image"
+                                   class="col-sm-1 control-label">Image</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="ImageTextBox"
+                                       placeholder="Image"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.image" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Int"
+                                   class="col-sm-1 control-label">Int</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="IntTextBox"
+                                       placeholder="Int"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.int" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Money"
+                                   class="col-sm-1 control-label">Money</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="MoneyTextBox"
+                                       placeholder="Money"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.money" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="NChar"
+                                   class="col-sm-1 control-label">NChar</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="NCharTextBox"
+                                       placeholder="NChar"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.nChar" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="NText"
+                                   class="col-sm-1 control-label">NText</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="NTextTextBox"
+                                       placeholder="NText"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.nText" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Numeric"
+                                   class="col-sm-1 control-label">Numeric</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="NumericTextBox"
+                                       placeholder="Numeric"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.numeric" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="NVarChar"
+                                   class="col-sm-1 control-label">NVarChar</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="NVarCharTextBox"
+                                       placeholder="NVarChar"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.nVarChar" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="NVarCharMax"
+                                   class="col-sm-1 control-label">NVarCharMax</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="NVarCharMaxTextBox"
+                                       placeholder="NVarCharMax"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.nVarCharMax" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Real"
+                                   class="col-sm-1 control-label">Real</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="RealTextBox"
+                                       placeholder="Real"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.real" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="SmallDateTime"
+                                   class="col-sm-1 control-label">SmallDateTime</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="SmallDateTimeTextBox"
+                                       placeholder="SmallDateTime"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.smallDateTime" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="SmallInt"
+                                   class="col-sm-1 control-label">SmallInt</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="SmallIntTextBox"
+                                       placeholder="SmallInt"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.smallInt" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="SmallMoney"
+                                   class="col-sm-1 control-label">SmallMoney</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="SmallMoneyTextBox"
+                                       placeholder="SmallMoney"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.smallMoney" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Text"
+                                   class="col-sm-1 control-label">Text</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="TextTextBox"
+                                       placeholder="Text"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.text" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Time"
+                                   class="col-sm-1 control-label">Time</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="TimeTextBox"
+                                       placeholder="Time"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.time" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="TimeStamp"
+                                   class="col-sm-1 control-label">TimeStamp</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="TimeStampTextBox"
+                                       placeholder="TimeStamp"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.timeStamp" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="TinyInt"
+                                   class="col-sm-1 control-label">TinyInt</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="TinyIntTextBox"
+                                       placeholder="TinyInt"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.tinyInt" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="UniqueIdentifier"
+                                   class="col-sm-1 control-label">UniqueIdentifier</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="UniqueIdentifierTextBox"
+                                       placeholder="UniqueIdentifier"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.uniqueIdentifier" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="VarBinary"
+                                   class="col-sm-1 control-label">VarBinary</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="VarBinaryTextBox"
+                                       placeholder="VarBinary"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.varBinary" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="VarBinaryMax"
+                                   class="col-sm-1 control-label">VarBinaryMax</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="VarBinaryMaxTextBox"
+                                       placeholder="VarBinaryMax"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.varBinaryMax" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="VarChar"
+                                   class="col-sm-1 control-label">VarChar</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="VarCharTextBox"
+                                       placeholder="VarChar"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.varChar" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="VarCharMax"
+                                   class="col-sm-1 control-label">VarCharMax</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="VarCharMaxTextBox"
+                                       placeholder="VarCharMax"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.varCharMax" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="Xml"
+                                   class="col-sm-1 control-label">Xml</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="XmlTextBox"
+                                       placeholder="Xml"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.xml" />
+                            </div>
+                        	
+						</div>
+                    
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+                                                    <!-- 2.2.2.1. Form label -->
+							<label for="ZSql_Variant"
+                                   class="col-sm-1 control-label">ZSql_Variant</label>
+
+                            <!-- 2.2.2.1. Form input -->
+							<div class="col-sm-7">
+                                <input id="ZSql_VariantTextBox"
+                                       placeholder="ZSql_Variant"
+                                       class="form-control"
+                                       data-z-validate
+                                       data-ng-model="vm.allDataType.zSql_Variant" />
+                            </div>
+                        	
+						</div>
+                    
+					
+						<!-- 2.2.2. One form group foreach property -->
+						<div class="form-group">
+
+							<!-- 2.2.2.1. Form label -->
+							<label for="ZHierarchy" class="col-sm-1 control-label">ZHierarchy</label>
+							<div class="col-sm-7">
+                               
+								<!-- 2.2.2.1. Form input -->
+								<select id="ZHierarchy" data-ng-options="t.zHierarchyID as t.name for t in vm.zHierarchys"
+									data-ng-model="vm.selectedZHierarchy" class="form-control" data-z-validate>
+                                </select>
+							</div>
+                            <button class="infoButton"
+                                            data-ng-click="vm.addZHierarchy()">
+                                        <i class="fa fa-plus"></i>Add ZHierarchy
+                                    </button>
+						</div>
+                    </form>
+                </div>
+            </div>
+

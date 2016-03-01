@@ -1,0 +1,162 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container">
+    <div class="row">
+        <h1 class="page-header">ALL DATA TYPES list</h1>
+        <div class="col-lg-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Big Int</th>
+                        <th>Bit</th>
+                        <th>Char</th>
+                        <th>Date</th>
+                        <th>Decimal</th>
+                        <th>Float</th>
+                        <th>Int</th>
+                        <th>NChar</th>
+                        <th>Numeric</th>
+                        <th>NVarChar</th>
+                        <th>Real</th>
+                        <th>VarChar</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="dt in datatypes" style="cursor: pointer">
+                        <td>
+                            <div ng-hide="dt.editing">{{dt.bigint}}</div>
+                            <div>
+                                <form ng-submit="doneEditing(dt)">
+                                    <strong>
+                                        <em>
+                                            <input type="text" class="form-control" ng-show="dt.editing" ng-model="dt.bigint" ng-blur="doneEditing(dt)" autofocus
+                                            />
+                                        </em>
+                                    </strong>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-hide="dt.editing">{{dt.bit}}</div>
+                            <div>
+                                <form ng-submit="doneEditing(dt)">
+                                    <strong>
+                                        <em>
+                                            <input type="checkbox" class="form-control" ng-show="dt.editing" ng-model="dt.bit" ng-blur="doneEditing(dt)" autofocus
+                                            />
+                                        </em>
+                                    </strong>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-hide="dt.editing">{{dt.char}}</div>
+                            <div>
+                                <form ng-submit="doneEditing(dt)">
+                                    <strong>
+                                        <em>
+                                            <input type="text" class="form-control" ng-show="dt.editing" ng-model="dt.char" ng-blur="doneEditing(dt)" autofocus
+                                            />
+                                        </em>
+                                    </strong>
+                                </form>
+                            </div>
+                        </td>
+                        <td>{{dt.date}}</td>
+                        <td>{{dt.decimal}}</td>
+                        <td>{{dt.float}}</td>
+                        <td>{{dt.int}}</td>
+                        <td>{{dt.nchar}}</td>
+                        <td>{{dt.numeric}}</td>
+                        <td>{{dt.nvarchar}}</td>
+                        <td>{{dt.real}}</td>
+                        <td>{{dt.varchar}}</td>
+                        <td>
+                            <button ng-hide="dt.editing" type="button" class="btn btn-primary" ng-click="editDT(dt)">Edit</button>
+                            <button ng-show="dt.editing" type="button" class="btn btn-success" ng-blur="doneEditing(dt)">Save</button>
+                            <button ng-hide="dt.editing" type="button" class="btn btn-danger" ng-click="removeDT(dt)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4">
+            <form class="form-horizontal" name="dtForm">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Big Int</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" ng-model="adtBigInt" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Bit</label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" class="form-control" ng-model="adtBit" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Char</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" ng-model="adtChar" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Date</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control" ng-model="adtDate" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Decimal</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" ng-model="adtDecimal" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Float</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" ng-model="adtFloat" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Int</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" ng-model="adtInt" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">NChar</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" ng-model="adtNchar" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Numeric</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" ng-model="adtNumeric" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">NVarChar</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" ng-model="adtNvarchar" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">VarChar</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" ng-model="adtVarchar" />
+                    </div>
+                </div>
+                <span class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary" ng-click="createDT()" ng-disabled="dtForm.$invalid">Add New</button>
+                </span>
+            </form>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+    <div class="container">
+        <p>MVP | MEAN
+    </div>
+</footer>

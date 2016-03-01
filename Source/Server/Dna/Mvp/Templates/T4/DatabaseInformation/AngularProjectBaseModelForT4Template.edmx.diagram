@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="fb20f478f64a48e59fc3de88ff56d923" Name="Diagram1">
+        <EntityTypeShape EntityType="DptModelForT4Template.C__MigrationHistory" Width="1.5" PointX="10.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.AllDataType" Width="1.5" PointX="5.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.AspNetRole" Width="1.5" PointX="2.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.AspNetUserClaim" Width="1.5" PointX="7.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.AspNetUserLogin" Width="1.5" PointX="7.25" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.AspNetUser" Width="1.5" PointX="5" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.Attachment" Width="1.5" PointX="7.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.AuditLog" Width="1.5" PointX="9.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.Client" Width="1.5" PointX="11.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.Diagnosis" Width="1.5" PointX="5.25" PointY="43" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.DnaGenChildTestTable" Width="1.5" PointX="13" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.DnaGenParentTestTable" Width="1.5" PointX="10.75" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.ELMAH_Error" Width="1.5" PointX="12.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.FormRole" Width="1.5" PointX="3" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.Form" Width="1.5" PointX="0.75" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.HospitalPatient" Width="1.5" PointX="10.5" PointY="44.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.Hospital" Width="1.5" PointX="8.25" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.Patient" Width="1.5" PointX="8.25" PointY="46.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.PatientTracking" Width="1.5" PointX="13.5" PointY="42.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.PatientTrackingDiagnos" Width="1.5" PointX="15.75" PointY="43" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.PatientTrackingImage" Width="1.5" PointX="18.75" PointY="41.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.PatientTrackingNote" Width="1.5" PointX="18.75" PointY="47.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.PatientTrackingProcedure" Width="1.5" PointX="15.75" PointY="38" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.Procedure" Width="1.5" PointX="5.25" PointY="37.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.ReferenceCode" Width="1.5" PointX="8" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.ReferenceCodeType" Width="1.5" PointX="5.75" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.RefreshToken" Width="1.5" PointX="13.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.Status" Width="1.5" PointX="0.75" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.sysdiagram" Width="1.5" PointX="13.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.TypeOfType" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.UserDiagnos" Width="1.5" PointX="10.5" PointY="49" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.UserHospital" Width="1.5" PointX="13.5" PointY="37" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.UserPatient" Width="1.5" PointX="13.5" PointY="49" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.UserProcedure" Width="1.5" PointX="10.5" PointY="40" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.User" Width="1.5" PointX="3" PointY="42.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.Validation" Width="1.5" PointX="15.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.webpages_Membership" Width="1.5" PointX="14.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.webpages_OAuthMembership" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.webpages_Roles" Width="1.5" PointX="0.75" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DptModelForT4Template.webpages_UsersInRoles" Width="1.5" PointX="3" PointY="12.625" IsExpanded="true" />
+        <AssociationConnector Association="DptModelForT4Template.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Diagnoses_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Diagnoses_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Diagnoses_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingDiagnoses_Diagnoses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserDiagnoses_Diagnoses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_DnaGenChildTestTable_DnaGenParentTestTable" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_FormRole_Form" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_FormRole_Role" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_HospitalPatients_Hospitals" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_HospitalPatients_Patients" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Hospitals_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Hospitals_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Hospitals_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTracking_Hospitals" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserHospitals_Hospitals" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Patients_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Patients_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Patients_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTracking_Patients" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserPatients_Patients" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTracking_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTracking_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTracking_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTracking_Users2" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingDiagnoses_PatientTracking" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingImages_PatientTracking" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingNotes_PatientTracking" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingProcedures_PatientTracking" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingDiagnoses_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingDiagnoses_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingDiagnoses_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingImages_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingImages_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingImages_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingNotes_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingNotes_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingNotes_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingProcedures_Procedures" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingProcedures_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingProcedures_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_PatientTrackingProcedures_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Procedures_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Procedures_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Procedures_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserProcedures_Procedures" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_ReferenceCodes_ReferenceCodeTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserDiagnoses_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserHospitals_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserPatients_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserProcedures_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Users_Statuses" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_TypeOfTypes_TypeOfTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_TypeOfTypes_TypeOfTypes1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserDiagnoses_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserDiagnoses_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserDiagnoses_Users2" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserHospitals_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserHospitals_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserHospitals_Users2" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserPatients_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserPatients_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserPatients_Users2" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserProcedures_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserProcedures_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_UserProcedures_Users2" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Users_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.FK_Users_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.fk_RoleId" ManuallyRouted="false" />
+        <AssociationConnector Association="DptModelForT4Template.AspNetUserRoles" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

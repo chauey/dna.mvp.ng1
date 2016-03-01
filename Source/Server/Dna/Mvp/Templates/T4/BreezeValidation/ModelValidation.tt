@@ -1,0 +1,549 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ include file="..\Utilities\Database.Utility.tt"#>
+<#@ output extension=".js" #>
+
+<#@ assembly name="Newtonsoft.Json.dll" #>
+<#@ import namespace="Newtonsoft.Json.Serialization" #>
+<#@ import namespace="Newtonsoft.Json.Linq" #>
+<#@ import namespace="Newtonsoft.Json" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System" #>
+<# 
+DataTable metaDataTable = GetMetaDataTable();
+List<string> schemaNames = GetSchemaNames(metaDataTable);
+
+// Required columns
+List<KeyValuePair<string, string>> requiredColumns = new List<KeyValuePair<string, string>>();
+
+// Tables with column extended properties
+Dictionary<string, Dictionary<string, JToken>> tableWithColumnExtProperties = new Dictionary<string, Dictionary<string, JToken>>();
+
+// Tables with column lengths
+Dictionary<string, Dictionary<string, int>> tableWithColumnLengths = new Dictionary<string, Dictionary<string, int>>();
+
+// Dictionary with <tableName, propertyName> with each datatype list
+List<KeyValuePair<string, string>> numericProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> intProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> smallIntProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> bigIntProperties = new List<KeyValuePair<string, string>>();
+
+List<KeyValuePair<string, string>> datetimeProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> timeProperty = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> bitProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> guidProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> emailProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> websiteProperties = new List<KeyValuePair<string, string>>();
+List<KeyValuePair<string, string>> phoneProperties = new List<KeyValuePair<string, string>>();
+
+List<string> tableNames = new List<string>();
+List<string> createValidationMethods = new List<string>();
+List<string> applyValidationMethods = new List<string>();
+
+if (schemaNames.Count() > 0)
+{
+    foreach (string schemaName in schemaNames)
+    {
+        // Statement
+        tableNames = GetTableNames(schemaName, "Table", metaDataTable);
+        foreach (string tableName in tableNames)
+        {
+            if (!string.IsNullOrEmpty(tableName) && !tableName.StartsWith("webpages_") && !tableName.StartsWith("__")) 
+            {
+                var entityNamePlural = GetStringIncamelCase(tableName);
+                var entityName = GetStringInSingle(entityNamePlural);
+				var entityNameInPascalCase = GetStringInPascalCase(entityName);
+
+                // Add Required columns to list
+                foreach (var requiredColumn in GetRequiredColumns(schemaName, tableName, metaDataTable))
+                {
+                    requiredColumns.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(requiredColumn)));
+                }
+
+                // Add Extended Properties to list
+                Dictionary<string, JToken> extPropertiesDictionary = new Dictionary<string, JToken>();
+                tableWithColumnExtProperties.Add(tableName, extPropertiesDictionary);
+                Dictionary<string, string> extProperties = GetMainColumnNamesWithExtProperties(schemaName, tableName, metaDataTable);
+                foreach (KeyValuePair<string, string> extProperty in extProperties)
+                {
+                    JToken extPropertyJson = ((JObject)JsonConvert.DeserializeObject(extProperty.Value))["validations"][0];
+                    extPropertiesDictionary.Add(extProperty.Key, extPropertyJson);
+                }
+                 
+                // Add columns with Types to list
+                var columnTypes = GetMainColumnNamesWithTypes(schemaName, tableName, metaDataTable);
+                foreach (var columnType in columnTypes)
+                {
+					// If current property = [datatype], add to [datatype]Properies dictionary
+					switch (columnType.Value)
+                    {
+						case "int":
+							intProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+							break;
+						case "bigint":
+							bigIntProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+							break;
+						case "smallint":
+							smallIntProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+							break;
+						case "datetime":
+							datetimeProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));	
+							break;
+						case "bit":
+							bitProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+							break;
+						case "uniqueIdentifier":
+							guidProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+							break;
+						case "nchar":
+						case "nvarchar":
+						case "char":
+						case"varchar":
+						case "text":
+						case"ntext":							
+							if (columnType.Key.IndexOf("email", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+								emailProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+							}
+							if (columnType.Key.IndexOf("website", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+								websiteProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+							}
+							if (columnType.Key.IndexOf("phone", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+								phoneProperties.Add(new KeyValuePair<string, string>(tableName, GetStringIncamelCase(columnType.Key)));
+							}
+							break;
+                    }
+                }
+
+                // Add column lengths to list
+                tableWithColumnLengths.Add(tableName, GetMainColumnNamesWithLengths(schemaName, tableName, metaDataTable));
+
+// #region Begin File Content
+#>
+(function () {
+/**
+ * @description
+ * 
+ * App service to handle Breeze built-in and custom validations:
+ * - Create.
+ * - Register.
+ * - Apply.
+ */
+
+    'use strict';
+
+    var serviceId = '<#=entityName#>.validation';
+
+    angular.module('app.services.data').factory(serviceId, ['common', <#=entityName#>Validation]);
+
+    function <#=entityName#>Validation(common) {
+        var entityNames;
+        var log = common.logger.getLogFn(serviceId);
+        var Validator = breeze.Validator;
+
+        // Add custom validations variables here
+        var requireReferenceValidator
+        <#foreach (var extProp in extPropertiesDictionary)
+        {#>
+            ,<#=extProp.Key + "CustomValidator"#>
+        <#}#>
+        ;
+
+        var service = {
+            applyValidators: applyValidators,
+            createAndRegister: createAndRegister
+        };
+
+        return service;
+
+        
+        // #region Create & apply validations       
+        // #region Required
+        function applyRequireReferenceValidators(metadataStore) {
+            var entityType;
+            var navigations;
+
+            <#if (requiredColumns.Any(r => r.Key == tableName))
+            {#>
+                // Get entity type of the table
+                entityType = metadataStore.getEntityType('<#=entityNameInPascalCase#>');
+
+                // Get all required columns
+                navigations = [
+                <#foreach (var property in requiredColumns.Where(r => r.Key == tableName))
+                {#>
+                    '<#=property.Value#>', 
+                <#}#>
+                ];
+                
+                // Push validation
+                navigations.forEach(function (propertyName) {
+                    entityType.getProperty(propertyName).validators
+                        .push(requireReferenceValidator);
+                });    
+            <#}#>
+        }
+
+        function createRequireReferenceValidator() {
+            var name = 'requireReferenceEntity';
+
+            // isRequired = true so zValidate directive displays required indicator
+            var ctx = {
+                messageTemplate: 'Missing %displayName%',
+                isRequired: true
+            };
+            var val = new Validator(name, valFunction, ctx);
+            return val;
+
+            // passes if reference has a value and is not the nullo (whose id === 0)
+            function valFunction(value) {
+                return value ? value.id !== 0 : false;
+            }
+        }
+        // #endregion
+
+
+        // #region Number
+        function applyIntValidators(metadataStore) {
+			var entityType;
+            var navigations;
+
+            <#if (intProperties.Any(p => p.Key == tableName))
+            {#>
+                // Get entity type of the table
+			    entityType = metadataStore.getEntityType('<#=entityNameInPascalCase#>');
+
+			    // Get Number columns
+			    navigations = [
+                <#foreach (var property in intProperties.Where(p => p.Key == tableName))
+                {#>
+                    '<#=property.Value#>', 
+                <#}#>
+                ];
+
+			    // Push validation
+                navigations.forEach(function (propertyName) {
+                    entityType.getProperty(propertyName).validators
+                        .push(Validator.int32());
+                });
+            <#}#>
+        }
+
+		function applyBigIntValidators(metadataStore) {
+			var entityType;
+            var navigations;
+
+            <#if (bigIntProperties.Any(p => p.Key == tableName))
+            {#>
+                // Get entity type of the table
+			    entityType = metadataStore.getEntityType('<#=entityNameInPascalCase#>');
+
+			    // Get Number columns
+			    navigations = [
+                <#foreach (var property in bigIntProperties.Where(p => p.Key == tableName))
+                {#>
+                    '<#=property.Value#>', 
+                <#}#>
+                ];
+
+			    // Push validation
+                navigations.forEach(function (propertyName) {
+                    entityType.getProperty(propertyName).validators
+                        .push(Validator.int64());
+                });
+            <#}#>
+        }
+
+		function applySmallIntValidators(metadataStore) {
+			var entityType;
+            var navigations;
+
+            <#if (smallIntProperties.Any(p => p.Key == tableName))
+            {#>
+                // Get entity type of the table
+			    entityType = metadataStore.getEntityType('<#=entityNameInPascalCase#>');
+
+			    // Get Number columns
+			    navigations = [
+                <#foreach (var property in smallIntProperties.Where(p => p.Key == tableName))
+                {#>
+                    '<#=property.Value#>', 
+                <#}#>
+                ];
+
+			    // Push validation
+                navigations.forEach(function (propertyName) {
+                    entityType.getProperty(propertyName).validators
+                        .push(Validator.int16());
+                });
+            <#}#>
+        }
+        // #endregion
+
+
+        // #region Date
+        function applyDateValidators(metadataStore) {
+			var entityType;
+            var navigations;
+
+            <#if (datetimeProperties.Any(p => p.Key == tableName))
+            {#>
+                // Get entity type of the table
+			    entityType = metadataStore.getEntityType('<#=entityNameInPascalCase#>');
+
+			    // Get date columns
+			    navigations = [
+                <#foreach (var property in datetimeProperties.Where(p => p.Key == tableName))
+                {#>
+                    '<#=property.Value#>', 
+                <#}#>
+                ];
+
+			    // Push validation
+                navigations.forEach(function (propertyName) {
+                    entityType.getProperty(propertyName).validators
+                        .push(Validator.date());
+                });
+            <#}#>
+        }
+        // #endregion
+
+		// #region UniqueIdentifier
+        function applyUniqueIdentifierValidators(metadataStore) {
+			var entityType;
+            var navigations;
+
+            <#if (datetimeProperties.Any(p => p.Key == tableName))
+            {#>
+                // Get entity type of the table
+			    entityType = metadataStore.getEntityType('<#=entityNameInPascalCase#>');
+
+			    // Get date columns
+			    navigations = [
+                <#foreach (var property in guidProperties.Where(p => p.Key == tableName))
+                {#>
+                    '<#=property.Value#>', 
+                <#}#>
+                ];
+
+			    // Push validation
+                navigations.forEach(function (propertyName) {
+                    entityType.getProperty(propertyName).validators
+                        .push(Validator.guid());
+                });
+            <#}#>
+        }
+        // #endregion
+
+		// #region Email
+        function applyEmailValidators(metadataStore) {
+			var entityType;
+            var navigations;
+
+            <#if (datetimeProperties.Any(p => p.Key == tableName))
+            {#>
+                // Get entity type of the table
+			    entityType = metadataStore.getEntityType('<#=entityNameInPascalCase#>');
+
+			    // Get date columns
+			    navigations = [
+                <#foreach (var property in emailProperties.Where(p => p.Key == tableName))
+                {#>
+                    '<#=property.Value#>', 
+                <#}#>
+                ];
+
+			    // Push validation
+                navigations.forEach(function (propertyName) {
+                    entityType.getProperty(propertyName).validators
+                        .push(Validator.emailAddress());
+                });
+            <#}#>
+        }
+        // #endregion
+
+		// #region Website
+        function applyUrlValidators(metadataStore) {
+			var entityType;
+            var navigations;
+
+            <#if (datetimeProperties.Any(p => p.Key == tableName))
+            {#>
+                // Get entity type of the table
+			    entityType = metadataStore.getEntityType('<#=entityNameInPascalCase#>');
+
+			    // Get date columns
+			    navigations = [
+                <#foreach (var property in websiteProperties.Where(p => p.Key == tableName))
+                {#>
+                    '<#=property.Value#>', 
+                <#}#>
+                ];
+
+			    // Push validation
+                navigations.forEach(function (propertyName) {
+                    entityType.getProperty(propertyName).validators
+                        .push(Validator.url());
+                });
+            <#}#>
+        }
+        // #endregion
+
+		// #region Phone
+        function applyPhoneValidators(metadataStore) {
+			var entityType;
+            var navigations;
+
+            <#if (datetimeProperties.Any(p => p.Key == tableName))
+            {#>
+                // Get entity type of the table
+			    entityType = metadataStore.getEntityType('<#=entityNameInPascalCase#>');
+
+			    // Get date columns
+			    navigations = [
+                <#foreach (var property in phoneProperties.Where(p => p.Key == tableName))
+                {#>
+                    '<#=property.Value#>', 
+                <#}#>
+                ];
+
+			    // Push validation
+                navigations.forEach(function (propertyName) {
+                    entityType.getProperty(propertyName).validators
+                        .push(Validator.phone());
+                });
+            <#}#>
+        }
+        // #endregion
+
+        // #region Max length
+        function applyMaxLengthValidators(metadataStore) {
+			var entityType;
+
+            <#foreach (var tableWithColumnLength in tableWithColumnLengths.Where(t => t.Value.Any()))
+            {
+            #>
+			    // Get entity type of the table
+			    entityType = metadataStore.getEntityType('<#=entityNameInPascalCase#>');
+
+			    // Push validation
+			    <#foreach (var columnLength in tableWithColumnLength.Value)
+                {#>
+                    entityType.getProperty('<#=columnLength.Key#>').validators
+                        .push(Validator.maxLength( {maxLength: <#=columnLength.Value#>}));
+                <#}#>
+            <#}#>
+        }
+        // #endregion
+
+
+        // #region Extended Properties
+        <#foreach (var extProp in extPropertiesDictionary)
+        {
+            string createValidationMethod = "create" + extProp.Key + "CustomValidator";
+            string applyValidationMethod = "apply" + extProp.Key + "CustomValidators";
+            createValidationMethods.Add(createValidationMethod);
+            applyValidationMethods.Add(applyValidationMethod);
+            #>
+        function <#=createValidationMethod#>() {
+            var val = Validator.makeRegExpValidator(
+                '<#=extProp.Value["type"]#>',
+                <#=extProp.Value["regularExpression"]#>,
+                "<#=extProp.Value["errorMessageTemplate"]#>");
+            return val;
+        }
+        function <#=applyValidationMethod#>(metadataStore) {
+            var entityType = metadataStore.getEntityType('<#=entityNameInPascalCase#>');
+            entityType.getProperty('<#=GetStringIncamelCase(extProp.Key)#>').validators
+                .push(<#=extProp.Key + "CustomValidator"#>);
+        }
+
+        <#}#>
+        // #endregion
+        // #endregion
+
+
+        // #region Validation configurations
+        // This function is called in model.extendMetadata()
+        // Apply Breeze & custom validations
+        function applyValidators(metadataStore)
+        {
+            // Required
+            applyRequireReferenceValidators(metadataStore);
+
+            // Data types
+            applyDateValidators(metadataStore);
+			applyIntValidators(metadataStore);
+			applyBigIntValidators(metadataStore);
+            applySmallIntValidators(metadataStore);
+			applyUniqueIdentifierIntValidators(metadataStore);
+			applyEmailValidators(metadataStore);
+			applyUrlValidators(metadataStore);
+			applyPhoneValidators(metadataStore);
+			
+            // Max length
+            applyMaxLengthValidators(metadataStore);
+
+            // Extended properties
+            <#foreach (string applyValidationMethod in applyValidationMethods)
+            {#>
+                <#=applyValidationMethod#>(metadataStore);
+            <#}#>
+
+            // data constraints
+        }
+
+        // This function is called in model.configureMetadataStore()
+        // Create & register custom validations
+        function createAndRegister(eNames) {
+            entityNames = eNames;
+
+            // Required
+            requireReferenceValidator = createRequireReferenceValidator();
+            Validator.register(requireReferenceValidator);
+
+            // Extended properties
+            <#foreach (string createValidationMethod in createValidationMethods)
+            {#>
+                <#=createValidationMethod.Substring(6)#> = <#=createValidationMethod#>();
+                Validator.register(<#=createValidationMethod.Substring(6)#>);
+            <#}#>
+
+            ////log('Validators created and registered.', null, serviceId, false);
+        }
+        // #endregion        
+    }
+})();
+<#
+// #endregion End File Content
+			SaveOutput("validations", entityName + ".validation.js");
+			}
+        }
+
+		var indexString = string.Empty;
+		foreach (string tableName in tableNames)
+        {
+            if (!tableName.StartsWith("webpages_") && !tableName.StartsWith("__"))
+            {
+				var entityNamePlural = GetStringIncamelCase(tableName);
+				var entityName = GetStringInSingle(entityNamePlural);
+				//indexString += @"<script src=""app/services/data/validations/" + entityName + @".validation.js""></script> \n ";
+				WriteLine(@"<script src=""app/services/data/validations/" + entityName + @".validation.js""></script>");
+            }
+        }
+			
+		// Write code in index.html
+		string templateDirectory = Path.GetDirectoryName(Host.TemplateFile + @"\..\..\Generated\" + string.Empty + @"\");
+		if (!Directory.Exists(templateDirectory))
+		{
+			 Directory.CreateDirectory(templateDirectory);
+		}
+
+		string outputFilePath = Path.Combine(templateDirectory, "index.html");
+		File.WriteAllText(outputFilePath, this.GenerationEnvironment.ToString()); 
+
+		this.GenerationEnvironment.Remove(0, this.GenerationEnvironment.Length);
+    }
+}
+#>

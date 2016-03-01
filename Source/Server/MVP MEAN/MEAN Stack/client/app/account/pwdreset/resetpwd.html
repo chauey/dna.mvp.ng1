@@ -1,0 +1,38 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container" ng-show="resetStateIs('valid_token')">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Reset password</h1>
+            <p>Submit your new password</p>
+        </div>
+        <div class="col-sm-12">
+            <form class="form" name="submitForm" ng-submit="submitNewPwd(submitForm, token)" novalidate>
+                <div class="form-group" ng-class="{ 'has-success': form.password.$valid && submitted,
+                                            'has-error': form.password.$invalid && submitted }">
+                    <label>New password</label>
+                    <input type="password" name="newPassword" class="form-control" ng-model="reset.newPassword" ng-minlength="6"
+                           required mongoose-error />
+                    <input hidden name="token" ng-model="reset.token" ng-value="{{token}}"></input>
+                    <p class="help-block" ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">Password must be at least 6 characters.</p>
+                    <p class="help-block" ng-show="form.password.$error.mongoose">{{ errors.password }}</p>
+                </div>
+                <div class="col-sm-6">
+                    <a href="/resetpwd/{{token}}"></a>
+                    <button class="btn btn-inverse btn-lg btn-primary" ng-disabled="pwdResetMailSend" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container" ng-show="resetStateIs('reseted')">
+    <div class="alert alert-success">
+        <h1>Congratulation! You reseted to new password successfully.</h1>
+    </div>
+</div>
+<div class="container" ng-show="resetStateIs('invalid_token')">
+    <div class="alert alert-danger">
+        <h2>Password reset</h2>
+        <p>Somthing went wrong. Your attend to reset your password has failed.</p>
+        <a href="/pwdreset" class="text-right">Try again to change your password</a>
+    </div>
+</div>

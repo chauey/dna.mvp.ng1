@@ -1,0 +1,112 @@
+﻿<section class="mainbar">
+    <section class="matter">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Payment Information</h2>
+                    <!-- 1. Search bar -->
+                    <div class="form-search">
+
+                        <!-- 1.1. Search box -->
+                        <input id="cardSearchTextBox" class="input-sm search-query"
+                               data-ng-model="vm.cardSearch"
+                               data-ng-keyup="vm.search($event)"
+                               placeholder="live search...">
+
+                        <div class="btn-group pull-right">
+
+                            <!-- 1.2. Refresh button -->
+                            <a class="infoButton"
+                               data-ng-click="vm.refresh()">
+                                <i class="fa fa-refresh"></i><span> Refresh</span>
+                            </a>
+
+                            <!-- 1.3. Add button -->
+                            <a id="cardAddButton" class="infoButton" href="#/addCard/new">
+                                <i class="fa fa-plus"></i> Add Card
+                            </a>
+                        </div>
+                    </div>
+
+                    <br /> <br /> <br />
+
+                    <!-- 2. Content/main area -->
+                    <div class="col-md-12">
+
+                        <!-- 2.1 Data list in Portlet box -->
+                        <div class="portlet box blue-madison">
+
+                            <!-- Portlet Title -->
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <div>{{vm.title}} ({{vm.cardFilteredCount}} / {{vm.cardCount}})</div>
+                                </div>
+                                <div class="tools">
+                                    <a href="" class="collapse"></a>
+                                    <!--<div>Page {{vm.paging.currentPage}} of {{vm.paging.pageCount}}</div>-->
+                                </div>
+                            </div>
+
+                            <!-- Portlet Body -->
+                            <div class="portlet-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-condensed table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th data-ng-repeat="thead in vm.theads">
+                                                    <a data-ng-click="vm.setSort(thead)" href="">{{thead}}</a>
+                                                    <span>
+                                                        <!-- Change DisplayNames to FieldNames: lowercase first letter then remove spaces -->
+                                                        <span data-ng-if="vm.sorting.orderBy ==
+															(thead.charAt(0).toLowerCase() + thead.slice(1)).replace(' ','')">
+                                                            <i class="fa fa-caret-down" style="color: #00C0F7;"
+                                                               data-ng-show="vm.sorting.orderDesc == ''"></i>
+                                                            <i class="fa fa-caret-up" style="color: #00C0F7;"
+                                                               data-ng-show="vm.sorting.orderDesc == 'desc'"></i>
+                                                        </span>
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-ng-repeat="d in vm.cards"
+                                                data-ng-click="vm.goTocard(d)"
+                                                data-ng-class="{info: d.isDefault}"
+                                                title="View details" style="cursor: pointer;">
+                                                <!-- // ADD TABLE DATA HERE with approriate data type and control -->
+                                                <td>{{d.last4}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- 2.2. Panel pagination -->
+                        <div class="widget-foot">
+                            <div class="clearfix"></div>
+                            <!-- Pagination -->
+                            <pagination class="pagination-sm"
+                                        total-items="vm.cardFilteredCount"
+                                        items-per-page="vm.paging.pageSize"
+                                        data-ng-model="vm.paging.currentPage"
+                                        data-ng-change="vm.pageChanged()"
+                                        max-size="vm.paging.maxPagesToShow"
+                                        boundary-links="true"
+                                        previous-text="Prev"
+                                        next-text="Next"
+                                        first-text="First"
+                                        last-text="Last"></pagination>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </section>
+</section>
+
